@@ -41,7 +41,6 @@ sakai.topnavigation = function(tuid, showSettings){
     var currentChatStatus = "";
 
     // Links and labels
-    var hiLabel = "#hispan";
     var myprofileName = "#myprofile_name";
     var onlineButton = "#online_button";
     var pictureHolder = "#picture_holder";
@@ -64,11 +63,13 @@ sakai.topnavigation = function(tuid, showSettings){
     var navCalendarLink = "#nav_calendar_link";
     var navSelectedNavItemClass = "explore_nav_selected";
     var topNavigationBar = "#top_navigation";
+    var navMyProfile = "#topnavigation_my_profile";
 
     // Messages
     var chatUnreadMessages = "#chat_unreadMessages";
 
     // Search
+    var $general_search_container = $("#general_search_container");
     var $general_search_form = $("#general_search_container form");
     var $general_search_input = $("#general_search_input");
     var $general_search_default_value = $("#general_search_default_value");
@@ -195,8 +196,9 @@ sakai.topnavigation = function(tuid, showSettings){
             }
         });
 
-        $(window).bind("chat_status_change", function(event, currentChatStatus){
-            updateChatStatusElement($(userLink), currentChatStatus);
+        $(window).bind("chat_status_change", function(event, chatstatus){
+            currentChatStatus = chatstatus;
+            updateChatStatusElement($(userLink), chatstatus);
         });
 
         $(window).bind("click", function(e){
@@ -333,6 +335,9 @@ sakai.topnavigation = function(tuid, showSettings){
         $(".personal .sign_out").hide();
         $(".help").hide();
         $("#user_link_container").hide();
+        
+        // Hide search bar
+ 	    $general_search_container.hide();
 
         // Show anonymous elements
         $("#other_logins_button_container").show();
@@ -415,29 +420,37 @@ sakai.topnavigation = function(tuid, showSettings){
      * executed on the initial load of the page
      */
     var doInit = function(){
+        
+        $(navMyProfile).attr("href", "/~" + sakai.data.me.user.userid);
+        
         var obj = {};
         var menulinks = [];
 
         for (var i in sakai.config.Navigation) {
-            var temp = new Object();
-            temp.url = sakai.config.Navigation[i].url;
-            temp.label = sakai.api.i18n.General.getValueForKey(sakai.config.Navigation[i].label);
-            temp.cleanurl = temp.url || "";
-            if (temp.cleanurl) {
-                if (temp.cleanurl.indexOf('?') && temp.cleanurl.indexOf('?') > 0) {
-                    temp.cleanurl = temp.cleanurl.substring(0, temp.cleanurl.indexOf('?'));
+
+            // We need to add the hasOwnProperty to pass to JSLint and it is also a security issue
+            if (sakai.config.Navigation.hasOwnProperty(i)) {
+            
+                var temp = new Object();
+                temp.url = sakai.config.Navigation[i].url;
+                temp.label = sakai.api.i18n.General.getValueForKey(sakai.config.Navigation[i].label);
+                temp.cleanurl = temp.url || "";
+                if (temp.cleanurl) {
+                    if (temp.cleanurl.indexOf('?') && temp.cleanurl.indexOf('?') > 0) {
+                        temp.cleanurl = temp.cleanurl.substring(0, temp.cleanurl.indexOf('?'));
+                    }
+                    if (temp.cleanurl.indexOf('#') && temp.cleanurl.indexOf('#') > 0) {
+                        temp.cleanurl = temp.cleanurl.substring(0, temp.cleanurl.indexOf('#'));
+                    }
                 }
-                if (temp.cleanurl.indexOf('#') && temp.cleanurl.indexOf('#') > 0) {
-                    temp.cleanurl = temp.cleanurl.substring(0, temp.cleanurl.indexOf('#'));
+                if (i == 0) {
+                    temp.firstlink = true;
                 }
+                else {
+                    temp.firstlink = false;
+                }
+                menulinks.push(temp);
             }
-            if (i == 0) {
-                temp.firstlink = true;
-            }
-            else {
-                temp.firstlink = false;
-            }
-            menulinks.push(temp);
         }
         obj.links = menulinks;
         // Get navigation and render menu template
@@ -449,8 +462,7 @@ sakai.topnavigation = function(tuid, showSettings){
 
         // Fill in the name of the user in the different fields
         if (sakai.api.User.getDisplayName(person.profile) !== "") {
-            $(userIdLabel).text(sakai.api.User.getDisplayName(person.profile));
-            $(hiLabel).text(sakai.api.User.getProfileBasicElementValue(person.profile, "firstName"));
+            $(userIdLabel).text(sakai.api.Util.shortenString(sakai.api.User.getDisplayName(person.profile), 25));
         }
 
         // Show the profile picture on the dashboard page

@@ -98,7 +98,8 @@ sakai.pickeruser = function(tuid, showSettings) {
       "sortOn": "lastName",
       "sortOrder": "ascending",
       "what": "People",
-      "where": "Group"
+      "where": "Group",
+      "excludeList": []
     };
 
     /**
@@ -122,7 +123,7 @@ sakai.pickeruser = function(tuid, showSettings) {
      * @returns void
      */
     var render = function(iConfig) {
-
+        $pickeruser_add_button.attr("disabled", "disabled");
         clearAutoSuggest();
         // Merge user defined config with defaults
         for (var element in iConfig) {
@@ -186,7 +187,10 @@ sakai.pickeruser = function(tuid, showSettings) {
           if ($pickeruser_copy_myself.is(':checked')) {
             messageList.push(sakai.data.me.profile["rep:userId"]);
           }
-          sakai.api.Communication.sendMessage(messageList, sakai.api.Security.saneHTML($("#pickeruser_subject_text").text()) + iConfig.where, messageText);
+          if (iConfig.URL){
+              messageText = messageText + "\n\n" + "<a href='" + iConfig.URL + "'>" + iConfig.URL + "</a>";
+          }
+          sakai.api.Communication.sendMessage(messageList, sakai.api.Security.saneHTML($("#pickeruser_subject_text").text()) + " " + iConfig.where, messageText);
       }
       $pickeruser_container.jqmHide();
       $(window).trigger("sakai-pickeruser-finished", {"toAdd":userList});
@@ -207,21 +211,32 @@ sakai.pickeruser = function(tuid, showSettings) {
                 sakai.api.Server.loadJSON(searchUrl.replace(".json", ""), function(success, data){
                     if (success) {
                         var suggestions = [];
+                        var name, value, type;
                         $.each(data.results, function(i) {
                             if (pickerData.type === 'content') {
-                                suggestions.push({"value": data.results[i]['jcr:name'], "name": data.results[i]['sakai:pooled-content-file-name'], "type": "file"});
+                                name = data.results[i]['sakai:pooled-content-file-name'];
+                                value = data.results[i]['jcr:name'];
+                                type = "file";
                             } else if (data.results[i]["rep:userId"]) {
-                                suggestions.push({"value": data.results[i]["rep:userId"], "name": sakai.api.Security.saneHTML(sakai.api.User.getDisplayName(data.results[i])), "type": "user"});
+                                name = sakai.api.Security.saneHTML(sakai.api.User.getDisplayName(data.results[i]));
+                                value = data.results[i]["rep:userId"];
+                                type = "user";
                             } else if (data.results[i]["sakai:group-id"]) {
-                                suggestions.push({"value": data.results[i]["sakai:group-id"], "name": data.results[i]["sakai:group-title"], "type": "group"});
+                                name = data.results[i]["sakai:group-title"];
+                                value = data.results[i]["sakai:group-id"];
+                                type = "group";
+                            }
+                            if (pickerData.excludeList.length === 0 || $.inArray(value, pickerData.excludeList) === -1) {
+                                suggestions.push({"value": value, "name": name, "type": type});
                             }
                         });
                         add(suggestions);
                     } else {
 
                     }
-                }, {"q": "*" + query.replace(/\s+/g, "* OR *") + "*"});
+                }, {"q": "*" + query.replace(/\s+/g, "* OR *") + "*", "page": 0, "items": 15});
             },
+            retrieveLimit: 10,
             asHtmlID: tuid,
             selectedItemProp: "name",
             searchObjProps: "name",
@@ -252,11 +267,9 @@ sakai.pickeruser = function(tuid, showSettings) {
 
     var addChoicesFromPickeradvanced = function(data) {
       $.each(data, function(i,val) {
-          var imgSrc = "/dev/_images/user_avatar_icon_32x32.png";
           var name = "";
           var id = "";
           if (val.entityType == "group") {
-              imgSrc = "/dev/_images/group_avatar_icon_32x32.png";
               name = val["sakai:group-title"];
               id = val["sakai:group-id"];
           } else if (val.entityType == "user") {
@@ -266,10 +279,7 @@ sakai.pickeruser = function(tuid, showSettings) {
               name = val["sakai:pooled-content-file-name"];
               id = val["jcr:name"];
           }
-          var itemHTML = '<li id="as-selection-' + id + '" class="as-selection-item"><a class="as-close">×</a>' + name + '</li>';
-          itemHTML = sakai.api.Security.saneHTML(itemHTML);
-          $("#as-values-" + tuid).val(id + "," + $("#as-values-" + tuid).val());
-          $("#as-original-" + tuid).before(itemHTML);
+          $pickeruser_search_query.autoSuggest.add_selected_item({"name": name, "value": id}, id);
           $pickeruser_add_button.removeAttr("disabled");
       });
       $("input#" + tuid).val('').focus();
@@ -281,6 +291,16 @@ sakai.pickeruser = function(tuid, showSettings) {
 
     $(window).unbind("sakai-pickeruser-init");
     $(window).bind("sakai-pickeruser-init", function(e, config, callbackFn) {
+
+        // position dialog box at users scroll position
+        var htmlScrollPos = $("html").scrollTop();
+        var docScrollPos = $(document).scrollTop();
+        if (htmlScrollPos > 0) {
+            $(".dialog").css({"top": htmlScrollPos + 50 + "px"});
+        } else if (docScrollPos > 0) {
+            $(".dialog").css({"top": docScrollPos + 50 + "px"});
+        }
+
         $pickeruser_container.jqmShow();
         render(config);
         $(window).unbind("sakai-pickeradvanced-finished");

@@ -145,9 +145,9 @@ sakai.dashboard = function(tuid, showSettings) {
             for (var ii = 0, jj = columns[i].length; ii < jj; ii++) {
                 var index = jsonobj.columns["column" + (i + 1)].length;
                 jsonobj.columns["column" + (i + 1)][index] = {};
-                jsonobj.columns["column" + (i + 1)][index].name = columns[i][ii];
-                jsonobj.columns["column" + (i + 1)][index].visible = "block";
                 jsonobj.columns["column" + (i + 1)][index].uid = "id" + Math.round(Math.random() * 10000000000000);
+                jsonobj.columns["column" + (i + 1)][index].visible = "block";
+                jsonobj.columns["column" + (i + 1)][index].name = columns[i][ii];
             }
         }
 
@@ -195,6 +195,7 @@ sakai.dashboard = function(tuid, showSettings) {
     }
 
     var showDashboard = function() {
+        tempSettings = settings;
 
         if (!Widgets.layouts[settings.layout]) {
 
@@ -214,9 +215,9 @@ sakai.dashboard = function(tuid, showSettings) {
                 if (index < newlength) {
                     for (i = 0, j = settings.columns[l].length; i < j; i++) {
                         columns[index][i] = {};
-                        columns[index][i].name = settings.columns[l][i].name;
-                        columns[index][i].visible = settings.columns[l][i].visible;
                         columns[index][i].uid = settings.columns[l][i].uid;
+                        columns[index][i].visible = settings.columns[l][i].visible;
+                        columns[index][i].name = settings.columns[l][i].name;
                     }
                     index++;
                 }
@@ -238,20 +239,20 @@ sakai.dashboard = function(tuid, showSettings) {
                             }
                             var _i = columns[lowestcolumn].length;
                             columns[lowestcolumn][_i] = {};
-                            columns[lowestcolumn][_i].name = settings.columns[l][i].name;
-                            columns[lowestcolumn][_i].visible = settings.columns[l][i].visible;
                             columns[lowestcolumn][_i].uid = settings.columns[l][i].uid;
+                            columns[lowestcolumn][_i].visible = settings.columns[l][i].visible;
+                            columns[lowestcolumn][_i].name = settings.columns[l][i].name;
                         }
                     }
                     index++;
                 }
             }
 
-            var jsonstring = '{"columns":{';
+            var jsonstring = '{"layout":"' + settings.layout + '","columns":{';
             for (i = 0, j = Widgets.layouts[settings.layout].widths.length; i < j; i++) {
                 jsonstring += '"column' + (i + 1) + '":[';
                 for (var ii = 0, jj = columns[i].length; ii < jj; ii++) {
-                    jsonstring += '{"name":"' + columns[i][ii].name + '","visible":"' + columns[i][ii].visible + '","uid":"' + columns[i][ii].uid + '"}';
+                    jsonstring += '{"uid":"' + columns[i][ii].uid + '","visible":"' + columns[i][ii].visible + '","name":"' + columns[i][ii].name + '"}';
                     if (ii !== columns[i].length - 1) {
                         jsonstring += ',';
                     }
@@ -262,7 +263,7 @@ sakai.dashboard = function(tuid, showSettings) {
                 }
             }
 
-            jsonstring += '},"layout":"' + settings.layout + '"}';
+            jsonstring += '}}';
 
             settings = $.parseJSON(jsonstring);
 
@@ -429,7 +430,7 @@ sakai.dashboard = function(tuid, showSettings) {
               /**
              * Bind the document on click event
              */
-              $(document).unbind('click').click(function(e) {
+              $(document).click(function(e) {
                   var $clicked = $(e.target);
 
                   // Check if one of the parents is the chatstatuscontainer
@@ -489,7 +490,7 @@ sakai.dashboard = function(tuid, showSettings) {
 
     var saveState = function() {
 
-        var serString = '{"columns":{';
+        var serString = '{"layout":"' + settings.layout + '","columns":{';
 
         var columns = $(".groupWrapper", $rootel);
         for (var i = 0, j = columns.length; i < j; i++) {
@@ -526,7 +527,7 @@ sakai.dashboard = function(tuid, showSettings) {
                         if (iii !== 0) {
                             serString += ",";
                         }
-                        serString += '{"name":"' + node.id.split("_")[0] + '","visible":"' + widgetdisplay + '","uid":"' + uid + '"}';
+                        serString += '{"uid":"' + uid + '","visible":"' + widgetdisplay + '","name":"' + node.id.split("_")[0] + '"}';
 
                     }
                 } catch(err) {
@@ -539,7 +540,7 @@ sakai.dashboard = function(tuid, showSettings) {
 
         }
 
-        serString += '},"layout":"' + settings.layout + '"}';
+        serString += '}}';
 
         settings = $.parseJSON(serString);
 
@@ -626,11 +627,11 @@ sakai.dashboard = function(tuid, showSettings) {
         columns[lowestcolumn][_i].visible = "block";
         columns[lowestcolumn][_i].uid = "id" + Math.round(Math.random() * 10000000000);
 
-        var jsonstring = '{"columns":{';
+        var jsonstring = '{"layout":"' + selectedlayout + '","columns":{';
         for (var i = 0, j = Widgets.layouts[selectedlayout].widths.length; i < j; i++) {
             jsonstring += '"column' + (i + 1) + '":[';
             for (var ii = 0, jj = columns[i].length; ii < jj; ii++) {
-                jsonstring += '{"name":"' + columns[i][ii].name + '","visible":"' + columns[i][ii].visible + '","uid":"' + columns[i][ii].uid + '"}';
+                jsonstring += '{"uid":"' + columns[i][ii].uid + '","visible":"' + columns[i][ii].visible + '","name":"' + columns[i][ii].name + '"}';
                 if (ii !== columns[i].length - 1) {
                     jsonstring += ',';
                 }
@@ -640,7 +641,7 @@ sakai.dashboard = function(tuid, showSettings) {
                 jsonstring += ',';
             }
         }
-        jsonstring += '},"layout":"' + selectedlayout + '"}';
+        jsonstring += '}}';
 
         settings = $.parseJSON(jsonstring);
 
@@ -737,14 +738,14 @@ sakai.dashboard = function(tuid, showSettings) {
             }
 
             settings = {};
+            settings["layout"] = selectedlayout;
             settings["columns"] = {};
             for (i = 0, j = Widgets.layouts[selectedlayout].widths.length; i < j; i++) {
                 settings["columns"]["column" + (i + 1)] = [];
                 for (var ii = 0, jj = columns[i].length; ii < jj; ii++) {
-                    settings["columns"]["column" + (i + 1)][settings["columns"]["column" + (i + 1)].length] = {"name":columns[i][ii].name,"visible":columns[i][ii].visible,"uid":columns[i][ii].uid};
+                    settings["columns"]["column" + (i + 1)][settings["columns"]["column" + (i + 1)].length] = {"uid":columns[i][ii].uid,"visible":columns[i][ii].visible,"name":columns[i][ii].name};
                 }
             }
-            settings["layout"] = selectedlayout;
 
             sakai.api.Widgets.saveWidgetData(tuid, settings, beforeFinishAddWidgets);
 
@@ -763,11 +764,14 @@ sakai.dashboard = function(tuid, showSettings) {
 
     $(changeLayoutDialog, $rootel).jqm({
         modal: true,
-        trigger: $('#edit-layout', $rootel),
         overlay: 20,
         toTop: true,
         onShow: renderLayouts
     });
+
+    sakai.dashboard.changeLayout = function() {
+        $(changeLayoutDialog, $rootel).jqmShow();
+    };
 
     ///////////////////////
     // Add Sakai Goodies //
@@ -858,10 +862,14 @@ sakai.dashboard = function(tuid, showSettings) {
     */
      $(addGoodiesDialog, $rootel).jqm({
          modal: true,
-         trigger: $(addGoodiesTrigger, $rootel),
          overlay: 20,
          toTop: true,
          onShow: renderGoodies
+     });
+     $(window).bind("sakai-dashboard-showAddWidgetDialog", function(e, iTuid) {
+         if (iTuid == tuid) {
+              $(addGoodiesDialog, $rootel).jqmShow();
+          }
      });
 
     /**
@@ -902,11 +910,9 @@ sakai.dashboard = function(tuid, showSettings) {
      * Send out an event to indicate that the dashboard widget has been
      * loaded successfully
      */
-    var init = function() {
-        $(window).trigger("sakai.dashboard.ready", tuid);
-    };
 
-    init();
+    $(window).trigger("sakai.dashboard.ready", tuid);
+    sakai.dashboard.isReady = true;
 };
 
 sakai.api.Widgets.widgetLoader.informOnLoad("dashboard");

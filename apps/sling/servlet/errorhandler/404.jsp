@@ -6,7 +6,7 @@
     <head>
 
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>Sakai 3 R&amp;D - Page not found</title>
+        <title></title>
 
         <!-- Sakai Core CSS -->
         <link rel="stylesheet" type="text/css" href="/dev/_css/FSS/fss-base.css" />
@@ -26,6 +26,7 @@
         <script type="text/javascript" src="/dev/_configuration/widgets.js"></script>
         <script type="text/javascript" src="/var/widgets.json?callback=sakai.storeWidgets"></script>
         <script type="text/javascript" src="/dev/_configuration/config.js"></script>
+        <script type="text/javascript" src="/dev/_configuration/config_custom.js"></script>
 
         <!-- Core 3rd-party JS -->
         <script type="text/javascript" src="/dev/_lib/jquery/jquery.js"></script>
@@ -51,8 +52,12 @@
     </head>
 
     <body class="fl-centered index i18nable">
-        <div class="index-container fl-centered page_not_found_error">
-            <div id="page_not_found_error_logged_out_template" style="display:none"><!--
+
+        <!-- TOP BANNER -->
+        <div id="top_banner"><!-- --></div>
+
+        <div class="index-container fl-centered page_not_found_error"><span style="display:none;"><br /></span>
+            <div id="page_not_found_error_logged_out_template" style="display:none;"><!--
                 <div class="header-title">
                     <img src="/dev/_images/sakai_logo_index.png" alt="__MSG__INSTANCE_NAME__" />
                 </div>
@@ -85,9 +90,7 @@
                             </p>
                         </div>
                         <div class="login-container">
-							<a href="/dev/index.html">
-                            	<button class="s3d-button s3d-button-primary" type="submit"><span class="s3d-button-inner">Sign In</span></button>
-							</a>
+                            <button class="s3d-button s3d-button-primary" type="submit"><span class="s3d-button-inner">Sign In</span></button>
                             <p>
                                 If you have an account, you may wish to sign in to search available pages.
                             </p>

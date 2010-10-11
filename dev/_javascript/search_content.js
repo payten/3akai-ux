@@ -90,15 +90,15 @@ sakai.search = function() {
             value : "Content",
             facets : {
                 "all" : {
-                    "category": "All Files",
+                    "category": "All Content",
                     "searchurl": searchURLmap.allfiles
                 },
                 "manage" : {
-                    "category": "Files I manage",
+                    "category": "Content I manage",
                     "searchurl": searchURLmap.pooledcontentmanager
                 },
                 "member" : {
-                    "category": "Files I'm a Member of",
+                    "category": "Content I'm a viewer of",
                     "searchurl": searchURLmap.pooledcontentviewer
                 }
             }
@@ -114,8 +114,15 @@ sakai.search = function() {
      * This method will show all the appropriate elements for when a search is executed.
      */
     var showSearchContent = function() {
-        $(searchConfig.global.searchTerm).text(sakai.api.Security.saneHTML(searchterm));
-        $(searchConfig.global.tagTerm).text(sakai.api.Security.saneHTML(tagterm));
+        $(searchConfig.global.searchTerm).html(sakai.api.Security.saneHTML(sakai.api.Security.escapeHTML(searchterm)));
+        if (tagterm) {
+            var tags = tagterm.replace("/tags/", "").split("/");
+            if(tags[0] === "directory"){
+                $(searchConfig.global.tagTerm).html($("#search_result_results_located_in").html() + " " + tags.splice(1,tags.length).toString().replace(/,/g, "<span class='search_directory_seperator'>&raquo;</span>"));
+            } else {
+                $(searchConfig.global.tagTerm).html($("#search_result_results_tagged_under").html() + " " + sakai.api.Security.saneHTML(tagterm.replace("/tags/", "")));
+            }
+        }
         $(searchConfig.global.numberFound).text("0");
         $(searchConfig.results.header).show();
         $(searchConfig.results.tagHeader).hide();
@@ -182,13 +189,13 @@ sakai.search = function() {
             } else if (results.results.length <= 0) {
                 $(searchConfig.global.numberFound).text(0);
             } else {
-                $(searchConfig.global.numberFound).text("thousands");
+                $(searchConfig.global.numberFound).text("more than 100");
             }
 
             // Reset the pager.
             $(searchConfig.global.pagerClass).pager({
                 pagenumber: currentpage,
-                pagecount: Math.ceil(results.total / resultsToDisplay),
+                pagecount: Math.ceil(Math.abs(results.total) / resultsToDisplay),
                 buttonClickCallback: pager_click_handler
             });
 
@@ -197,9 +204,15 @@ sakai.search = function() {
                 finaljson = mainSearch.prepareCMforRendering(results.results, finaljson, searchterm);
             }
 
+            // if we're searching tags we need to hide the pager since it doesnt work too well
+            if (!results.total) {
+                results.total = resultsToDisplay;
+            }
+
             // We hide the pager if we don't have any results or
             // they are less then the number we should display
-            if (results.total < resultsToDisplay) {
+            results.total = Math.abs(results.total);
+            if (results.total <= resultsToDisplay) {
                 $(searchConfig.global.pagerClass).hide();
             }
             else {
@@ -291,7 +304,7 @@ sakai.search = function() {
         // Rebind everything
         mainSearch.addEventListeners(searchterm, searchwhere);
 
-        if (searchterm && searchterm !== $(searchConfig.global.text).attr("title")) {
+        if (searchquery && searchterm && searchterm !== $(searchConfig.global.text).attr("title")) {
             // Show and hide the correct elements.
             showSearchContent();
 
@@ -316,8 +329,9 @@ sakai.search = function() {
             }
             
             // Check if we want to search using a faceted link
-            if (facetedurl)
+            if (facetedurl) {
                 url = facetedurl.replace(".json", ".infinity.json");
+            };
 
             $.ajax({
                 url: url,
@@ -407,6 +421,10 @@ sakai.search = function() {
     var thisFunctionality = {
         "doHSearch" : sakai._search.doHSearch
     };
+    
+    $(window).bind("sakai-fileupload-complete", function(){
+       window.location = window.location + "&_=" + Math.random(); 
+    });
 
     var mainSearch = sakai._search(searchConfig, thisFunctionality);
 

@@ -76,9 +76,6 @@ sakai.account_preferences = function(){
     // templates
     var languagesTemplate = accountPreferences + "_languagesTemplate";
 
-    var regionalSetting;
-    var languageSetting;
-
     ///////////////////////
     // Utility functions //
     ///////////////////////
@@ -227,9 +224,7 @@ sakai.account_preferences = function(){
         var locale = {"locale" : language, "timezone" : $(timezonesContainer).val(), "_charset_":"utf-8"};
 
         // if regional Setting and langauge is changed only then save the changes
-        if (regionalSetting !== $(timezonesContainer).val() || language !== languageSetting) {
-            regionalSetting = $(timezonesContainer).val();
-            languageSetting = language;
+        if (me.user.locale.timezone.name !== $(timezonesContainer).val() || language !== me.user.locale.language+"_"+me.user.locale.country) {
             $.ajax({
                 data: locale,
                 url: "/system/userManager/user/" + me.user.userid + ".update.html",
@@ -238,11 +233,15 @@ sakai.account_preferences = function(){
 
                     if (language !== me.user.locale.language + "_" + me.user.locale.country) {
                         // Reload the page if the language for a user has changed
-                        document.location.reload();
+                        sakai.api.Util.notification.show($(messageChangeLang).html(), $(messageChangeLang).html());
+                            window.setTimeout(function(){
+                            document.location.reload();
+                        },2000);
                     }
                     else {
                         // Show successful regional setting change through gritter
                         sakai.api.Util.notification.show($(messageChangeLang).html(), $(messageChangeLang).html());
+                        me.user.locale.timezone.name = $(timezonesContainer).val();
                     }
 
                 },
@@ -274,6 +273,11 @@ sakai.account_preferences = function(){
                     required: true,
                     minlength: 4,
                     equalTo: "#new_pass"
+                }
+            },
+            messages: {
+                retype_pass:{
+                    "equalTo": "Please enter the same password twice."
                 }
             },
             debug:true

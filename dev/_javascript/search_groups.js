@@ -31,6 +31,10 @@ sakai.search = function() {
     var tagterm = "";
     var currentpage = 0;
     var currentfacet = "";
+    
+    // Add Group Button links
+    var createGroupContainer = "#creategroupcontainer";
+    var searchAddGroupButton = ".search_add_group_button";
 
     // Search URL mapping
     var searchURLmap = {
@@ -90,7 +94,7 @@ sakai.search = function() {
                 "all": {
                     "category": "All Groups",
                     "searchurl": searchURLmap.allgroups
-                }, 
+                },
                 "manage": {
                     "category": "Groups I manage",
                     "searchurl": searchURLmap.managergroups
@@ -112,8 +116,15 @@ sakai.search = function() {
      * This method will show all the appropriate elements for when a search is executed.
      */
     var showSearchContent = function() {
-        $(searchConfig.global.searchTerm).text(sakai.api.Security.saneHTML(searchterm));
-        $(searchConfig.global.tagTerm).text(sakai.api.Security.saneHTML(tagterm));
+        $(searchConfig.global.searchTerm).html(sakai.api.Security.saneHTML(sakai.api.Security.escapeHTML(searchterm)));
+        if (tagterm) {
+            var tags = tagterm.replace("/tags/", "").split("/");
+            if(tags[0] === "directory"){
+                $(searchConfig.global.tagTerm).html($("#search_result_results_located_in").html() + " " + tags.splice(1,tags.length).toString().replace(/,/g, "<span class='search_directory_seperator'>&raquo;</span>"));
+            } else {
+                $(searchConfig.global.tagTerm).html($("#search_result_results_tagged_under").html() + " " + sakai.api.Security.saneHTML(tagterm.replace("/tags/", "")));
+            }
+        }
         $(searchConfig.global.numberFound).text("0");
         $(searchConfig.results.header).show();
         $(searchConfig.results.tagHeader).hide();
@@ -178,7 +189,7 @@ sakai.search = function() {
                     $.each(results, function(index, resultObject) {
                         resultCount++;
                     });
-                    var resultsTemp = {results : results, total : resultCount}; 
+                    var resultsTemp = {results : results, total : resultCount};
                     results = resultsTemp;
                 }
 
@@ -189,13 +200,13 @@ sakai.search = function() {
             } else if (results.results.length <= 0) {
                 $(searchConfig.global.numberFound).text(0);
             } else {
-                $(searchConfig.global.numberFound).text("thousands");
+                $(searchConfig.global.numberFound).text("more than " + Math.abs(results.total));
             }
 
             // Reset the pager.
             $(searchConfig.global.pagerClass).pager({
                 pagenumber: currentpage,
-                pagecount: Math.ceil(results.total / resultsToDisplay),
+                pagecount: Math.ceil(Math.abs(results.total) / resultsToDisplay),
                 buttonClickCallback: pager_click_handler
             });
 
@@ -229,14 +240,21 @@ sakai.search = function() {
                 }
             }
 
-            // If we don't have any results or they are less then the number we should display
-            // we hide the pager
-            if ((results.total < resultsToDisplay) || (results.results.length <= 0)) {
+            // if we're searching tags we need to hide the pager since it doesnt work too well
+            if (!results.total) {
+                results.total = resultsToDisplay;
+            }
+
+            // We hide the pager if we don't have any results or
+            // they are less then the number we should display
+            results.total = Math.abs(results.total);
+            if (results.total <= resultsToDisplay) {
                 $(searchConfig.global.pagerClass).hide();
             }
             else {
                 $(searchConfig.global.pagerClass).show();
             }
+
         }
         else {
             $(searchConfig.global.pagerClass).hide();
@@ -275,12 +293,12 @@ sakai.search = function() {
 
         facetedurl = mainSearch.getFacetedUrl();
 
-        if (facet){
+        if (facet && searchConfig.facetedConfig.facets[facet]){
             facetedurl = searchConfig.facetedConfig.facets[facet].searchurl;
         } else {
             facet = "";
         }
-        
+
         $(".faceted_category").removeClass("faceted_category_selected");
         if (facet) {
             $("#" + facet).addClass("faceted_category_selected");
@@ -304,7 +322,7 @@ sakai.search = function() {
         // Rebind everything
         mainSearch.addEventListeners(searchterm, searchwhere);
 
-        if (searchterm && searchterm !== $(searchConfig.global.text).attr("title").toLowerCase()) {
+        if (searchquery && searchterm && searchterm !== $(searchConfig.global.text).attr("title").toLowerCase()) {
 
             // Show and hide the correct elements.
             showSearchContent();
@@ -320,7 +338,12 @@ sakai.search = function() {
                 urlsearchterm += splitted[i] + "~" + " " + splitted[i] + "*" + " ";
             }
 
-            var searchURL = sakai.config.URL.SEARCH_GROUPS + "?page=" + (currentpage - 1) + "&items=" + resultsToDisplay + "&q=" + urlsearchterm;
+            var searchURL = sakai.config.URL.SEARCH_GROUPS;
+            var params = {
+                page: (currentpage - 1),
+                items: resultsToDisplay,
+                q: urlsearchterm
+            }
 
             // Check if we want to search using a faceted link
             if (facetedurl) {
@@ -328,17 +351,24 @@ sakai.search = function() {
                 if (facetedurl === sakai.config.URL.GROUPS_MANAGER || facetedurl === sakai.config.URL.GROUPS_MEMBER) {
                     urlsearchterm = searchterm
                 }
-                
-                searchURL = facetedurl + "?page=" + (currentpage - 1) + "&items=" + resultsToDisplay + "&q=" + urlsearchterm + "&facet=" + facet;
+
+                searchURL = facetedurl;
+                params = {
+                    page: (currentpage - 1),
+                    items: resultsToDisplay,
+                    q: urlsearchterm,
+                    facet: facet
+                }
             }
 
             $.ajax({
                 url: searchURL,
+                data: params,
                 cache: false,
                 success: function(data) {
                     renderResults(data, true);
                 },
-                onFail: function(status) {
+                error: function(status) {
                     var json = {};
                     renderResults(json, false);
                 }
@@ -373,6 +403,23 @@ sakai.search = function() {
             sakai._search.reset();
         }
     };
+
+    /**
+     * Show the popup to create a new group.
+     */
+ 	var createNewGroup = function(){
+ 	    $(createGroupContainer).show();
+ 	    // Load the creategroup widget.
+ 	    sakai.creategroup.initialise();
+ 	};
+    
+    
+    ////////////////////
+    // Event Handlers //
+ 	////////////////////
+ 	$(searchAddGroupButton).bind("click", function(ev){
+ 	    createNewGroup();
+ 	});
 
     /**
      * Will reset the view to standard.

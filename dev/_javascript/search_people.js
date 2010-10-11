@@ -63,6 +63,7 @@ sakai.search = function() {
             messageClass : ".search_result_person_link_message",
             messageID : "search_result_person_link_message_",
             addToContactsLink : ".link_add_to_contacts",
+            addToContactsFiller : "link_add_to_contacts_",
             addToContactsDialog : '#add_to_contacts_dialog',
             sendmessageContainer : "#sendmessagecontainer"
         },
@@ -121,21 +122,21 @@ sakai.search = function() {
                 "all" : {
                     "category": "All People",
                     "searchurl": searchURLmap.allusers
-                }, 
+                },
                 "contacts" : {
                     "category": "My Contacts",
                     "searchurl": searchURLmap.mycontacts
                 },
-                "onlinecontacts" : {
-                    "category": "Contact Currently Online",
-                    "searchurl": searchURLmap.onlinecontacts
-                }, 
+                //"onlinecontacts" : {
+                //    "category": "Contacts Currently Online",
+                //    "searchurl": searchURLmap.onlinecontacts
+                //},
                 "invited" : {
-                    "category": "Invited",
+                    "category": "My Contact Invitations",
                     "searchurl": searchURLmap.invitedcontacts
                 },
                 "requested" : {
-                    "category": "Requested",
+                    "category": "Pending Invitations",
                     "searchurl": searchURLmap.pendingcontacts
                 }
             }
@@ -154,8 +155,15 @@ sakai.search = function() {
      * This method will show all the appropriate elements for when a search is executed.
      */
     var showSearchContent = function() {
-        $(searchConfig.global.searchTerm).text(sakai.api.Security.saneHTML(searchterm));
-        $(searchConfig.global.tagTerm).text(sakai.api.Security.saneHTML(tagterm));
+        $(searchConfig.global.searchTerm).html(sakai.api.Security.saneHTML(sakai.api.Security.escapeHTML(searchterm)));
+        if (tagterm) {
+            var tags = tagterm.replace("/tags/", "").split("/");
+            if(tags[0] === "directory"){
+                $(searchConfig.global.tagTerm).html($("#search_result_results_located_in").html() + " " + tags.splice(1,tags.length).toString().replace(/,/g, "<span class='search_directory_seperator'>&raquo;</span>"));
+            } else {
+                $(searchConfig.global.tagTerm).html($("#search_result_results_tagged_under").html() + " " + sakai.api.Security.saneHTML(tagterm.replace("/tags/", "")));
+            }
+        }
         $(searchConfig.global.numberFound).text("0");
         $(searchConfig.results.header).show();
         $(searchConfig.results.tagHeader).hide();
@@ -264,13 +272,13 @@ sakai.search = function() {
             } else if (results.results.length <= 0) {
                 $(searchConfig.global.numberFound).text(0);
             } else {
-                $(searchConfig.global.numberFound).text("thousands");
+                $(searchConfig.global.numberFound).text("more than 100");
             }
 
             // Reset the pager.
             $(searchConfig.global.pagerClass).pager({
                 pagenumber: currentpage,
-                pagecount: Math.ceil(results.total / resultsToDisplay),
+                pagecount: Math.ceil(Math.abs(results.total) / resultsToDisplay),
                 buttonClickCallback: pager_click_handler
             });
 
@@ -278,9 +286,15 @@ sakai.search = function() {
                 finaljson = mainSearch.preparePeopleForRender(results.results, finaljson);
             }
 
-            // If we don't have any results or they are less then the number we should display
-            // we hide the pager
-            if ((results.total < resultsToDisplay) || (results.results.length <= 0)) {
+            // if we're searching tags we need to hide the pager since it doesnt work too well
+            if (!results.total) {
+                results.total = resultsToDisplay;
+            }
+
+            // We hide the pager if we don't have any results or
+            // they are less then the number we should display
+            results.total = Math.abs(results.total);
+            if (results.total <= resultsToDisplay) {
                 $(searchConfig.global.pagerClass).hide();
             }
             else {
@@ -328,14 +342,14 @@ sakai.search = function() {
         if (facet){
             facetedurl = searchConfig.facetedConfig.facets[facet].searchurl;
         }
-        
+
         $(".faceted_category").removeClass("faceted_category_selected");
         if (facet) {
             $("#" + facet).addClass("faceted_category_selected");
         } else {
             $(".faceted_category:first").addClass("faceted_category_selected");
         }
-    
+
         if (isNaN(page)){
             page = 1;
         }
@@ -353,7 +367,7 @@ sakai.search = function() {
         //    Rebind everything
         mainSearch.addEventListeners(searchterm, searchwhere);
 
-        if (searchterm && searchterm !== $(searchConfig.global.text).attr("title").toLowerCase()) {
+        if (searchquery && searchterm && searchterm !== $(searchConfig.global.text).attr("title").toLowerCase()) {
             // Show and hide the correct elements.
             showSearchContent();
 
@@ -367,20 +381,40 @@ sakai.search = function() {
 
             // The search URL depends on the searchWhere variable
             var searchURL;
-            
+            var params = {};
+
             if(searchWhere === "mycontacts") {
-                searchURL = sakai.config.URL.SEARCH_USERS_ACCEPTED + "&q=" + urlsearchterm;
+                searchURL = sakai.config.URL.SEARCH_USERS_ACCEPTED;
+                params = {
+                    q: urlsearchterm
+                }
             }  else {
-                searchURL = sakai.config.URL.SEARCH_USERS + "?page=" + (currentpage - 1) + "&items=" + resultsToDisplay + "&q=" + urlsearchterm + "&sortOn=sakai:firstName&sortOrder=ascending";
+                searchURL = sakai.config.URL.SEARCH_USERS;
+                params = {
+                    page: (currentpage - 1),
+                    items: resultsToDisplay,
+                    q: urlsearchterm,
+                    sortOn: "basic/elements/lastName/@value",
+                    sortOrder: "ascending"
+                }
             }
 
             // Check if we want to search using a faceted link
-            if (facetedurl)
-                searchURL = facetedurl + "?page=" + (currentpage - 1) + "&items=" + resultsToDisplay + "&q=" + urlsearchterm + "&sortOn=sakai:firstName&sortOrder=ascending";
+            if (facetedurl){
+               searchURL = facetedurl;
+               params = {
+                    page: (currentpage - 1),
+                    items: resultsToDisplay,
+                    q: urlsearchterm,
+                    sortOn: "basic/elements/firstName/@value",
+                    sortOrder: "ascending"
+                }
+            }
 
             $.ajax({
                 cache: false,
                 url: searchURL,
+                data: params,
                 success: function(data) {
 
                     // Store found people in data cache
@@ -489,7 +523,7 @@ sakai.search = function() {
 
     /** A user want to make a new friend. */
     $(searchConfig.global.addToContactsLink).live("click", function(ev) {
-        contactclicked = this.id.split("_")[4];
+        contactclicked = (this.id.substring(searchConfig.global.addToContactsFiller.length));
         sakai.addtocontacts.initialise(contactclicked, mainSearch.removeAddContactLinks);
     });
 
@@ -510,13 +544,13 @@ sakai.search = function() {
     var doInit = function() {
 
         mainSearch = sakai._search(searchConfig, thisFunctionality);
-        
+
         // add the bindings
         mainSearch.addEventListeners();
 
         // display faceted panel
         mainSearch.addFacetedPanel();
-        
+
     };
     doInit();
 };

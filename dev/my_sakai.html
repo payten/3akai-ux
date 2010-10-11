@@ -3,7 +3,7 @@
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>Sakai 3 R&amp;D - __MSG__MY_SAKAI__</title>
+        <title></title>
 
         <!-- Sakai Core CSS -->
         <link rel="stylesheet" type="text/css" href="_css/FSS/fss-base.css" />
@@ -25,7 +25,8 @@
         <!-- Sakai Config JS -->
         <script type="text/javascript" src="_configuration/widgets.js"></script>
         <script type="text/javascript" src="/var/widgets.json?callback=sakai.storeWidgets"></script>
-        <script type="text/javascript" src="_configuration/config.js"></script>
+        <script type="text/javascript" src="/dev/_configuration/config.js"></script>
+        <script type="text/javascript" src="/dev/_configuration/config_custom.js"></script>
 
         <!-- Core 3rd-party JS -->
         <script type="text/javascript" src="_lib/jquery/jquery.js"></script>
@@ -57,6 +58,9 @@
 
     <body id="root" class="body-container fl-centered fl-container i18nable my-sakai">
 
+        <!-- TOP BANNER -->
+        <div id="top_banner"><!-- --></div>
+
         <!-- NAVIGATION -->
         <div id="widget_topnavigation" class="widget_inline"></div>
 
@@ -66,7 +70,25 @@
                 <div class="decor"><!-- --></div>
 
                 <!-- ENTITY WIDGET -->
-                <div id="widget_entity" class="widget_inline"></div>
+                <div id="widget_entity" class="widget_inline" style="float:left"></div>
+                <div id="mysakai_edit_page" style="display:none">
+                    <div id="mysakai_edit_page_container">
+                        <button class="s3d-button s3d-button-inline" id="mysakai_more_link">
+                            <span class="s3d-button-inner">
+                                <span class="s3d-button-icon-left"></span>
+                                <span class="s3d-button-inner-text">Edit Page</span>
+                                <span class="s3d-button-icon-right"></span>
+                            </span>
+                        </button>
+
+                        <div class="add_more_menu" id="mysakai_more_menu" style="display:none">
+                            <ul>
+                                <li id="mysakai_more_customize_page" class="more_option"><a href="javascript:;" class="s3d-action">Customize Page</a></li>
+                                <li id="mysakai_more_change_layout" class="more_option option_last"><a href="javascript:;" class="s3d-action">Change Layout</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- CONTAINER FOR THE CREATEGROUP CONTAINER -->
                 <div id="creategroupcontainer" style="display:none;">

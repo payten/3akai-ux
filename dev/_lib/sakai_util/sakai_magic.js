@@ -118,10 +118,12 @@ sakai.api.Communication.sendMessage = function(to, subject, body, category, repl
         if(toUsers) {
             toUsers += ",";
         }
-        if(typeof(userids) === "string") {
+        if(typeof(userids) === "string" && $.trim(userids) !== "") {
+            userids = $.trim(userids);
             toUsers += "internal:" + userids;
         } else if(typeof(userids) === "object") {
             toUsers += "internal:" + userids.join(",internal:");
+            toUsers = toUsers.replace(/internal\:\,/g, "");
         }
     };
 
@@ -184,14 +186,14 @@ sakai.api.Communication.sendMessage = function(to, subject, body, category, repl
     //////////////////
     // MAIN ROUTINE //
     //////////////////
-    
+
     var reqs = [];
     if (typeof(to) === "string") {
         var id = to;
         to = [];
         to[0] = id;
     }
-    
+
     if (typeof(to) === "object") {
         for (var i = 0; i < to.length; i++) {
             reqs[reqs.length] = {
@@ -206,8 +208,8 @@ sakai.api.Communication.sendMessage = function(to, subject, body, category, repl
         if (typeof callback === "function") {
             callback(false, xhr);
         }
-    } 
-    
+    }
+
     $.ajax({
        url: "/system/batch",
        method: "POST",
@@ -221,7 +223,7 @@ sakai.api.Communication.sendMessage = function(to, subject, body, category, repl
            if (!sendDone) {
                doSendMessage();
            }
-       } 
+       }
     });
 
 };
@@ -376,9 +378,8 @@ sakai.api.Groups = sakai.api.Groups || {};
 
 /**
  * Public function used to set joinability and visibility permissions for a
- * group with groupid.  Currently, visibility is only partially complete
- * (see SAKIII-853, depends on KERN-1064) and joinability is not implemented
- * at all (depends on KERN-1019).
+ * group with groupid.
+ *
  * @param {String} groupid The id of the group that needs permissions set
  * @param {String} joinable The joinable state for the group (from sakai.config.Permissions.Groups)
  * @param {String} visible The visibile state for the group (from sakai.config.Permissions.Groups)
@@ -396,8 +397,36 @@ sakai.api.Groups.setPermissions = function (groupid, joinable, visible, callback
         var jackrabbitUrl = "/system/userManager/group/" + groupid + ".update.html";
         var homeFolderUrl = "/~" + groupid + ".modifyAce.html";
 
-        // determine visibility state (joinability needs to be checked later, depends on KERN-1019)
-        if(visible == sakai.config.Permissions.Groups.visible.members) {
+        // determine visibility state
+        if(visible == sakai.config.Permissions.Groups.visible.managers) {
+            // visible to managers only
+            batchRequests.push({
+                "url": jackrabbitUrl,
+                "method": "POST",
+                "parameters": {
+                    ":viewer": groupid + "-managers",
+                    ":viewer@Delete": "everyone",
+                    "sakai:group-visible": visible,
+                    "sakai:group-joinable": joinable
+                }
+            });
+            batchRequests.push({
+                "url": homeFolderUrl,
+                "method": "POST",
+                "parameters": {
+                    "principalId": "everyone",
+                    "privilege@jcr:read": "denied"
+                }
+            });
+            batchRequests.push({
+                "url": homeFolderUrl,
+                "method": "POST",
+                "parameters": {
+                    "principalId": "anonymous",
+                    "privilege@jcr:read": "denied"
+                }
+            });
+        } else if(visible == sakai.config.Permissions.Groups.visible.members) {
             // visible to members only
             batchRequests.push({
                 "url": jackrabbitUrl,
@@ -539,9 +568,11 @@ sakai.api.Groups.isCurrentUserAManager = function (groupid) {
 
 /**
  * Determines whether the current user is a member of the given group.
+ * Managers are considered members of a group. If the current user is a manager
+ * of the group, this function will return true.
  *
  * @param groupid {String} id of the group to check
- * @return true if the current user is a member, false otherwise
+ * @return true if the current user is a member or manager, false otherwise
  */
 sakai.api.Groups.isCurrentUserAMember = function (groupid) {
     if(!groupid || typeof(groupid) !== "string") {
@@ -558,34 +589,185 @@ sakai.api.Groups.isCurrentUserAMember = function (groupid) {
 
 
 /**
- * Adds logged in user to a specified group
+ * Adds the specified user to a specified group
  *
- * @param {String} groupID The ID of the group we would like the user to become
- * a member of
+ * @param {String} userID The ID of the user to add to the group
+ * @param {String} groupID The ID of the group to add the user to
  * @param {Function} callback Callback function executed at the end of the
- * operation
- * @returns true or false
- * @type Boolean
+ * operation - callback args:
+ * -- {Boolean} success true if the operation succeeded, false if it failed
+ * -- {Object} data data returned on successful operation, xhr on failed operation
  */
-sakai.api.Groups.addToGroup = function(groupID, callback) {
-
+sakai.api.Groups.addToGroup = function(userID, groupID, callback) {
+    if (userID && typeof(userID) === "string" &&
+        groupID && typeof(groupID) === "string") {
+        // add user to group
+        $.ajax({
+            url: "/system/userManager/group/" + groupID + ".update.json",
+            data: {
+                "_charset_":"utf-8",
+                ":member": userID
+            },
+            type: "POST",
+            success: function (data) {
+                if (typeof(callback) === "function") {
+                    callback(true, data);
+                }
+            },
+            error: function (xhr, textStatus, thrownError) {
+                if (typeof(callback) === "function") {
+                    callback(false, xhr);
+                }
+            }
+        });
+    } else {
+        if (typeof(callback) === "function") {
+            callback(false, {"textStatus": "Invalid arguments sent to sakai.api.Groups.addToGroup()"});
+        }
+    }
 };
 
 
 /**
- * Removes logged in user from a specified group
+ * Removes the specified user from a specified group
  *
- * @param {String} groupID The ID of the group we would like the user to be
- * removed from
+ * @param {String} userID The ID of the user to remove from the group
+ * @param {String} groupID The ID of the group to remove the user from
  * @param {Function} callback Callback function executed at the end of the
- * operation
- *
- * @returns true or false
- * @type Boolean
+ * operation - callback args:
+ * -- {Boolean} success true if the operation succeeded, false if it failed
+ * -- {Object} data data returned on successful operation, xhr on failed operation
  */
-sakai.api.Groups.removeFromGroup = function(groupID, callback) {
-
+sakai.api.Groups.removeFromGroup = function(userID, groupID, callback) {
+    if (userID && typeof(userID) === "string" &&
+        groupID && typeof(groupID) === "string") {
+        $.ajax({
+            url: "/system/userManager/group/" + groupID + ".update.json",
+            data: {
+                "_charset_":"utf-8",
+                ":member@Delete": userID
+            },
+            type: "POST",
+            success: function (data) {
+    	        if (typeof(callback) === "function") {
+                    callback(true, data);
+                }
+            },
+            error: function (xhr, textStatus, thrownError) {
+                if (typeof(callback) === "function") {
+                    callback(false, xhr);
+                }
+            }
+        });
+    } else {
+        if (typeof(callback) === "function") {
+            callback(false, {"textStatus": "Invalid arguments sent to sakai.api.Groups.removeFromGroup()"});
+        }
+    }
 };
+
+
+/**
+ * Creates a join request for the given user for the specified group
+ *
+ * @param {String} userID ID of the user that wants to join the group
+ * @param {String} groupID ID of the group to the user wants to join
+ * @param {Function} callback Callback function executed at the end of the
+ * operation - callback args:
+ *  -- {Boolean} success True if operation succeeded, false otherwise
+ *  -- {Object} error null if successful, xhr data otherwise
+ */
+sakai.api.Groups.addJoinRequest = function (userID, groupID, callback) {
+    if (userID && typeof(userID) === "string" &&
+        groupID && typeof(groupID) === "string") {
+        $.ajax({
+            url: "/~" + groupID + "/joinrequests.create.html?userid=" + userID,
+            type: "POST",
+            success: function (data) {
+                if (typeof(callback) === "function") {
+                    callback(true, null);
+                }
+            },
+            error: function (xhr, textStatus, thrownError) {
+                if (typeof(callback) === "function") {
+                    callback(false, xhr);
+                }
+            }
+        });
+    } else {
+        if (typeof(callback) === "function") {
+            callback(false, {"textStatus": "Invalid arguments sent to sakai.api.Groups.addJoinRequest()"});
+        }
+    }
+};
+
+
+sakai.api.Groups.removeJoinRequest = function (userID, groupID, callback) {
+    if (userID && typeof(userID) === "string" &&
+        groupID && typeof(groupID) === "string") {
+        $.ajax({
+            url: "/~" + groupID + "/joinrequests/" + userID,
+            data: {
+                ":operation": "delete"
+            },
+            type: "POST",
+            success: function (data) {
+                if (typeof(callback) === "function") {
+                    callback(true, null);
+                }
+            },
+            error: function (xhr, textStatus, thrownError) {
+                if (typeof(callback) === "function") {
+                    callback(false, xhr);
+                }
+            }
+        });
+    } else {
+        if (typeof(callback) === "function") {
+            callback(false, {"textStatus": "Invalid arguments sent to sakai.api.Groups.removeJoinRequest()"});
+        }
+    }
+};
+
+
+/**
+ * Returns all join requests for the specified group
+ *
+ * @param {String} groupID ID of the group to fetch join requests for
+ * @param {Function} callback Callback function executed at the end of the
+ * @param {Boolean} async Optional argument to set whether this operation is
+ *   asynchronous or not. Default is true.
+ * operation - callback args:
+ *  -- {Boolean} success true if operation succeeded, false otherwise
+ *  -- {Object} joinrequest data if successful, xhr data otherwise
+ */
+sakai.api.Groups.getJoinRequests = function (groupID, callback, async) {
+    if (groupID && typeof(groupID) === "string") {
+        if (async == null) {
+            async = true;
+        }
+        $.ajax({
+            url: "/var/joinrequests/list.json?groupId=" + groupID,
+            type: "GET",
+            async: async,
+            success: function (data) {
+                if (typeof(callback) === "function") {
+                    callback(true, data);
+                }
+            },
+            error: function (xhr, textStatus, thrownError) {
+                if (typeof(callback) === "function") {
+                    callback(false, xhr);
+                }
+            }
+        });
+    } else {
+        if (typeof(callback) === "function") {
+            callback(false, {"textStatus": "Invalid arguments sent to sakai.api.Groups.getJoinRequests()"});
+        }
+    }
+};
+
 
 /**
  * Returns all the users who are member of a certain group
@@ -605,7 +787,25 @@ sakai.api.Groups.getMembers = function(groupID, callback) {
 
 
 
+/**
+ * @class Skinning
+ *
+ * @description
+ * <p>Skinning support for Sakai</p>
+ */
+sakai.api.Skinning = sakai.api.Skinning || {};
 
+/**
+ * loadSkins
+ * Loads in any skins defined in sakai.config.skinCSS
+ */
+sakai.api.Skinning.loadSkinsFromConfig = function() {
+    if (sakai.config.skinCSS && sakai.config.skinCSS.length) {
+        $(sakai.config.skinCSS).each(function(i,val) {
+            $.Load.requireCSS(val);
+        });
+    }
+};
 
 /**
  * @class i18n
@@ -724,7 +924,7 @@ sakai.api.i18n.init = function(){
                 return false;
             }
         }
-        if ($.inArray(currentPage, sakai.config.requireProcessing) === -1){
+        if ($.inArray(currentPage, sakai.config.requireProcessing) === -1 && window.location.pathname.substring(0, 2) !== "/~"){
             sakai.api.Security.showPage();
         }
         sakai.api.Widgets.Container.setReadyToLoad(true);
@@ -875,11 +1075,22 @@ sakai.api.i18n.General.process = function(toprocess, localbundle, defaultbundle)
         return "";
     }
 
-    var expression = new RegExp("__MSG__(.*?)__", "gm"), processed = "", lastend = 0;
+    var expression = new RegExp(".{1}__MSG__(.*?)__", "gm"), processed = "", lastend = 0;
+
     while(expression.test(toprocess)) {
         var replace = RegExp.lastMatch;
         var lastParen = RegExp.lastParen;
-        var toreplace = sakai.api.i18n.General.getValueForKey(lastParen);
+        var quotes = "";
+
+        // need to add quotations marks if key is adjacent to an equals sign which means its probably missing quotes - IE
+        if (replace.substr(0,2) !== "__"){
+            if (replace.substr(0,1) === "="){
+                quotes = '"';
+            }
+            replace = replace.substr(1, replace.length);
+        }
+
+        var toreplace = quotes + sakai.api.i18n.General.getValueForKey(lastParen) + quotes;
         processed += toprocess.substring(lastend,expression.lastIndex-replace.length) + toreplace;
         lastend = expression.lastIndex;
     }
@@ -967,13 +1178,6 @@ sakai.api.i18n.Widgets.getValueForKey = function(widgetname, locale, key) {
 sakai.api.l10n = sakai.api.l10n || {};
 
 /**
- * Start the general l10n process
- */
-sakai.api.l10n.init = function() {
-
-};
-
-/**
  * Get the current logged in user's locale
  *
  * @return {String} The user's locale string in XXX format
@@ -983,18 +1187,23 @@ sakai.api.l10n.getUserLocale = function() {
 };
 
 /**
- * Get a site's locale
- *
- * @returns {String} The site's locale string in XXX format
+ * Parse a date string into a date object and adjust that date to the timezone
+ * set by the current user.
+ * @param {Object} dateString    date to parse in the format 2010-10-06T14:45:54+01:00
  */
-sakai.api.l10n.getSiteLocale = function() {
-
-};
-
-
-
-
-
+sakai.api.l10n.parseDateString = function(dateString){
+    var d = new Date();
+    d.setFullYear(parseInt(dateString.substring(0,4),10));
+    d.setMonth(parseInt(dateString.substring(5,7),10) - 1);
+    d.setDate(parseInt(dateString.substring(8,10),10));
+    d.setHours(parseInt(dateString.substring(11,13),10));
+    d.setMinutes(parseInt(dateString.substring(14,16),10));
+    d.setSeconds(parseInt(dateString.substring(17,19),10));
+    // Localization
+    d.setTime(d.getTime() - (parseInt(dateString.substring(19,22),10)*60*60*1000));
+    d.setTime(d.getTime() + sakai.data.me.user.locale.timezone.GMT*60*60*1000);
+    return d;
+}
 
 
 
@@ -1022,7 +1231,7 @@ sakai.api.Security = sakai.api.Security || {};
  */
 sakai.api.Security.escapeHTML = function(inputString){
     if (inputString) {
-        return $("<div/>").text(inputString).html();
+        return $("<div/>").text(inputString).html().replace(/"/g,"&quot;");
     } else {
         return "";
     }
@@ -1081,7 +1290,10 @@ sakai.api.Security.saneHTML = function(inputHTML) {
                         switch (atype) {
                             case html4.atype.SCRIPT:
                             case html4.atype.STYLE:
-                                if ((value === "display: none;") || (value === "display:none;") || (value === "display: none") || (value === "display:none")) {
+                                if ((value === "display: none;") || (value === "display:none;") || (value === "display: none") || 
+                                    (value === "display:none") || (value.split(":")[0] === "background-color") || 
+                                    (value.split(":")[0] === "color") || (value.split(":")[0] === "font-size") ||
+                                    (value.split(":")[0] === "font-weight") || (value.split(":")[0] === "font-style")) {
                                     value = value;
                                 } else {
                                     value = null;
@@ -1199,6 +1411,14 @@ sakai.api.Security.showPage = function(){
     } else {
         $('html').addClass("requireUser");
     }
+    sakai.api.Skinning.loadSkinsFromConfig();
+    // Put the title inside the page
+    var pageTitle = sakai.api.i18n.General.getValueForKey(sakai.config.PageTitles.prefix);
+    if (sakai.config.PageTitles.pages[window.location.pathname]){
+        pageTitle += sakai.api.i18n.General.getValueForKey(sakai.config.PageTitles.pages[window.location.pathname]);
+    }
+    document.title = pageTitle;
+    // Show the actual page content
     $('body').show();
 };
 
@@ -2006,7 +2226,7 @@ sakai.api.User.loadMeData = function(callback) {
 
             // Log error
             fluid.log("sakai.api.User.loadMeData: Could not load logged in user data from the me service!");
-            
+
             if (xhr.status === 500 && window.location.pathname !== "/dev/500.html"){
                 document.location = "/dev/500.html";
             }
@@ -2141,6 +2361,41 @@ sakai.api.User.getShortDescription = function(profile) {
     return $.trim(shortDesc);
 };
 
+sakai.api.User.getContacts = function(callback) {
+    if (sakai.data.me.mycontacts) {
+        if ($.isFunction(callback)) {
+            callback();
+        }
+    } else {
+        // has to be synchronous
+        $.ajax({
+            url: sakai.config.URL.SEARCH_USERS_ACCEPTED,
+            data: {"q": "*"},
+            async: false,
+            success: function(data) {
+                sakai.data.me.mycontacts = data.results;
+                if ($.isFunction(callback)) {
+                    callback();
+                }
+            }
+        });
+    }
+};
+
+sakai.api.User.checkIfConnected = function(userid) {
+    var ret = false;
+    sakai.api.User.getContacts(function() {
+        for (var i in sakai.data.me.mycontacts) {
+            if (i && sakai.data.me.mycontacts.hasOwnProperty(i)) {
+                if (sakai.data.me.mycontacts[i].user === userid) {
+                    ret = true;
+                }
+            }
+        }
+    });
+    return ret;
+};
+
 /**
  * @class Util
  *
@@ -2246,6 +2501,129 @@ sakai.api.Util.convertToHumanReadableFileSize = function(filesize) {
 };
 
 /**
+ * Set the permissions for an array of uploaded files or links
+ * @param {String} permissionValue either 'public', 'everyone', 'group' or 'private'
+ * @param {Array} filesArray Array of files containing the 'hashpath' property per file. This hashpath is the resourceID of the file
+ * @param {Function} callback Function to call when the permissions have been saved or failed to save.
+ *                   The callback function is provided with a Boolean. True = permissions successfully set, False = permissions not set (error)
+ */
+sakai.api.Util.setFilePermissions = function(permissionValue, filesArray, callback, groupID){
+    // Check which value was selected and fill in the data object accordingly
+    var data = [];
+    for (var file in filesArray) {
+        if (filesArray.hasOwnProperty(file)) {
+            var contentPath = "/p/" + filesArray[file].hashpath;
+            switch (permissionValue) {
+                // Logged in only
+                case "everyone":
+                    var item = {
+                        "url": contentPath + ".members.html",
+                        "method": "POST",
+                        "parameters": {
+                            ":viewer": "everyone",
+                            ":viewer@Delete": "anonymous"
+                        }
+                    };
+                    data[data.length] = item;
+                    var item = {
+                        "url": contentPath + ".modifyAce.html",
+                        "method": "POST",
+                        "parameters": {
+                            "principalId": "everyone",
+                            "privilege@jcr:read": "granted"
+                        }
+                    };
+                    data[data.length] = item;
+                    var item = {
+                        "url": contentPath + ".modifyAce.html",
+                        "method": "POST",
+                        "parameters": {
+                            "principalId": "anonymous",
+                            "privilege@jcr:read": "denied"
+                        }
+                    };
+                    data[data.length] = item;
+                    break;
+                // Public
+                case "public":
+                    var item = {
+                        "url": contentPath + ".members.html",
+                        "method": "POST",
+                        "parameters": {
+                            ":viewer": ["everyone", "anonymous"]
+                        }
+                    };
+                    data[data.length] = item;
+                    var item = {
+                        "url": contentPath + ".modifyAce.html",
+                        "method": "POST",
+                        "parameters": {
+                            "principalId": ["everyone", "anonymous"],
+                            "privilege@jcr:read": "granted"
+                        }
+                    };
+                    data[data.length] = item;
+                    break;
+                // Managers and viewers only
+                case "private":
+                    var item = {
+                        "url": contentPath + ".members.html",
+                        "method": "POST",
+                        "parameters": {
+                            ":viewer@Delete": ["anonymous", "everyone"]
+                        }
+                    };
+                    data[data.length] = item;
+                    var item = {
+                        "url": contentPath + ".modifyAce.html",
+                        "method": "POST",
+                        "parameters": {
+                            "principalId": ["everyone", "anonymous"],
+                            "privilege@jcr:read": "denied"
+                        }
+                    };
+                    data[data.length] = item;
+                    break;
+                case "group":
+                    var item = {
+                        "url": contentPath + ".members.html",
+                        "method": "POST",
+                        "parameters": {
+                            ":viewer": groupID
+                        }
+                    };
+                    data[data.length] = item;
+                    var item = {
+                        "url": contentPath + ".modifyAce.html",
+                        "method": "POST",
+                        "parameters": {
+                            "principalId": ["everyone", "anonymous"],
+                            "privilege@jcr:read": "denied"
+                        }
+                    };
+                    data[data.length] = item;
+                    break;
+            }
+        }
+    }
+    $.ajax({
+        url: sakai.config.URL.BATCH,
+        traditional: true,
+        type: "POST",
+        cache: false,
+        data: {
+            requests: $.toJSON(data)
+        },
+        success: function(data){
+            callback(true);
+        },
+        error: function(xhr, textStatus, thrownError){
+            callback(false);
+        }
+    });
+}
+
+/**
  * Formats a comma separated string of text to an array of usable tags
  * Filters out unwanted tags (eg empty tags)
  * Returns the array of tags, if no tags were provided or none were valid an empty array is returned
@@ -2269,7 +2647,7 @@ sakai.api.Util.formatTags = function(inputTags){
     else {
         return [];
     }
-}
+};
 
 /**
  * Add and delete tags from an entity
@@ -2286,37 +2664,35 @@ sakai.api.Util.formatTags = function(inputTags){
  */
 
 sakai.api.Util.tagEntity = function(tagLocation, newTags, currentTags, callback) {
-    
-        var setTags = function(tagLocation, tags, callback) {
+    var setTags = function(tagLocation, tags, callback) {
         if (tags.length) {
-            $(tags).each(function(i,val) {
-                // check to see that the tag exists
-                $.ajax({
-                    url: "/tags/" + val + ".tagged.json",
-                    success: function(data) {
-                        doSetTag(val);
-                    },
-                    // if it doesn't exist, create the tag before setting it
-                    error: function(data) {
-                        $.ajax({
-                            url: "/tags/" + val,
-                            data: {
-                                "sakai:tag-name": val,
-                                "sling:resourceType": "sakai/tag"
-                            },
-                            type: "POST",
-                            success: function(data) {
-                                doSetTag(val);
-                            },
-                            error: function(xhr, response) {
-                                fluid.log(val + " failed to be created");
-                                if ($.isFunction(callback)) {
-                                    callback();
-                                }
-                            }
-                        });
+            var requests = [];
+            $(tags).each(function(i, val){
+                requests.push({
+                    "url": "/tags/" + val,
+                    "method": "POST",
+                    "parameters": {
+                        "sakai:tag-name": val,
+                        "sling:resourceType": "sakai/tag"
                     }
                 });
+            });
+            $.ajax({
+                url: sakai.config.URL.BATCH,
+                traditional: true,
+                type: "POST",
+                data: {
+                    requests: $.toJSON(requests)
+                },
+                success: function() {
+                    doSetTags(tags);
+                },
+                error: function(xhr, response){
+                    fluid.log(val + " failed to be created");
+                    if ($.isFunction(callback)) {
+                        callback();
+                    }
+                }
             });
         } else {
             if ($.isFunction(callback)) {
@@ -2325,21 +2701,32 @@ sakai.api.Util.tagEntity = function(tagLocation, newTags, currentTags, callback)
         }
 
         // set the tag on the entity
-        var doSetTag = function(val) {
+        var doSetTags = function(tags) {
+            var requests = [];
+            $(tags).each(function(i,val) {
+                requests.push({
+                    "url": tagLocation,
+                    "method": "POST",
+                    "parameters": {
+                        "key": "/tags/" + val,
+                        ":operation": "tag"
+                    }
+                });
+            });
             $.ajax({
-                url: tagLocation,
-                data: {
-                    "key": "/tags/" + val,
-                    ":operation": "tag"
-                },
+                url: sakai.config.URL.BATCH,
+                traditional: true,
                 type: "POST",
-                error: function(xhr, response) {
-                    fluid.log(tagLocation + " failed to be tagged as " + val);
+                data: {
+                    requests: $.toJSON(requests)
                 },
-                complete: function() {
+                success: function() {
                     if ($.isFunction(callback)) {
                         callback();
                     }
+                },
+                error: function(xhr, response){
+                    fluid.log(tagLocation + " failed to be tagged as " + val);
                 }
             });
         };
@@ -2388,20 +2775,28 @@ sakai.api.Util.tagEntity = function(tagLocation, newTags, currentTags, callback)
             }
         }
     };
-    
+
     var tagsToAdd = [];
     var tagsToDelete = [];
     // determine which tags to add and which to delete
     $(newTags).each(function(i,val) {
-        val = $.trim(val);
+        val = $.trim(val).replace(/#/g,"");
         if (val && $.inArray(val,currentTags) == -1) {
-            tagsToAdd.push(val);
+            if (sakai.api.Security.escapeHTML(val) === val && val.length) {
+                if ($.inArray(val, tagsToAdd) < 0) {
+                    tagsToAdd.push(val);
+                }
+            }
         }
     });
     $(currentTags).each(function(i,val) {
-        val = $.trim(val);
+        val = $.trim(val).replace(/#/g,"");
         if (val && $.inArray(val,newTags) == -1) {
-            tagsToDelete.push(val);
+            if (sakai.api.Security.escapeHTML(val) === val && val.length) {
+                if ($.inArray(val, tagsToDelete) < 0) {
+                    tagsToDelete.push(val);
+                }
+            }
         }
     });
     deleteTags(tagLocation, tagsToDelete, function() {
@@ -2579,6 +2974,81 @@ sakai.api.Util.parseSakaiDate = function(dateInput) {
 
 
 /**
+ * Parse an RFC822 date into a JavaScript date object.
+ * Examples of RFC822 dates:
+ * Wed, 02 Oct 2002 13:00:00 GMT
+ * Wed, 02 Oct 2002 13:00:00 +0200
+ *
+ * @param {String} dateString
+ * @return {Date}  a Javascript date object
+ */
+sakai.api.Util.parseRFC822Date = function(dateString) {
+
+    var dateOutput = new Date();
+
+    var dateElements = dateString.split(" ");
+    var dateElementsTime = dateElements[4].split(":");
+
+    var months = {"Jan":0,"Feb":1,"Mar":2,"Apr":3,"May":4,"Jun":5,"Jul":6,"Aug":7,"Sep":8,"Oct":9,"Nov":10,"Dec":11};
+    var zones = {
+        "UT": 0,
+        "GMT": 0,
+        "EST": -5,
+        "EDT": -4,
+        "CST": -6,
+        "CDT": -5,
+        "MST": -7,
+        "MDT": -6,
+        "PST": -8,
+        "PDT": -7,
+        "Z": 0,
+        "A":-1,
+        "M":-12,
+        "N": 1,
+        "Y": 12
+    }
+
+    // Set day
+    if (dateElements[1]) { dateOutput.setDate(Number(dateElements[1])); }
+
+    //Set month
+    if (dateElements[2]) { dateOutput.setMonth(months[dateElements[2]]); }
+
+    // Set year
+    if (dateElements[3]) { dateOutput.setFullYear(Number(dateElements[3])); }
+
+    // Set hour
+    if (dateElements[4] && dateElementsTime[0]) {
+
+        // Take timezone offset into account
+        if (zones[dateElements[5]]) {
+            dateOutput.setHours(dateElementsTime[0] + zones[dateElements[5]]);
+        } else if (!isNaN(parseInt(dateElements[5], 10))) {
+            var zoneTimeHour = Number(dateElements[5].substring(0,2));
+            dateOutput.setHours(Number(dateElementsTime[0]) + zoneTimeHour);
+        }
+    }
+
+    // Set minutes
+    if (dateElements[4] && dateElementsTime[1]) {
+
+        if (!isNaN(parseInt(dateElements[5], 10))) {
+            var zoneTimeMinutes = Number(dateElements[5].substring(3,4));
+            dateOutput.setMinutes(Number(dateElementsTime[1]) + zoneTimeMinutes);
+        } else {
+            dateOutput.setMinutes(Number(dateElementsTime[1]));
+        }
+    }
+
+    // Set seconds
+    if (dateElements[4] && dateElementsTime[2]) { dateOutput.setSeconds(dateElementsTime[2]); }
+
+    return dateOutput;
+
+}
+
+
+/**
  * Removes JCR or Sling properties from a JSON object
  * @param {Object} i_object The JSON object you want to remove the JCR object from
  * @returns void
@@ -2670,6 +3140,22 @@ sakai.api.Util.stripTags = function(s) {
 
 
 };
+
+/**
+ * Shorten a string if it is too long, otherwise return the string as is
+ * @param {Object} s    String to shorten
+ * @param {Object} maxSize    Maximum length the string can have
+ */
+sakai.api.Util.shortenString = function(s, maxSize){
+    if (s && typeof s === "string"){
+        if (s.length > maxSize){
+            return s.substring(0, maxSize - 3) + "...";
+        } else {
+            return s;
+        }
+    }
+    return s;
+}
 
 
 /**
@@ -2909,6 +3395,8 @@ sakai.api.Widgets.loadWidgetData = function(id, callback) {
  * Will be used for detecting widget declerations inside the page and load those
  * widgets into the page
  */
+sakai.api.Widgets.cssCache = {};
+
 sakai.api.Widgets.widgetLoader = {
 
     loaded : [],
@@ -3011,9 +3499,18 @@ sakai.api.Widgets.widgetLoader = {
 
             var CSSTags = locateTagAndRemove(content, "link", "href");
             content = CSSTags.content;
+            var stylesheets = [];
 
             for (var i = 0, j = CSSTags.URL.length; i<j; i++) {
-                $.Load.requireCSS(CSSTags.URL[i]);
+                // SAKIII-1524 - Instead of loading all of the widget CSS files independtly,
+                // we collect all CSS file declarations from all widgets in the current pass
+                // of the WidgetLoader. These will then be loaded in 1 go.
+                if ($.browser.msie && !sakai.api.Widgets.cssCache[CSSTags.URL[i]]) {
+                    stylesheets.push(CSSTags.URL[i]);
+                    sakai.api.Widgets.cssCache[CSSTags.URL[i]] = true;
+                } else {
+                    $.Load.requireCSS(CSSTags.URL[i]);
+                }
             }
 
             var JSTags = locateTagAndRemove(content, "script", "src");
@@ -3031,6 +3528,8 @@ sakai.api.Widgets.widgetLoader = {
             for (var JSURL = 0, l = JSTags.URL.length; JSURL < l; JSURL++){
                 $.Load.requireJS(JSTags.URL[JSURL]);
             }
+            
+            return stylesheets;
 
         };
 
@@ -3097,6 +3596,7 @@ sakai.api.Widgets.widgetLoader = {
                                 requests: $.toJSON(bundles)
                             },
                             success: function(data){
+                                var stylesheets = [];
                                 for (var i = 0, j = requestedURLsResults.length; i < j; i++) {
                                     // Current widget name
                                     var widgetName = requestedURLsResults[i].url.split("/")[2];
@@ -3134,7 +3634,59 @@ sakai.api.Widgets.widgetLoader = {
                                     } else {
                                         translated_content = sakai.api.i18n.General.process(requestedURLsResults[i].body, sakai.data.i18n.localBundle, sakai.data.i18n.defaultBundle);
                                     }
-                                    sethtmlover(translated_content, widgets, widgetName);
+                                    var ss = sethtmlover(translated_content, widgets, widgetName);
+                                    for (var s = 0; s < ss.length; s++){
+                                        stylesheets.push(ss[s]);
+                                    }
+                                }
+                                // SAKIII-1524 - IE has a limit of maximum 32 CSS files (link or style tags). When
+                                // a lot of widgets are loaded into 1 page, we can easily hit that limit. Therefore,
+                                // we adjust the widgetloader to load all CSS files of 1 WidgetLoader pass in 1 style
+                                // tag filled with import statements
+                                if ($.browser.msie && stylesheets.length > 0) {
+                                    var numberCSS = $("head style, head link").length;
+                                    // If we have more than 30 stylesheets, we will merge all of the previous style
+                                    // tags we have created into the lowest possible number
+                                    if (numberCSS >= 30){
+                                        $("head style").each(function(index){
+                                            if ($(this).attr("title") && $(this).attr("title") === "sakai_widgetloader") {
+                                                $(this).remove();
+                                            }
+                                        });
+                                    }
+                                    var allSS = [];
+                                    var newSS = document.createStyleSheet();
+                                    newSS.title = "sakai_widgetloader";
+                                    var totalImportsInCurrentSS = 0;
+                                    // Merge in the previously created style tags
+                                    if (numberCSS >= 30){
+                                        for (var s in sakai.api.Widgets.cssCache){
+                                             if (totalImportsInCurrentSS >= 30){
+                                                 allSS.push(newSS);
+                                                 newSS = document.createStyleSheet();
+                                                 newSS.title = "sakai_widgetloader";
+                                                 totalImportsInCurrentSS = 0;
+                                             }    
+                                             newSS.addImport(s);
+                                             totalImportsInCurrentSS++;
+                                        }
+                                    }
+                                    // Add in the stylesheets declared in the widgets loaded
+                                    // in the current pass of the WidgetLoader
+                                    for (var s = 0, ss = stylesheets.length; s < ss; s++) {
+                                        if (totalImportsInCurrentSS >= 30){
+                                        	allSS.push(newSS);
+                                            newSS = document.createStyleSheet();
+                                            newSS.title = "sakai_widgetloader";
+                                            totalImportsInCurrentSS = 0;
+                                        }
+                                        newSS.addImport(stylesheets[s]);
+                                    }
+                                    allSS.push(newSS);
+                                    // Add the style tags to the document
+                                    for (var s = 0; s < allSS.length; s++) {
+                                        $("head").append(allSS[s]);
+                                    }
                                 }
                             }
                         });
@@ -3383,10 +3935,15 @@ sakai.api.Widgets.isOnDashboard = function(tuid) {
     * @param {String|Object} templateElement The name of the template HTML ID or a jQuery selection object.
     * @param {Object} templateData JSON object containing the template data
     * @param {Object} outputElement (Optional) jQuery element in which the template needs to be rendered
+    * @param {Boolean} doSanitize (Optional) perform html sanitization. Defaults to true
     */
-    $.TemplateRenderer = function (templateElement, templateData, outputElement) {
+    $.TemplateRenderer = function (templateElement, templateData, outputElement, doSanitize) {
 
         var templateName;
+        var sanitize = true;
+        if (doSanitize !== undefined) {
+            sanitize = doSanitize;
+        }
 
         // The template name and the context object should be defined
         if(!templateElement || !templateData){
@@ -3429,7 +3986,9 @@ sakai.api.Widgets.isOnDashboard = function(tuid) {
         var render = templateCache[templateName].process(templateData);
 
         // Run the rendered html through the sanitizer
-        render = sakai.api.Security.saneHTML(render);
+        if (sanitize) {
+            render = sakai.api.Security.saneHTML(render);
+        }
 
         // Check it there was an output element defined
         // If so, put the rendered template in there
@@ -3637,10 +4196,40 @@ sakai.api.Widgets.isOnDashboard = function(tuid) {
     };
 
     /**
+     * Check to see if the tag+attributes combination currently exists in the DOM
+     *
+     * @param {Object} tagname
+     *  Name of the tag we want to insert. This is supposed to be "link" or "script".
+     * @param {Object} attributes
+     *  A JSON object that contains all of the attributes we want to attach to the tag we're
+     *  inserting. The keys in this object are the attribute names, the values in the object
+     *  are the attribute values
+     * @return {jQuery|Boolean} returns the selected objects if found, otherwise returns false
+     */
+    var checkForTag = function(tagname, attributes) {
+        var selector = tagname;
+        for (var i in attributes) {
+            if (i && attributes.hasOwnProperty(i)) {
+                selector += "[" + i + "*=" + attributes[i] + "]";
+            }
+        }
+        if ($(selector).length) return $(selector);
+        else return false;
+    };
+
+    /**
      * Load a JavaScript file into the document
      * @param {String} URL of the JavaScript file relative to the parent dom.
      */
     $.Load.requireJS = function(url) {
+        var attributes = {"src": url, "type": "text/javascript"};
+        var existingScript = checkForTag("script", attributes);
+        if (existingScript) {
+            // Remove the existing script so we can place in a new one
+            // We need to do this otherwise the init functions that need to be called
+            // at the end of widgets never get called again
+            existingScript.remove();
+        }
         insertTag("script", {"src" : url, "type" : "text/javascript"});
     };
 
@@ -3649,7 +4238,12 @@ sakai.api.Widgets.isOnDashboard = function(tuid) {
      * @param {String} URL of the CSS file relative to the parent dom.
      */
     $.Load.requireCSS = function(url) {
-        insertTag("link", {"href" : url, "type" : "text/css", "rel" : "stylesheet"});
+        var attributes = {"href" : url, "type" : "text/css", "rel" : "stylesheet"};
+        var existingStylesheet = checkForTag("link", attributes);
+        // if the stylesheet already exists, don't add it again
+        if (!existingStylesheet) {
+            insertTag("link", attributes);
+        }
     };
 
 })(jQuery);
@@ -3722,9 +4316,6 @@ sakai.api.autoStart = function() {
 
             // Start i18n
             sakai.api.i18n.init();
-
-            // Start l10n
-            sakai.api.l10n.init();
 
         });
 

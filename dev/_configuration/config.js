@@ -28,7 +28,6 @@ sakai.config = {
         LOGOUT_URL: "/dev/logout.html",
         MY_DASHBOARD_URL: "/dev/my_sakai.html",
         PEOPLE_URL: "/dev/people.html",
-        PROFILE_URL: "/dev/show.html?type=user",
         PROFILE_EDIT_URL: "/dev/profile_edit.html",
         PUBLIC_CONTENT_MEDIA_URL: "/dev/public_content_media.html",
         PUBLIC_COURSES_SITES_URL: "/dev/public_courses_sites.html",
@@ -52,10 +51,10 @@ sakai.config = {
         CAPTCHA_SERVICE: "/system/captcha",
         CHAT_GET_SERVICE: "/var/message/chat/__KIND__.json",
         CHAT_UPDATE_SERVICE: "/var/message.chatupdate.json",
-        CONTACTS_ACCEPTED: "/var/contacts/accepted.json",
+        CONTACTS_ACCEPTED: "/var/contacts/accepted.infinity.json",
         CONTACTS_ALL: "/var/contacts/all.json",
-        CONTACTS_INVITED: "/var/contacts/invited.json",
-        CONTACTS_PENDING: "/var/contacts/pending.json",
+        CONTACTS_INVITED: "/var/contacts/invited.infinity.json",
+        CONTACTS_PENDING: "/var/contacts/pending.infinity.json",
         CREATE_USER_SERVICE: "/system/userManager/user.create.html",
         DISCUSSION_GETPOSTS_THREADED: "/var/search/discussions/threaded.json?path=__PATH__&marker=__MARKER__",
         DISCUSSION_INITIALPOSTS_SERVICE: "/var/search/discussions/initialdiscussionposts.json?path=__PATH__&items=__ITEMS__&page=__PAGE__",
@@ -119,12 +118,58 @@ sakai.config = {
         TWITTER_POST_URL: "/var/proxy/twitter/update_status.json",
         USER_CHANGELOCALE_SERVICE: "/rest/user/changelocale/__USERID__",
         USER_CHANGEPASS_SERVICE: "/system/userManager/user/__USERID__.changePassword.html",
-        USER_EXISTENCE_SERVICE: "/system/userManager/user/__USERID__.json",
+        USER_EXISTENCE_SERVICE: "/system/userManager/user.exists.html?userid=__USERID__",
 
         // PREFIXES
         GROUP_PREFIX: "/_group",
         USER_PREFIX: "/_user"
 
+    },
+    
+    PageTitles: {
+        "prefix": "TITLE_PREFIX",
+        "pages": {
+            /**  403.html  **/
+            /**  404.html  **/
+            /**  500.html  **/
+            /**  account_preferences.html  **/
+            "/dev/account_preferences.html": "ACCOUNT_PREFERENCES",
+            /**  acknowledgements.html  **/
+            "/dev/acknowledgements.html": "ACKNOWLEDGEMENTS",
+            /**  content_profile.html  **/
+            "/dev/content_profile.html": "CONTENT_PROFILE",
+            /**  create_new_account.html  **/
+            "/dev/create_new_account.html": "CREATE_A_NEW_ACCOUNT",
+            /**  directory.html  **/
+            "/dev/directory.html": "DIRECTORY",
+            /**  group_edit.html  **/
+            "/dev/group_edit.html": "MANAGE_GROUP",
+            /**  inbox.html  **/
+            "/dev/inbox.html": "MY_MESSAGES",
+            /**  index.html  **/
+            "/": "SIGN_IN",
+            "/dev": "SIGN_IN",
+            "/dev/": "SIGN_IN",
+            "/index.html": "SIGN_IN",
+            "/dev/index.html": "SIGN_IN",
+            /**  logout.html  **/
+            "/dev/logout.html": "LOGGING_OUT",
+            /**  my_sakai.html  **/
+            "/dev/my_sakai.html": "MY_SAKAI",
+            /**  people.html  **/
+            "/dev/people.html": "PEOPLE",
+            /**  profile_edit.html  **/
+            "/dev/profile_edit.html": "EDIT_MY_PROFILE",
+            /**  search.html  **/
+            "/dev/search.html": "SEARCH_ALL",
+            /**  search_groups.html  **/
+            "/dev/search_groups.html": "SEARCH_GROUPS",
+            /**  search_people.html  **/
+            "/dev/search_people.html": "SEARCH_PEOPLE",
+            /**  search_content.html  **/
+            "/dev/search_content.html": "SEARCH_CONTENT_AND_MEDIA"
+            /**  show.html  **/
+        }
     },
 
     Search: {
@@ -137,7 +182,7 @@ sakai.config = {
         /*
          * A collection of permission keys and range of values to be referenced
          * for making permissions decisions. The values of properties are only
-         * for reference, may not match designs and are not to be place in the
+         * for reference, may not match designs and are not to be placed in the
          * UI (message bundles should be used to match up-to-date designs).
          */
         Groups: {
@@ -161,8 +206,9 @@ sakai.config = {
          * The structure of the config object is identical to the storage object
          * When system/me returns profile data for the logged in user the profile_config and profile_data objects could be merged
          * "label": the internationalizable message for the entry label in HTML
-         * "required": Whether the entry is compulsory or not
-         * 
+         * "required": {Boolean} Whether the entry is compulsory or not
+         * "display": {Boolean} Show the entry in the profile or not
+         * "editable": {Boolean} Whether or not the entry is editable
          * For a date entry field use "date" as the type for MM/dd/yyyy and "dateITA" as the type for dd/MM/yyyy
          * 
          */
@@ -173,16 +219,19 @@ sakai.config = {
                 "required": true,
                 "display": true,
                 "access": "everybody",
+                "modifyacl": false,
                 "elements": {
                     "firstName": {
                         "label": "__MSG__PROFILE_BASIC_FIRSTNAME_LABEL__",
                         "required": true,
-                        "display": true
+                        "display": true,
+                        "limitDisplayLength": 50
                     },
                     "lastName": {
                         "label": "__MSG__PROFILE_BASIC_LASTNAME_LABEL__",
                         "required": true,
-                        "display": true
+                        "display": true,
+                        "limitDisplayLength": 50
                     },
                     "picture": {
                         "label": "__MSG__PROFILE_BASIC_PICTURE_LABEL__",
@@ -235,8 +284,10 @@ sakai.config = {
                         "label": "__MSG__PROFILE_BASIC_DATEOFBIRTH_LABEL__",
                         "required": false,
                         "display": true,
-                        "type": "dateITA"
-                        //"type": "date"
+                        "type": "oldDateITA",
+                        "example": "__MSG__DATE_OF_BIRTH_ITA_EXAMPLE__"
+                        //"type": "oldDate",
+                        //"example": "__MSG__DATE_OF_BIRTH_EXAMPLE__"
                     },
                     "tags": {
                         "label": "__MSG__TAGS__",
@@ -252,6 +303,7 @@ sakai.config = {
                 "required": true,
                 "display": true,
                 "access": "everybody",
+                "modifyacl": true,
                 "elements": {
                     "aboutme": {
                         "label": "__MSG__PROFILE_ABOUTME_LABEL__",
@@ -283,6 +335,7 @@ sakai.config = {
                 "required": false,
                 "display": true,
                 "access": "everybody",
+                "modifyacl": true,
                 "multiple": true,
                 "multipleLabel": "__MSG__PROFILE_PUBLICATION_LABEL__",
                 //"template": "profile_section_publications_template",
@@ -343,7 +396,8 @@ sakai.config = {
                     "url": {
                         "label": "__MSG__PROFILE_PUBLICATIONS_URL__",
                         "required": false,
-                        "display": true
+                        "display": true,
+                        "validation":"appendhttp url"
                     }
                 }
             }
@@ -371,16 +425,33 @@ sakai.config = {
 
     },
 
-    Connections: {
+    Groups: {
         /*
-         * Email message that will be sent when inviting someone to become a connection.
-         * ${user} will be replaced by the name of the current user and ${comment} will
-         * be replaced by the personal message left by the inviter.
+         * Email message that will be sent to group managers when a user requests
+         * to join their group.
+         * ${user} will be replaced by the name of the requesting user and ${group}
+         * will be replaced with the group name.
          */
-        Invitation: {
-            title: "${user} has invited you to become a connection",
-            body: "Hi, \n\n ${user} has invited you to become a connection. \nHe/She has also left the following message: \n\n ${comment} \n\nTo accept this invitation, please click on the accept button. \n\nKind regards,\n\nThe Sakai Team"
+        JoinRequest: {
+            title: "${user} has requested to join your group: ${group}",
+            body: "Hi, \n\n ${user} has requested to join your group: ${group}. Use the links below to respond to this request. \n\n Kind regards,\n\nThe Sakai Team"
         }
+    },
+
+    Relationships: {
+        /*
+         * Relationships used by the add contacts widget to define what relationship the contacts can have
+         */
+        "contacts": [
+            {"name": "Classmate", "definition": "is my classmate", "selected": false},
+            {"name": "Supervisor", "inverse": "Supervised", "definition": "is my supervisor", "selected": false},
+            {"name": "Supervised", "inverse": "Supervisor", "definition": "is being supervised by me", "selected": false},
+            {"name": "Lecturer", "inverse": "Student", "definition": "is my lecturer", "selected": false},
+            {"name": "Student", "inverse": "Lecturer", "definition": "is my student", "selected": false},
+            {"name": "Colleague", "definition": "is my colleague", "selected": false},
+            {"name": "College Mate", "definition": "is my college mate", "selected": false},
+            {"name": "Shares Interests", "definition": "shares an interest with me", "selected": false}
+        ]
     },
 
     Site: {
@@ -431,17 +502,65 @@ sakai.config = {
             URL: "/dev/_images/mimetypes/doc.png",
             description: "Word document"
         },
+        "application/msword": {
+            URL: "/dev/_images/mimetypes/doc.png",
+            description: "Word document"
+        },
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document": {
+            URL: "/dev/_images/mimetypes/doc.png",
+            description: "Word document"
+        },
         "application/pdf": {
             URL: "/dev/_images/mimetypes/pdf.png",
             description: "PDF document"
         },
+        "application/x-pdf": {
+            URL: "/dev/_images/mimetypes/pdf.png",
+            description: "PDF document"
+        },
+        "application/vnd.ms-powerpoint": {
+            URL: "/dev/_images/mimetypes/pps.png",
+            description: "PowerPoint document"
+        },
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation": {
+            URL: "/dev/_images/mimetypes/pps.png",
+            description: "PowerPoint document"
+        },
+        "application/vnd.oasis.opendocument.text": {
+            URL: "/dev/_images/mimetypes/doc.png",
+            description: "Open Office document"
+        },
+        "application/x-shockwave-flash": {
+            URL: "/dev/_images/mimetypes/swf.png",
+            description: "Flash player file"
+        },
+        "application/zip": {
+            URL: "/dev/_images/mimetypes/zip.png",
+            description: "Archive file"
+        },
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+            URL: "/dev/_images/mimetypes/spreadsheet.png",
+            description: "Spreadsheet document"
+        },
+        "application/vnd.ms-excel": {
+            URL: "/dev/_images/mimetypes/spreadsheet.png",
+            description: "Spreadsheet document"
+        },
         "text/plain": {
+            URL: "/dev/_images/mimetypes/txt.png",
+            description: "Text document"
+        },
+        "text/rtf": {
             URL: "/dev/_images/mimetypes/txt.png",
             description: "Text document"
         },
         "image/png": {
             URL: "/dev/_images/mimetypes/images.png",
             description: "Png image"
+        },
+        "image/bmp": {
+            URL: "/dev/_images/mimetypes/images.png",
+            description: "Bmp image"
         },
         "image/gif": {
             URL: "/dev/_images/mimetypes/images.png",
@@ -451,9 +570,21 @@ sakai.config = {
             URL: "/dev/_images/mimetypes/images.png",
             description: "Jpg image"
         },
+        "image/pjpeg": {
+            URL: "/dev/_images/mimetypes/images.png",
+            description: "Jpg image"
+        },
         "text/html": {
             URL: "/dev/_images/mimetypes/html.png",
             description: "HTML document"
+        },
+        "video/x-msvideo": {
+            URL: "/dev/_images/mimetypes/video.png",
+            description: "Video file"
+        },
+        "video/mp4": {
+            URL: "/dev/_images/mimetypes/video.png",
+            description: "Video file"
         },
         folder: {
             URL: "/dev/_images/mimetypes/kmultiple.png",
@@ -508,11 +639,11 @@ sakai.config = {
             "label" : "CONTENT_AND_MEDIA"
         },
         {
-            "url" : "/dev/search_groups.html#q=*&facet=see",
+            "url" : "/dev/search_groups.html#q=*&facet=manage",
             "label" : "GROUPS"
         },
         {
-            "url" : "/dev/people.html",
+            "url" : "/dev/search_people.html#q=*&facet=contacts",
             "label" : "PEOPLE"
         },
         {
@@ -544,7 +675,9 @@ sakai.config = {
         "/dev/index.html",
         "/dev/create_new_account.html",
         "/dev/",
-        "/dev"
+        "/dev",
+        "/",
+        "/index.html"
     ],
     
     /*
@@ -605,6 +738,8 @@ sakai.config = {
             "employees": ["bert", "oszkar", "nicolaas"]
         }
     },
+    // Array of css files to load in each page
+    skinCSS: [],
 
     widgets: {}
 };

@@ -45,9 +45,9 @@
     top: -15px;
 }
 
-/** TAB VARIANT **/
-.content_search .s3d-primary-tabs {
-    background: url('../../_images/site_tab_bg.png') top right no-repeat;
+/* Button */	
+.search_add_content_button, .search_add_group_button {
+    float:right;
 }
 
 .search_content_wrapper {
@@ -165,6 +165,7 @@
     font-size: 1.2em;
     margin-bottom:10px;
     margin-top:10px;
+    overflow:hidden;
 }
 
 a.search_results_part_title {

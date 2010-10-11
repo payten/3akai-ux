@@ -293,6 +293,7 @@ if (!sakai.sendmessage){
                 searchObjProps: "name",
                 selectedItemProp: "name",
                 keyDelay: "200",
+                retrieveLimit: 10,
                 formatList: function(data, elem) {
                     // formats each line to be presented in autosuggest list
                     // add the correct image, wrap name in a class
@@ -311,7 +312,9 @@ if (!sakai.sendmessage){
                         if (success) {
                             var suggestions = [];
                             $.each(data.results, function(i) {
-                                if (data.results[i]["rep:userId"]) {
+                                if (data.results[i]["rep:userId"] &&
+                                !(toUser && toUser.uuid == data.results[i]["rep:userId"])) {
+                                    // && data.results[i]["rep:userId"] !== sakai.data.me.user.userid) { // add this to ignore the user sending the message
                                     suggestions.push({"value": data.results[i]["rep:userId"], "name": sakai.api.Security.saneHTML(sakai.api.User.getDisplayName(data.results[i])), "type": "user"});
                                 } else if (data.results[i]["sakai:group-id"]) {
                                     suggestions.push({"value": data.results[i]["sakai:group-id"], "name": data.results[i]["sakai:group-title"], "type": "group"});
@@ -321,7 +324,7 @@ if (!sakai.sendmessage){
                         } else {
 
                         }
-                    }, {"q": "*" + query.replace(/\s+/g, "* OR *") + "*"});
+                    }, {"q": "*" + query.replace(/\s+/g, "* OR *") + "*", "page": 0, "items": 15});
                 }
             });
         };

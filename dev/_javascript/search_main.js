@@ -121,7 +121,7 @@ sakai._search = function(config, callback) {
             }
         });
     };
-    
+
     fetchMyFriends();
 
     /**
@@ -148,6 +148,7 @@ sakai._search = function(config, callback) {
             var frag = $.deparam.fragment();
             frag["filter"] = ""; // clear the filter
             frag["facet"] = ""; // clear the facet
+            frag["page"] = "1";
             url = $.param.fragment(url, frag);
             $(this).attr("href", url);
             return true;
@@ -234,11 +235,14 @@ sakai._search = function(config, callback) {
             }
             // Modify the tags if there are any
             if(finaljson.items[i]["sakai:tags"]){
+                if (typeof(finaljson.items[i]["sakai:tags"]) === 'string')
+                    finaljson.items[i]["sakai:tags"] = finaljson.items[i]["sakai:tags"].split(",");
 
                 for(var k = 0, l = finaljson.items[i]["sakai:tags"].length; k < l; k++){
 
                     // If the searchterm occures in the tags, make it bold
-                    finaljson.items[i]["sakai:tags"][k] = convertTermToBold(finaljson.items[i]["sakai:tags"][k], searchterm);
+                    if (finaljson.items[i]["sakai:tags"][k])
+                        finaljson.items[i]["sakai:tags"][k] = convertTermToBold(finaljson.items[i]["sakai:tags"][k], searchterm);
                 }
             }
         }
@@ -408,17 +412,17 @@ sakai._search = function(config, callback) {
     var addFacetedPanel = function() {
         $(window).bind("sakai.api.UI.faceted.ready", function(e){
             sakai.api.UI.faceted.render(searchConfig.facetedConfig);
-            
+
             var currentfacet = $.bbq.getState('facet');
             if (currentfacet) {
                 $("#" + currentfacet).addClass("faceted_category_selected");
             } else {
                 $(".faceted_category:first").addClass("faceted_category_selected");
-            }          
+            }
 
             // bind faceted search elements
             // loop through each faceted category and bind the link to trigger a search
-            
+
             $(".faceted_category").bind("click", function(ev){
                 var facet = $(this).attr("id");
                 var searchquery = $(searchConfig.global.text).val();
@@ -426,7 +430,7 @@ sakai._search = function(config, callback) {
                 mainFacetedUrl = searchConfig.facetedConfig.facets[facet].searchurl;
                 sakai._search.doHSearch(1, searchquery, searchwhere, facet);
             });
-            
+
         });
     };
 

@@ -46,8 +46,9 @@ sakai.comments = function(tuid, showSettings){
     var start = 0; // Start fetching from the first comment.
     var clickedPage = 1;
     var defaultPostsPerPage = 10;
-    var currentSite = sakai.site.currentsite.id;
-    var store = "/sites/" + currentSite + "/store/";
+    var widgeturl = sakai.api.Widgets.widgetLoader.widgets[tuid] ? sakai.api.Widgets.widgetLoader.widgets[tuid].placement : false;
+    var currentSite = "";
+    var store = "";
 
     // Main Ids
     var comments = "#comments";
@@ -253,10 +254,10 @@ sakai.comments = function(tuid, showSettings){
             catch (ex) {
                 comment.date = tempDate;
             }
-            
+
             comment.timeAgo = "about " + getTimeAgo(comment.date) + " ago";
             comment.formatDate = formatDate(comment.date);
-            comment.messageTxt = comment["sakai:body"];            
+            comment.messageTxt = comment["sakai:body"];
             comment.message = tidyInput(comment["sakai:body"]);
             // weird json bug.
             comment["sakai:deleted"] = (comment["sakai:deleted"] && (comment["sakai:deleted"] === "true" || comment["sakai:deleted"] === true)) ? true : false;
@@ -267,22 +268,15 @@ sakai.comments = function(tuid, showSettings){
             // Puts the userinformation in a better structure for trimpath
             // if (comment.profile["sling:resourceType"] === "sakai/user-profile") { // no longer in use, it seems
             if (comment.profile) {
-                   var profile = comment.profile[0];
-                var fullName = "";
-                if (profile.firstName) {
-                    fullName = profile.firstName;
-                }
-                if (profile.lastName) {
-                    fullName += " " + profile.lastName;
-                }
-                user.fullName = fullName;
+                var profile = comment.profile[0];
+                user.fullName = sakai.api.User.getDisplayName(profile);
                 user.picture = sakai.config.URL.USER_DEFAULT_ICON_URL;
                 // Check if the user has a picture
                 if (profile.picture && $.parseJSON(profile.picture).name) {
-                    user.picture = "/~" + profile["rep:userId"] + "/public/profile/" + $.parseJSON(profile.picture).name;
+                    user.picture = "/~" + profile["userid"] + "/public/profile/" + $.parseJSON(profile.picture).name;
                 }
-                user.uid = profile["userid"][0];
-                user.profile = sakai.config.URL.PROFILE_URL + "&id=" + user.uid;
+                user.uid = profile["userid"];
+                user.profile = "/~" + user.uid;
             }
             else {
                 // This is an anonymous user.
@@ -351,7 +345,7 @@ sakai.comments = function(tuid, showSettings){
             items = widgetSettings.perPage;
         }
 
-        var url = "/var/search/comments/flat.json?sortOn=" + sortOn + "&sortOrder=" + sortOrder + "&page=" + (clickedPage - 1) + "&items=" + items + "&marker=" + tuid + "&path=" + store.substring(0, store.length - 1);
+        var url = "/var/search/comments/flat.json?sortOn=" + sortOn + "&sortOrder=" + sortOrder + "&page=" + (clickedPage - 1) + "&items=" + items + "&marker=" + tuid + "&path=" + store;
         $.ajax({
             url: url,
             cache: false,
@@ -414,8 +408,8 @@ sakai.comments = function(tuid, showSettings){
             alert("Anonymous users are not allowed to post comments. Please register or log in to add your comment.");
         }
 
-        var subject = 'Comment on sites/' + sakai.site.currentsite.id;
-        var to = "internal:s-" + currentSite;
+        var subject = 'Comment on /~' + currentSite;
+        var to = "internal:w-" + widgeturl + "/message";
 
         if (allowPost) {
             var body = $(commentsMessageTxt, rootel).val();
@@ -431,7 +425,7 @@ sakai.comments = function(tuid, showSettings){
             };
 
 
-            var url = "/~" + sakai.data.me.user.userid + "/message.create.html";
+            var url = widgeturl + "/message.create.html";
             $.ajax({
                 url: url,
                 type: "POST",
@@ -569,6 +563,9 @@ sakai.comments = function(tuid, showSettings){
 
         sakai.api.Widgets.loadWidgetData(tuid, function(success, data){
             if (success) {
+                if (!data.message) {
+                    sakai.api.Widgets.saveWidgetData(tuid, {"message":{"sling:resourceType":"sakai/messagestore"}}, null);
+                }
                 widgetSettings = data;
                 // Clean up some values so that true is really true and not "true" or 1 ...
                 var keysToClean = ['sakai:forcename', 'sakai:forcemail', 'notification', 'sakai:allowanonymous'];
@@ -793,6 +790,28 @@ sakai.comments = function(tuid, showSettings){
      * @param {Boolean} showSettings Show the settings of the widget or not
      */
     var doInit = function(){
+        if (widgeturl) {
+            store = widgeturl + "/message";
+            $.ajax({
+                url: widgeturl + ".infinity.json",
+                type: "GET",
+                dataType: "json",
+                success: function(data){
+                    // no op
+                },
+                error: function(xhr, textStatus, thrownError) {
+                    if (xhr.status == 404) {
+                        // we need to create the initial message store
+                        $.post(store, {"sling:resourceType":"sakai/messagestore"} );
+                    }
+                }
+            });
+        }
+        if (sakai.currentgroup && !$.isEmptyObject(sakai.currentgroup.id)) {
+            currentSite = sakai.currentgroup.id;
+        } else {
+            currentSite = sakai.profile.main.data["rep:userId"];
+        }
         if (!showSettings) {
             // Show the main view.
             $(commentsSettingsContainer, rootel).hide();

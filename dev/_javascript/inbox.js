@@ -42,6 +42,8 @@ sakai.inbox = function() {
     var cats = "";
     var inboxComposeNewPanelOpen = false;
     var getAll = true;
+    
+    var openedBox = false;
 
 
     /**
@@ -467,14 +469,9 @@ sakai.inbox = function() {
      */
     var formatMessage = function(message) {
 
+        // 2010-10-06T14:45:54+01:00
         var dateString = message["sakai:created"];
-        var d = new Date();
-        d.setFullYear(parseInt(dateString.substring(0,4),10));
-        d.setMonth(parseInt(dateString.substring(5,7),10) - 1);
-        d.setDate(parseInt(dateString.substring(8,10),10));
-        d.setHours(parseInt(dateString.substring(11,13),10));
-        d.setMinutes(parseInt(dateString.substring(14,16),10));
-        d.setSeconds(parseInt(dateString.substring(17,19),10));
+        var d = sakai.api.l10n.parseDateString(dateString);
         //Jan 22, 2009 10:25 PM
         message.date = formatDate(d, "M j, Y G:i A");
 
@@ -499,7 +496,7 @@ sakai.inbox = function() {
         }
 
         // A chat message doesn't really have subject, only a body.
-        if(message["sakai:type"] === "chat"){
+        if(message["sakai:category"] === "chat"){
             message.subject = "Chat message";
         }
 
@@ -655,7 +652,7 @@ sakai.inbox = function() {
                 sortBy = "sakai:created";
                 break;
             case "type":
-                sortBy = "sakai:type"
+                sortBy = "sakai:category";
                 break;
             case "to":
                 sortBy = "sakai:to";
@@ -731,10 +728,8 @@ sakai.inbox = function() {
 
         if (unreadMessages > 0){
             $("#inbox_unread_nr_messages").text(sakai.api.Security.saneHTML("(" + unreadMessages + ")"));
-            $(chatUnreadMessages).html(sakai.api.Security.saneHTML(unreadMessages));
         } else {
             $("#inbox_unread_nr_messages").text("");
-            $(chatUnreadMessages).html("0");
         }
 
         if (unreadAnnouncements > 0){
@@ -749,6 +744,8 @@ sakai.inbox = function() {
             $("#inbox_unread_nr_invitations").text("");
         }
 
+        var totalUnread = 0 + unreadMessages + unreadInvitations + unreadAnnouncements;
+        $(chatUnreadMessages).text(sakai.api.Security.saneHTML(totalUnread));
     };
 
     /**
@@ -820,23 +817,22 @@ sakai.inbox = function() {
      */
     var displayMessage = function(id) {
 
-        $(".message-options").show();
-        $("#inbox_message_previous_messages").hide();
-        $("#inbox_message_replies").html("");
-
-        // Hide invitation links
-        $("#inbox-invitation-accept").hide();
-        $("#inbox-invitation-already").hide();
-        $("#inbox-sitejoin-accept").hide();
-        $("#inbox-sitejoin-deny").hide();
-        $("#inbox-sitejoin-already").hide();
-
-        showPane(inboxPaneMessage);
         var message = getMessageWithId(id);
 
         selectedMessage = message;
-        if (typeof message !== "undefined") {
+        if (typeof message !== "undefined" && !$.isEmptyObject(message)) {
+            $(".message-options").show();
+            $("#inbox_message_previous_messages").hide();
+            $("#inbox_message_replies").html("");
 
+            // Hide invitation links
+            $("#inbox-invitation-accept").hide();
+            $("#inbox-invitation-already").hide();
+            $("#inbox-sitejoin-accept").hide();
+            $("#inbox-sitejoin-deny").hide();
+            $("#inbox-sitejoin-already").hide();
+
+            showPane(inboxPaneMessage);
             // Fill in this message values.
             $(inboxSpecificMessageSubject).text(sakai.api.Security.saneHTML(message["sakai:subject"]));
             var messageBody = ""+message["sakai:body"]; // coerce to string in case the body is all numbers
@@ -845,7 +841,7 @@ sakai.inbox = function() {
 
             if (message.userFrom) {
                 for (var i = 0, j = message.userFrom.length; i < j; i++) {
-                    $(inboxSpecificMessageFrom).attr("href", sakai.config.URL.PROFILE_URL + "&id=" + message.userFrom[i].userid)
+                    $(inboxSpecificMessageFrom).attr("href", "/~" + message.userFrom[i].userid);
                     $(inboxSpecificMessageFrom).text(sakai.api.User.getDisplayName(message.userFrom[i]));
                     if (message.userFrom[i].photo) {
                         $(inboxSpecificMessagePicture).attr("src", "/~" + message.userFrom[i]["userid"] + "/public/profile/" + message.userFrom[i].photo);
@@ -921,6 +917,8 @@ sakai.inbox = function() {
                 // We haven't read this message yet. Mark it as read.
                 markMessageRead(message, id);
             }
+        } else {
+            $.bbq.removeState("message");
         }
 
     };
@@ -1000,7 +998,7 @@ sakai.inbox = function() {
     var sendMessageFinished = function(success, data) {
         clearInputFields();
         // Show the sent inbox pane.
-        $.bbq.pushState({"box": "sent"},2);
+        $.bbq.pushState({"box": openedBox},2);
     };
 
 
@@ -1114,6 +1112,7 @@ sakai.inbox = function() {
             unreadAnnouncements -= deletedUnreadAnnouncements;
             unreadInvitations -= deletedUnreadInvitations;
             updateUnreadNumbers();
+            $.bbq.removeState("message");
 
             for (var d = 0, e = pathToMessages.length; d < e; d++) {
                 $.ajax({
@@ -1167,7 +1166,11 @@ sakai.inbox = function() {
     //    This is the widget id!
     $(inboxComposeCancel).live("click", function() {
         //    Jump back to inbox
-        $.bbq.pushState({"box":"inbox"},2);
+        $.bbq.pushState({"box": openedBox},2);
+    });
+    
+    $("#top_navigation .mail").live("click", function(){
+        $.bbq.pushState({"box": "inbox"},2);
     });
 /*
     // Bind click event to hide menus
@@ -1196,24 +1199,31 @@ sakai.inbox = function() {
     /* Filter the messages. */
 
     $(inboxFilterMessages).click(function() {
+        openedBox = "messages";
         $.bbq.pushState({"box": "messages"},2);
     });
     $(inboxFilterAnnouncements).click(function() {
+        openedBox = "announcements";
         $.bbq.pushState({"box": "announcements"},2);
     });
     $(inboxFilterChats).click(function() {
+        openedBox = "chats";
         $.bbq.pushState({"box": "chats"},2);
     });
     $(inboxFilterInvitations).click(function() {
+        openedBox = "invitations";
         $.bbq.pushState({"box": "invitations"},2);
     });
     $(inboxFilterInbox).click(function() {
+        openedBox = "inbox";
         $.bbq.pushState({"box": "inbox"},2);
     });
     $(inboxFilterSent).click(function() {
+        openedBox = "sent";
         $.bbq.pushState({"box": "sent"},2);
     });
     $(inboxFilterTrash).click(function() {
+        openedBox = "trash";
         $.bbq.pushState({"box": "trash"},2);
     });
 
@@ -1237,30 +1247,17 @@ sakai.inbox = function() {
 
     });
 
-
-    // Sorters for the inbox.
-    $(inboxTableHeaderSort).bind("mouseenter", function() {
-        if (sortOrder === 'descending') {
-            $(this).append(sakai.api.Security.saneHTML($(inboxInboxSortUp).html()));
-        }
-        else {
-            $(this).append(sakai.api.Security.saneHTML($(inboxInboxSortDown).html()));
-        }
-    });
-    $(inboxTableHeaderSort).bind("mouseout", function() {
-        $(inboxTable + " " + inboxArrow).remove();
-    });
     $(inboxTableHeaderSort).bind("click", function() {
+        $(inboxTable + " " + inboxArrow).remove();
         sortBy = $(this).attr("id").replace(/inbox_table_header_/gi, "");
         sortOrder = (sortOrder === "descending") ? "ascending" : "descending";
-
+        if (sortOrder === "descending") {
+            $(this).append(sakai.api.Security.saneHTML($(inboxInboxSortDown).html()));
+        } else {
+            $(this).append(sakai.api.Security.saneHTML($(inboxInboxSortUp).html()));
+        }
         getAllMessages();
     });
-
-
-
-
-
 
     /**
      *
@@ -1270,7 +1267,7 @@ sakai.inbox = function() {
 
     $(inboxSpecificMessageBackToInbox).click(function() {
         // Show the inbox.
-        showPane(inboxPaneInbox);
+        $.bbq.pushState({"box": openedBox},2);
 
         // Clear all the input fields
         clearInputFields();
@@ -1312,13 +1309,20 @@ sakai.inbox = function() {
         var body = $(inboxSpecificMessageComposeBody).val();
 
         sakai.api.Communication.sendMessage(selectedMessage["sakai:from"], subject, body, "message", selectedMessage["sakai:id"], sendMessageFinished);
-
-        // Clear all the input fields
+        showGeneralMessage($(inboxGeneralMessagesSent).text());
+        // Clear all the input fieldst
         clearInputFields();
     });
 
     $(window).bind('hashchange', function(e) {
+        $(inboxTable + " " + inboxArrow).remove();
+        $("#inbox_table_header_date").append(sakai.api.Security.saneHTML($(inboxInboxSortDown).html()));
         var box = $.bbq.getState("box");
+        if (box){
+            openedBox = box;
+        } else if (!openedBox) {
+            openedBox = "inbox";
+        }
         var msg = $.bbq.getState("message");
         var action = $.bbq.getState("action");
         if (action) {
@@ -1384,30 +1388,25 @@ sakai.inbox = function() {
 
 
     var doInit = function() {
-        // Check if we are logged in or out.
-        var person = sakai.data.me;
-        var uuid = person.user.userid;
-        if (!uuid || person.user.anon) {
-            redirectToLoginPage();
-        }
-        else {
-            // We are logged in. Do all the nescecary stuff.
-            // load the list of messages.
-            showUnreadMessages();
-            var getMsgsReady = false;
-            var sendMsgReady = false;
-            getAll = true;
-            getAllMessages(function() {
-                getMsgsReady = true;
-                if (getMsgsReady && sendMsgReady)
-                    $(window).trigger("hashchange");
-            });
-            $(window).bind("sakai-sendmessage-ready", function() {
-                sendMsgReady = true;
-                if (getMsgsReady && sendMsgReady)
-                    $(window).trigger("hashchange");
-            });
-        }
+        
+        // We are logged in. Do all the nescecary stuff.
+        // load the list of messages.
+        showUnreadMessages();
+        var getMsgsReady = false;
+        var sendMsgReady = false;
+        getAll = true;
+        getAllMessages(function() {
+        getMsgsReady = true;
+        if (getMsgsReady && sendMsgReady)
+            $(window).trigger("hashchange");
+        });
+        $(window).bind("sakai-sendmessage-ready", function() {
+            sendMsgReady = true;
+            if (getMsgsReady && sendMsgReady) {
+                $(window).trigger("hashchange");
+            }
+        });
+
     };
 
 

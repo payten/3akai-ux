@@ -49,6 +49,7 @@ sakai.remotecontent = function(tuid, showSettings){
 
     // Links and labels
     var remotecontent = "#remotecontent";
+    var remotecontentTitle = remotecontent + "_title";
     var remotecontentSettings = remotecontent + "_settings";
     var remotecontentSettingsAdvanced = remotecontentSettings + "_advanced";
     var remotecontentSettingsAdvancedDown = remotecontentSettingsAdvanced + "_down";
@@ -62,6 +63,8 @@ sakai.remotecontent = function(tuid, showSettings){
     var remotecontentSettingsPreview = remotecontentSettings + "_preview";
     var remotecontentSettingsPreviewFrame = remotecontentSettingsPreview + "_frame";
     var remotecontentSettingsUrl = remotecontentSettings + "_url";
+    var remotecontentSettingsUrlError = remotecontentSettingsUrl + "_error";
+    var remotecontentSettingsUrlBlank = remotecontentSettingsUrl + "_blank";
     var remotecontentSettingsWidth = remotecontentSettings + "_width";
 
     // Containers
@@ -75,6 +78,7 @@ sakai.remotecontent = function(tuid, showSettings){
     var $remotecontentSettingsColorContainerTemplate = $("#remotecontent_settings_color_container_template", rootel);
     var $remotecontentSettingsTemplate = $("#remotecontent_settings_template", rootel);
     var $remotecontentSettingsPreviewTemplate = $("#remotecontent_settings_preview_template", rootel);
+    var $noRemoteContentSet = $("#remotecontent_no_content_set", rootel);
 
 
     ///////////////////////
@@ -93,7 +97,7 @@ sakai.remotecontent = function(tuid, showSettings){
     };
 
     /**
-     * Check if the input url is in fact an url or not
+     * Check if the input url is missing http/s or not
      * @param {String} url Url that needs to be tested
      * @return {Boolean}
      *     true: is an url
@@ -101,6 +105,18 @@ sakai.remotecontent = function(tuid, showSettings){
      */
     var isUrl = function(url){
         return (/^http\:\/\/|^https\:\/\//i).test(url);
+    };
+
+    /**
+     * Check if the input url is in fact a complete url or not
+     * @param {String} url Url that needs to be tested
+     * @return {Boolean}
+     *     true: is an url
+     *     false: is not an url
+     */
+    var isCompleteUrl = function(url){
+        var regEx = /^(?:ftp|https?):\/\/(?:(?:[\w\.\-\+%!$&'\(\)*\+,;=]+:)*[\w\.\-\+%!$&'\(\)*\+,;=]+@)?(?:[a-z0-9\-\.%]+)(?::[0-9]+)?(?:[\/|\?][\w#!:\.\?\+=&%@!$'~*,;\/\(\)\[\]\-]*)?$/
+        return regEx.test(url);
     };
 
     /**
@@ -127,7 +143,7 @@ sakai.remotecontent = function(tuid, showSettings){
             jsonDefaultSize.width = defaultWidth;
             jsonDefaultSize.width_unit = defaultWidthUnit;
             jsonDefaultSize.height = defaultHeight;
-            $(remotecontentSettingsPreview).html($.TemplateRenderer($remotecontentSettingsPreviewTemplate, json));
+            $(remotecontentSettingsPreview).html($.TemplateRenderer($remotecontentSettingsPreviewTemplate, json, null, false));
         }
         else {
             $(remotecontentSettingsPreviewFrame).attr("style", "border: " + json.border_size + "px #" + json.border_color + " solid");
@@ -139,7 +155,7 @@ sakai.remotecontent = function(tuid, showSettings){
      */
     var renderIframe = function(){
         if (json) {
-            $(remotecontentMainContainer, rootel).html($.TemplateRenderer($remotecontentSettingsPreviewTemplate, json));
+            $(remotecontentMainContainer, rootel).html($.TemplateRenderer($remotecontentSettingsPreviewTemplate, json, null, false));
 
             // SAKIII-314 We need to show the container, otherwise the second item won't be shown.
             $(remotecontentMainContainer, rootel).show();
@@ -182,11 +198,15 @@ sakai.remotecontent = function(tuid, showSettings){
      * Save the remotecontent to the jcr
      */
     var saveRemoteContent = function(){
-        if (json.url !== "") {
+        if (json.url === "" || json.url === 'http://'){
+            // Show a notification
+            sakai.api.Util.notification.show($(remotecontentTitle).html(), $(remotecontentSettingsUrlBlank).html());
+        } else if (isCompleteUrl(json.url)){
+            $(remotecontentSettingsPreview).html("");
             sakai.api.Widgets.saveWidgetData(tuid, json, savedDataToJCR);
-        }
-        else {
-            alert("Please specify a URL");
+        } else {
+            // Show a notification
+            sakai.api.Util.notification.show($(remotecontentTitle).html(), $(remotecontentSettingsUrlError).html());
         }
     };
 
@@ -229,13 +249,16 @@ sakai.remotecontent = function(tuid, showSettings){
         // Change the url for the iFrame
         $(remotecontentSettingsUrl).change(function(){
             var urlValue = $(this).val();
+            json.url = urlValue;
             if (urlValue !== "") {
                 // Check if someone already wrote http inside the url
                 if (!isUrl(urlValue)) {
                     urlValue = 'http://' + urlValue;
                 }
-                json.url = urlValue;
-                renderIframeSettings(true);
+                if (isCompleteUrl(urlValue) && urlValue !== 'http://') {
+                    json.url = urlValue;
+                    renderIframeSettings(true);
+                }
             }
         });
 
@@ -368,7 +391,12 @@ sakai.remotecontent = function(tuid, showSettings){
             else {
                 // When the request isn't successful, it means that  there was no existing remotecontent
                 // so we show the basic settings.
-                displaySettings(null, false);
+                if (showSettings) {
+                    displaySettings(null, false);
+                } else {
+                    $(remotecontentMainContainer, rootel).html($.TemplateRenderer($noRemoteContentSet, {}));
+                    $(remotecontentMainContainer, rootel).show();
+                }
             }
         });
     };

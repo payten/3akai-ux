@@ -36,7 +36,6 @@ sakai.contentprofilefiledetails = function(tuid, showSettings){
     var contentProfileFileDetailsContainer = "#content_profile_file_details_container";
 
     // Buttons
-    var contentProfileFileDetailsActionDownload= "#content_profile_file_details_action_download";
     var contentProfileFileDetailsActionDelete= "#content_profile_file_details_action_delete";
     var contentProfileFileDetailsActionUpload = "#upload_content";
     var contentProfileFileDetailsViewRevisions = "#content_profile_details_view_revisions";
@@ -45,14 +44,9 @@ sakai.contentprofilefiledetails = function(tuid, showSettings){
     var profileData = [];
 
     var addBinding = function(){
-        // Bind the download button
-        $(contentProfileFileDetailsActionDownload).bind("click", function(){
-            window.open(contentPath + "/" + profileData["sakai:pooled-content-file-name"]);
-        });
-
         // Open the delete content pop-up
         $(contentProfileFileDetailsActionDelete).bind("click", function(){
-            sakai.deletecontent.init(profileData);
+            sakai.deletecontent.init(sakai.content_profile.content_data);
         });
     };
 
@@ -67,23 +61,6 @@ sakai.contentprofilefiledetails = function(tuid, showSettings){
         var year = date.getFullYear();
         var formattedDate = day + " " + month + " " + year;
         return formattedDate;
-    }
-
-    /**
-     * Get userprofile with the userid provided
-     * @param {Object} userid
-     */
-    var getUserProfile = function(userid){
-        $.ajax({
-            url: "/~" + userid + "/public/authprofile.infinity.json",
-            success: function(profile){
-                profileData["sakai:pool-content-created-for-full"] = sakai.api.User.getDisplayName(profile);
-                renderDetails();
-            },
-            error: function(xhr, textStatus, thrownError){
-                sakai.api.Util.notification.show("Failed loading profile", "Failed to load file profile information");
-            }
-        });
     }
 
     var renderDetails = function(){
@@ -105,7 +82,7 @@ sakai.contentprofilefiledetails = function(tuid, showSettings){
         // Set the global JSON object (we also need this in other functions + don't want to modify this)
         globalJSON = $.extend(true, {}, json);
 
-        // And render the basic information
+        // And render the detailed information
         var renderedTemplate = $.TemplateRenderer("content_profile_file_details_template", json);
         var renderedDiv = $(document.createElement("div"));
         renderedDiv.html(renderedTemplate)
@@ -118,6 +95,33 @@ sakai.contentprofilefiledetails = function(tuid, showSettings){
 
         // Add classes
         $(contentProfileFileDetailsActionUpload).data("hashpath", "contentpath_" + contentPath.split("/p/")[1]);
+
+        // make sure the newly added content is properly styled with
+        // threedots truncation
+        $(".content_profile_file_details_file_name_threedots").ThreeDots({
+            max_rows: 1,
+            text_span_class: "threedots",
+            e_span_class: "threedots_a",
+            whole_word: false,
+            alt_text_t: true
+        });
+    }
+
+    /**
+     * Get userprofile with the userid provided
+     * @param {Object} userid
+     */
+    var getUserProfile = function(userid){
+        $.ajax({
+            url: "/~" + userid + "/public/authprofile.infinity.json",
+            success: function(profile){
+                profileData["sakai:pool-content-created-for-full"] = sakai.api.User.getDisplayName(profile);
+                renderDetails();
+            },
+            error: function(xhr, textStatus, thrownError){
+                renderDetails();
+            }
+        });
     }
 
     var loadRevisions = function(){
@@ -211,11 +215,11 @@ sakai.contentprofilefiledetails = function(tuid, showSettings){
     };
 
     $(contentProfileFileDetailsViewRevisions).live("click",function(){
-        sakai.filerevisions.initialise(profileData);
+        sakai.filerevisions.initialise(sakai.content_profile.content_data);
     });
 
     $(window).bind("sakai-fileupload-complete", function(){
-        doInit();
+        handleHashChange();
     });
 
     if (sakai.content_profile.content_data && sakai.content_profile.content_data.data) {

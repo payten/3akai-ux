@@ -3,7 +3,7 @@
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>Sakai 3 R&amp;D - __MSG__DIRECTORY__</title>
+        <title></title>
 
         <!-- Sakai Core CSS -->
         <link rel="stylesheet" type="text/css" href="_css/FSS/fss-base.css" />
@@ -15,7 +15,6 @@
         <!-- 3rd party CSS -->
         <link rel="stylesheet" type="text/css" href="_css/sakai/sakai.components.jq_pager.css" />
         <link rel="stylesheet" type="text/css" href="_lib/jquery/plugins/imgareaselect/imgareaselect-default.css" />
-        <link rel="stylesheet" type="text/css" href="_lib/JsTree/tree_component.css" />
 
         <!-- NYU Skin CSS-->
         <link rel="stylesheet" type="text/css" href="_skins/nyu/nyu.skin.css" />
@@ -23,7 +22,8 @@
         <!-- Sakai Config JS -->
         <script type="text/javascript" src="_configuration/widgets.js"></script>
         <script type="text/javascript" src="/var/widgets.json?callback=sakai.storeWidgets"></script>
-        <script type="text/javascript" src="_configuration/config.js"></script>
+        <script type="text/javascript" src="/dev/_configuration/config.js"></script>
+        <script type="text/javascript" src="/dev/_configuration/config_custom.js"></script>
 
         <!-- Core 3rd-party JS -->
         <script type="text/javascript" src="_lib/jquery/jquery.js"></script>
@@ -44,13 +44,14 @@
         <script type="text/javascript" src="/dev/_lib/jquery/plugins/jquery.cookie.js"></script>
         <script type="text/javascript" src="/dev/_lib/jquery/plugins/jquery.pager.js"></script>
         <script type="text/javascript" src="_lib/sakai_util/SHA.js"></script>
-        <script type="text/javascript" src="_lib/JsTree/tree_component.min.js"></script>
-        <script type="text/javascript" src="_lib/JsTree/css.js"></script>
         <script type="text/javascript" src="_lib/Fluid/ProgressiveEnhancement.js"></script>
 
     </head>
 
     <body id="root" class="fl-centered fl-container i18nable directory-container">
+
+        <!-- TOP BANNER -->
+        <div id="top_banner"><!-- --></div>
 
         <!-- NAVIGATION -->
         <div id="widget_topnavigation" class="widget_inline">
@@ -96,13 +97,13 @@
             </div>
         </div>
         {for i in directory}
-            <h1 class="directory_level_one_header"><a href="/dev/search.html#q=${escape(escape(i.name))}" name="${i.name}">${i.name}</a></h1>
+            <h1 class="directory_level_one_header"><a href="/dev/search.html#tag=/tags/directory/${(i.name)}" name="${i.name}">${i.name}</a></h1>
             {for j in i.secondlevels}
                 <div class="directory_block">
-                    <h2 class="directory_level_two_header" name="${j.name}"><a href="/dev/search.html#q=${escape(escape(i.name) + escape(" ") + escape(j.name))}" name="${i.name}${j.name}">${j.name}</a></h2>
+                    <h2 class="directory_level_two_header" name="${j.name}"><a href="/dev/search.html#tag=/tags/directory/${(i.name) + "/" + escape(j.name)}" name="${i.name}${j.name}">${j.name}</a></h2>
                     {for k in j.thirdlevels}
                     <p>
-                        <a href="/dev/search.html#q=${escape(escape(i.name) + escape(" ") + escape(j.name) + escape(" ") + escape(k.name))}" class="directory_level_three_link">${k.name}</a>
+                        <a href="/dev/search.html#tag=/tags/directory/${(i.name) + "/" + escape(j.name) + "/" + escape(k.name)}" class="directory_level_three_link">${k.name}</a>
                     </p>
                     {/for}
                 </div>

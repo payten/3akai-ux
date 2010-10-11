@@ -46,7 +46,8 @@ sakai.search = function(){
         $("#contacts_search_result").html("<b>Loading ...</b>");
 
         $.ajax({
-            url: "/var/contacts/accepted.json?page=" + (page - 1) + "&items=" + peopleToSearch,
+            url: "/var/contacts/accepted.infinity.json?page=" + (page - 1) + "&items=" + peopleToSearch,
+            cache: false,
             success: function(data){
                 foundContacts = $.extend(data, {}, true);
                 renderContacts();
@@ -94,8 +95,11 @@ sakai.search = function(){
                     }
 
                     var relationships = connection["sakai:types"];
-                    if (relationships) {
-                        finaljson.items[index].extra = relationships;
+                    // if there are more than 3 connection type display 2 connection,...
+                    if (relationships.length < 3) {
+                        finaljson.items[index].extra = relationships;    
+                    } else {
+                        finaljson.items[index].extra = relationships[0] + ", "+ relationships[1]+ ", ...";    
                     }
                     finaljson.items[index].connected = true;
                     if (finaljson.items[index].userid == sakai.data.me.user.userid){
@@ -115,7 +119,7 @@ sakai.search = function(){
         $("#contacts_search_result").html($.TemplateRenderer("contacts_search_result_template", finaljson));
 
         $(".link_remove_contact").bind("click", function(ev){
-            var user = this.id.split("_")[this.id.split("_").length - 1];
+            var user = this.id.substring(20);
 
             $.ajax({
                 url: "/~" + sakai.data.me.user.userid + "/contacts.remove.html",
@@ -155,7 +159,7 @@ sakai.search = function(){
         $("#invited_search_result").html("<b>Loading ...</b>");
 
         $.ajax({
-            url: "/var/contacts/invited.json?page=0&items=100",
+            url: "/var/contacts/invited.infinity.json?page=0&items=100",
             cache: false,
             success: function(data){
                 foundInvitations = $.extend(data, {}, true);
@@ -195,8 +199,12 @@ sakai.search = function(){
                         finaljson.items[index].name = finaljson.items[index].userid;
                     }
                     var relationships = connection["sakai:types"];
-                    if (relationships) {
-                        finaljson.items[index].extra = relationships;
+                    
+                    // if there are more than 3 connection type display 2 connection,...
+                    if (relationships.length < 3) {
+                        finaljson.items[index].extra = relationships;    
+                    } else {
+                        finaljson.items[index].extra = relationships[0] + ", "+ relationships[1]+ ", ...";    
                     }
                     finaljson.items[index].connected = true;
 
@@ -210,7 +218,7 @@ sakai.search = function(){
         $("#invited_search_result").html($.TemplateRenderer("invited_search_result_template", finaljson));
 
         $(".link_accept_contact").bind("click", function(ev){
-            var user = this.id.split("_")[this.id.split("_").length - 1];
+            var user = this.id.substring(20);
 
             $.ajax({
                 url: "/~" + sakai.data.me.user.userid + "/contacts.accept.html",
@@ -255,7 +263,7 @@ sakai.search = function(){
         $("#invited_search_result").html("<b>Loading ...</b>");
 
         $.ajax({
-            url: "/var/contacts/pending.json?page=0&items=100",
+            url: "/var/contacts/pending.infinity.json?page=0&items=100",
             cache: false,
             success: function(data){
                 foundPending = $.extend(data, {}, true);
@@ -295,8 +303,11 @@ sakai.search = function(){
                         finaljson.items[index].name = finaljson.items[index].userid;
                     }
                     var relationships = connection["sakai:types"];
-                    if (relationships) {
-                        finaljson.items[index].extra = relationships;
+                    // if there are more than 3 connection type display 2 connection,...
+                    if (relationships.length < 3) {
+                        finaljson.items[index].extra = relationships;    
+                    } else {
+                        finaljson.items[index].extra = relationships[0] + ", "+ relationships[1]+ ", ...";    
                     }
                     finaljson.items[index].connected = true;
 

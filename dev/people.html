@@ -4,7 +4,7 @@
     <head>
 
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>Sakai 3 R&amp;D - __MSG__MY_CONTACTS__</title>
+        <title></title>
 
         <!-- Sakai Core CSS -->
         <link rel="stylesheet" type="text/css" href="_css/FSS/fss-base.css" />
@@ -27,7 +27,8 @@
         <!-- Sakai Config JS -->
         <script type="text/javascript" src="_configuration/widgets.js"></script>
         <script type="text/javascript" src="/var/widgets.json?callback=sakai.storeWidgets"></script>
-        <script type="text/javascript" src="_configuration/config.js"></script>
+        <script type="text/javascript" src="/dev/_configuration/config.js"></script>
+        <script type="text/javascript" src="/dev/_configuration/config_custom.js"></script>
 
         <!-- Core 3rd-party JS -->
         <script type="text/javascript" src="_lib/jquery/jquery.js"></script>
@@ -53,6 +54,9 @@
 
     <body id="root" class="fl-centered fl-container people i18nable">
 
+        <!-- TOP BANNER -->
+        <div id="top_banner"><!-- --></div>
+
         <!-- NAVIGATION -->
         <div id="widget_topnavigation" class="widget_inline"></div>
 
@@ -64,7 +68,7 @@
                 <!-- TITLE BAR  -->
                 <div class="s3d-site-heading">
                     <div class="fl-container options find_more_people fl-force-right">
-                        <a id="edit-layout" href="search_people.html#q=*&page=1">__MSG__FIND_MORE_PEOPLE__</a>
+                        <a id="edit-layout" href="search_people.html#q=*&page=1">__MSG__SEARCH_PEOPLE__</a>
                     </div>
                     <h1>__MSG__PEOPLE__</h1>
                 </div>
@@ -99,11 +103,11 @@
                                     {for i in items}
                                         <div class="fl-container fl-fix search_result_person">
                                             {if ! i.picture}
-                                                <a href="/dev/show.html?type=user&amp;id=${i.userid}" class="fl-icon search_result_person_picture" title="__MSG__TO_SEE_THE_PERSON_PROFILE__"></a>
+                                                <a href="/~${i.userid}" class="fl-icon search_result_person_picture" title="__MSG__TO_SEE_THE_PERSON_PROFILE__"></a>
                                             {else}
-                                                <a href="/dev/show.html?type=user&amp;id=${i.userid}" class="search_result_person_picture" style="background-image:none" title="__TO_SEE_THE_PERSON_PROFILE__"><img src="${i.picture}" alt="__TO_SEE_THE_PERSON_PROFILE__" width="60px" height="60px"/></a>
+                                                <a href="/~${i.userid}" class="search_result_person_picture" style="background-image:none" title="__MSG__TO_SEE_THE_PERSON_PROFILE__"><img src="${i.picture}" alt="__MSG__TO_SEE_THE_PERSON_PROFILE__" width="60px" height="60px"/></a>
                                             {/if}
-                                            <a href="/dev/show.html?type=user&amp;id=${i.userid}" class="search_result_person_name">${i.name}</a>
+                                            <a href="/~${i.userid}" class="search_result_person_name">${i.name}</a>
                                             {if i.extra}
                                                 <label class="search_result_person_dept">${i.extra}</label>
                                             {else}
@@ -149,11 +153,11 @@
                                     {for i in items}
                                         <div class="fl-container fl-fix search_result_person" id="accept_contact_container_${i.userid}">
                                             {if ! i.picture}
-                                                <a href="/dev/show.html?type=user&amp;id=${i.userid}" class="fl-icon search_result_person_picture" title="__MSG__TO_SEE_THE_PERSON_PROFILE__"></a>
+                                                <a href="/~${i.userid}" class="fl-icon search_result_person_picture" title="__MSG__TO_SEE_THE_PERSON_PROFILE__"></a>
                                             {else}
-                                                <a href="/dev/show.html?type=user&amp;id=${i.userid}" class="search_result_person_picture" style="background-image:none" title="__MSG__TO_SEE_THE_PERSON_PROFILE__"><img src="${i.picture}" alt="__TO_SEE_THE_PERSON_PROFILE__" width="60px" height="60px"/></a>
+                                                <a href="/~${i.userid}" class="search_result_person_picture" style="background-image:none" title="__MSG__TO_SEE_THE_PERSON_PROFILE__"><img src="${i.picture}" alt="__MSG__TO_SEE_THE_PERSON_PROFILE__" width="60px" height="60px"/></a>
                                             {/if}
-                                            <a href="/dev/show.html?type=user&amp;id=${i.userid}" class="search_result_person_name">${i.name}</a>
+                                            <a href="/~${i.userid}" class="search_result_person_name">${i.name}</a>
                                             {if i.extra}
                                                 <label class="search_result_person_dept">${i.extra}</label>
                                             {else}
@@ -189,11 +193,11 @@
                                     {for i in items}
                                         <div class="fl-container fl-fix search_result_person">
                                             {if ! i.picture}
-                                                <a href="/dev/show.html?type=user&amp;id=${i.userid}" class="fl-icon search_result_person_picture" title="__MSG__TO_SEE_THE_PERSON_PROFILE__"></a>
+                                                <a href="/~${i.userid}" class="fl-icon search_result_person_picture" title="__MSG__TO_SEE_THE_PERSON_PROFILE__"></a>
                                             {else}
-                                                <a href="/dev/show.html?type=user&amp;id=${i.userid}" class="search_result_person_picture" style="background-image:none" title="__MSG__TO_SEE_THE_PERSON_PROFILE__"><img src="${i.picture}" alt="__TO_SEE_THE_PERSON_PROFILE__" width="60px" height="60px"/></a>
+                                                <a href="/~${i.userid}" class="search_result_person_picture" style="background-image:none" title="__MSG__TO_SEE_THE_PERSON_PROFILE__"><img src="${i.picture}" alt="__MSG__TO_SEE_THE_PERSON_PROFILE__" width="60px" height="60px"/></a>
                                             {/if}
-                                            <a href="/dev/show.html?type=user&amp;id=${i.userid}" class="search_result_person_name">${i.name}</a>
+                                            <a href="/~${i.userid}" class="search_result_person_name">${i.name}</a>
                                             {if i.extra}
                                                 <label class="search_result_person_dept">${i.extra}</label>
                                             {else}

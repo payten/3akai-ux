@@ -38,7 +38,9 @@ sakai.nopermissions = function(tuid, showSettings) {
                 redurl = querystring.get("redurl");
             }
             // Set the link for the sign in button
-            $(".login-container a").attr("href", gatewayURL + "?url=" + escape(redurl));
+            $(".login-container button").bind("click", function(){
+                document.location = (gatewayURL + "?url=" + escape(redurl));
+            });
         } else {
             // Remove the sakai.index stylesheet as it would mess up the design
             $("LINK[href*='/dev/_css/sakai/sakai.index.css']").remove();
@@ -47,6 +49,8 @@ sakai.nopermissions = function(tuid, showSettings) {
             $(permissionsError).append(renderedTemplate);
             $("#permission_error").addClass("error_page_bringdown");
         }
+        sakai.api.Security.showPage();
+        document.title = document.title + sakai.api.i18n.General.getValueForKey("ACCESS_DENIED");
     }
 
     doInit();

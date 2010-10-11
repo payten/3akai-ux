@@ -4,7 +4,7 @@
     <head>
 
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>Sakai 3 R&amp;D - __MSG__SEARCH_ALL__</title>
+        <title></title>
 
         <!-- Sakai Core CSS -->
         <link rel="stylesheet" type="text/css" href="_css/FSS/fss-base.css" />
@@ -27,7 +27,8 @@
         <!-- Sakai Config JS -->
         <script type="text/javascript" src="_configuration/widgets.js"></script>
         <script type="text/javascript" src="/var/widgets.json?callback=sakai.storeWidgets"></script>
-        <script type="text/javascript" src="_configuration/config.js"></script>
+        <script type="text/javascript" src="/dev/_configuration/config.js"></script>
+        <script type="text/javascript" src="/dev/_configuration/config_custom.js"></script>
 
         <!-- Core 3rd-party JS -->
         <script type="text/javascript" src="_lib/jquery/jquery.js"></script>
@@ -54,12 +55,15 @@
 
     <body id="root" class="fl-centered fl-container i18nable search-container">
 
+        <!-- TOP BANNER -->
+        <div id="top_banner"><!-- --></div>
+
         <!-- NAVIGATION -->
         <div id="widget_topnavigation" class="widget_inline"></div>
         <div id="widget_filemanager" class="widget_inline"></div>
 
         <!-- CONTENT -->
-        <div class="fl-container fl-fix fl-container-flex content content_search">
+        <div class="fl-container fl-container-flex content content_search">
             <div class="fl-fix fl-centered fixed-container">
                 <div class="decor"><!-- --></div>
                 <!-- TITLE -->
@@ -100,7 +104,10 @@
                             </div>
                         </div>
                         <div class="fl-left fl-container search_result_title" id="search_result_title" style="display:none">__MSG__FOUND__ <strong id="search_numberFound">0</strong> __MSG__RESULTS_MATCHING_YOUR_SEARCH_FOR__ <span class="keyword"><strong id="search_mysearchterm"></strong></span></div>
-                        <div class="fl-left fl-container search_result_title" id="search_result_tag_title" style="display:none">__MSG__RESULTS_TAGGED_UNDER__ <span class="keyword"><strong id="search_mytagterm"></strong></span></div>
+                        <div class="fl-left fl-container search_result_title" id="search_result_tag_title" style="display:none"><span class="keyword"><strong id="search_mytagterm"></strong></span></div>
+
+                        <div id="search_result_results_tagged_under" style="display:none;"><span style="font-weight:normal">__MSG__RESULTS_TAGGED_UNDER__</span></div>
+                        <div id="search_result_results_located_in" style="display:none;"><span style="font-weight:normal">__MSG__RESULTS_LOCATED_IN__</span></div>
 
                         <!-- TEMPORARY SEARCH TEXT -->
                         <span id="search_result_temp" style="display:none;"><b>__MSG__SEARCHING__ ...</b></span>
@@ -112,7 +119,7 @@
                         <div class="fl-container fl-fix search_results_container" style="display:none" id="cm_header">
                             <div class="search_top_rounded"><div class="search_top_rounded_inner"><!-- --></div></div>
                             <div class="fl-container fl-fix search_results_part">
-                                <div class="fl-container fl-fix search_results_part_header"> <a href="#" class="search_results_part_title">__MSG__CONTENT_AND_MEDIA__</a> <a href="#" class="fl-force-right display_more_link" id="display_more_cm" style="display:none"><small>__MSG__VIEW_MORE_CONTENT_AND_MEDIA_RESULTS__ &raquo;</small></a> </div>
+                                <div class="fl-container fl-fix search_results_part_header"> <a href="search_content.html" id="search_content_title" class="search_results_part_title">__MSG__CONTENT_AND_MEDIA__</a> <a href="#" class="fl-force-right display_more_link" id="display_more_cm" style="display:none"><small>__MSG__VIEW_MORE_CONTENT_AND_MEDIA_RESULTS__ &raquo;</small></a> </div>
                                 <div id="cm_search_result"></div>
                                 <div id="cm_search_result_template"><!--
                                 {for i in items}
@@ -128,7 +135,7 @@
                                         {elseif i['jcr:primaryType'] === "sling:Folder"}
                                             {var mimeType = 'folder'}
                                         {/if}
-                                        {if mimeType=="image/jpg" || mimeType=="image/png" || mimeType=="image/gif" || mimeType=="image/bmp"}
+                                        {if (mimeType=="image/jpg" || mimeType=="image/png" || mimeType=="image/gif") && sakai.config.MimeTypes[mimeType]}
                                             {var mimeTypeDescription = sakai.config.MimeTypes[mimeType].description}
                                             {if i['jcr:primaryType'] && i['jcr:primaryType'] === "sakai:pooled-content"}
                                                 <img src="/p/${i['jcr:name']}" alt="${mimeTypeDescription}" />
@@ -143,11 +150,27 @@
                                             <img src="${sakai.config.MimeTypes["other"].URL}" alt="${mimeTypeDescription}" />
                                         {/if}
                                         <div class="search_result_right">
-                                            <div class="search_result_header"><a href="/dev/content_profile.html#content_path={if i['sakai:pooled-content-file-name']}/p/${i['jcr:name']}{else}${i['jcr:path']}{/if}">{if i['sakai:pooled-content-file-name']}${i['sakai:pooled-content-file-name']}{elseif i['jcr:name']}${i['jcr:name']}{/if}</a></div>
-                                            {if i["sakai:description"]}<div class="search_result_description">${i["sakai:description"]}</div>{/if}
+                                            <div class="search_result_header">
+                                                <a href="/dev/content_profile.html#content_path={if i['sakai:pooled-content-file-name']}/p/${i['jcr:name']}" title="${i['sakai:pooled-content-file-name']}"{else}${i['jcr:path']}" title="${i['jcr:name']}"{/if}>
+                                                    {if i['sakai:pooled-content-file-name']}
+                                                        {if i['sakai:pooled-content-file-name'].length > 60}
+                                                            ${i['sakai:pooled-content-file-name'].substring(0, 60)}...
+                                                        {else}
+                                                            ${i['sakai:pooled-content-file-name']}
+                                                        {/if}
+                                                    {elseif i['jcr:name']}
+                                                        {if i['jcr:name'].length > 60}
+                                                            ${i['jcr:name'].substring(0, 60)}...
+                                                        {else}
+                                                            ${i['jcr:name']}
+                                                        {/if}
+                                                    {/if}
+                                                </a>
+                                            </div>
+                                            {if i["sakai:description"]}<div class="search_result_description">${sakai.api.Util.shortenString(i["sakai:description"], 400)}</div>{/if}
                                             {if i["sakai:tags"] && i["sakai:tags"].length > 0}
                                                 <div class="search_result_tags">__MSG__TAGS__:
-                                                    {for t in i["sakai:tags"]}{if t_index > 0},{/if} ${t}{/for}
+                                                    {for t in i["sakai:tags"]}{if t.split("/")[0] !== "directory"}{if t_index > 0},{/if} ${t}{/if}{/for}
                                                 </div>
                                             {/if}
                                             {if mimeTypeDescription}<div class="search_result_type"><a href="/dev/content_profile.html#content_path={if i['sakai:pooled-content-file-name']}/p/${i['jcr:name']}{else}${i['jcr:path']}{/if}">${mimeTypeDescription}</a></div>{/if}
@@ -165,11 +188,36 @@
                             <div class="search_bottom_rounded"><div class="search_bottom_rounded_inner"><!-- --></div></div>
                         </div>
 
+                        <!-- GROUPS -->
+                        <div class="fl-container fl-fix search_results_container" style="display:none" id="sites_header">
+                            <div class="search_top_rounded"><div class="search_top_rounded_inner"><!-- --></div></div>
+                            <div class="fl-container fl-fix search_results_part">
+                                <div class="fl-container fl-fix search_results_part_header"> <a href="search_group.html" id="search_groups_title" class="search_results_part_title">__MSG__GROUPS__</a> <a href="#" class="fl-force-right display_more_link" id="display_more_sites" style="display:none"><small>__MSG__VIEW_MORE_GROUP_RESULT__ &raquo;</small></a> </div>
+                                <div id="sites_search_result"> </div>
+                                <div id="sites_search_result_template"><!--
+                                    {for i in items}
+                                        {if i['sakai:group-id']}
+                                        {var groupsFound = true}
+                                        <div class="fl-container fl-fix search_result_course_site">
+                                            <div class="search_result_course_site_title"><a href="/~${i.pagepath}">${sakai.api.Util.shortenString(i["sakai:group-title"], 100)}</a></div>
+                                            <div class="search_result_course_site_url"><a href="/~${i.pagepath}">${sakai.api.Util.shortenString(i.pagepath, 100)}</a></div>
+                                            <div class="search_result_course_site_excerpt">${sakai.api.Util.shortenString(i["sakai:group-description"], 400)}</div>
+                                        </div>
+                                        {/if}
+                                    {/for}
+                                    {if !groupsFound}
+                                        __MSG__NO_GROUPS_FOUND__.
+                                    {/if}
+                                --></div>
+                            </div>
+                            <div class="search_bottom_rounded"><div class="search_bottom_rounded_inner"><!-- --></div></div>
+                        </div>
+
                         <!-- PEOPLE PART -->
                         <div class="fl-container fl-fix search_results_container" style="display:none" id="people_header">
                         <div class="search_top_rounded"><div class="search_top_rounded_inner"><!-- --></div></div>
                             <div class="fl-container fl-fix search_results_part">
-                                <div class="fl-container fl-fix search_results_part_header"> <a href="javascript:;" class="search_results_part_title">__MSG__PEOPLE__</a> <a href="javascript:;" class="fl-force-right display_more_link" id="display_more_people" style="display:none"><small>__MSG__VIEW_MORE_PEOPLE_RESULTS__ &raquo;</small></a> </div>
+                                <div class="fl-container fl-fix search_results_part_header"> <a href="search_people.html" id="search_people_title" class="search_results_part_title">__MSG__PEOPLE__</a> <a href="javascript:;" class="fl-force-right display_more_link" id="display_more_people" style="display:none"><small>__MSG__VIEW_MORE_PEOPLE_RESULTS__ &raquo;</small></a> </div>
                                 <div id="people_search_result"> </div>
                                 <div id="people_search_result_template"><!--
                                 {for i in items}
@@ -177,11 +225,11 @@
                                     {var peopleFound = true}
                                         <div class="fl-container fl-fix search_result_person">
                                             {if ! i.picture}
-                                                <a href="/dev/show.html?type=user&amp;id=${i.userid}" class="fl-icon search_result_person_picture" title="__MSG__TO_SEE_THE_PERSON_PROFILE__"></a>
+                                                <a href="/~${i.userid}" class="fl-icon search_result_person_picture" title="__MSG__TO_SEE_THE_PERSON_PROFILE__"></a>
                                             {else}
-                                                <a href="/dev/show.html?type=user&amp;id=${i.userid}" class="search_result_person_picture" title="__MSG__TO_SEE_THE_PERSON_PROFILE__"><img src="{if i.picture}${i.picture}{else}/dev/_images/person_icon.jpg{/if}" alt="__MSG__TO_SEE_THE_PERSON_PROFILE__" width="60px" height="60px"/></a>
+                                                <a href="/~${i.userid}" class="search_result_person_picture" title="__MSG__TO_SEE_THE_PERSON_PROFILE__"><img src="{if i.picture}${i.picture}{else}/dev/_images/person_icon.jpg{/if}" alt="__MSG__TO_SEE_THE_PERSON_PROFILE__" width="60px" height="60px"/></a>
                                             {/if}
-                                            <a href="/dev/show.html?type=user&amp;id=${i.userid}" class="search_result_person_name">${i.name}</a>
+                                            <a href="/~${i.userid}" class="search_result_person_name">${sakai.api.Util.shortenString(i.name, 25)}</a>
                                             {if i.extra}
                                                 <a href="javascript:;" class="search_result_person_dept">${i.extra}</a>
                                             {else}
@@ -207,26 +255,6 @@
                             <div class="search_bottom_rounded"><div class="search_bottom_rounded_inner"><!-- --></div></div>
                         </div>
 
-                        <!-- GROUPS -->
-                        <div class="fl-container fl-fix search_results_container" style="display:none" id="sites_header">
-                            <div class="search_top_rounded"><div class="search_top_rounded_inner"><!-- --></div></div>
-                            <div class="fl-container fl-fix search_results_part">
-                                <div class="fl-container fl-fix search_results_part_header"> <a href="#" class="search_results_part_title">__MSG__GROUPS__</a> <a href="#" class="fl-force-right display_more_link" id="display_more_sites" style="display:none"><small>__MSG__VIEW_MORE_GROUP_RESULT__ &raquo;</small></a> </div>
-                                <div id="sites_search_result"> </div>
-                                <div id="sites_search_result_template"><!--
-                                    {for i in items}
-                                        <div class="fl-container fl-fix search_result_course_site">
-                                            <div class="search_result_course_site_title"><a href="/dev/show.html?type=group&amp;id=${i.pagepath}">${i["sakai:group-title"]}</a></div>
-                                            <div class="search_result_course_site_url"><a href="/dev/show.html?type=group&amp;id=${i.pagepath}">${i.pagepath}</a></div>
-                                            <div class="search_result_course_site_excerpt">${i["sakai:group-description"]}</div>
-                                        </div>
-                                    {forelse}
-                                        __MSG__NO_GROUPS_FOUND__.
-                                    {/for}
-                                --></div>
-                            </div>
-                            <div class="search_bottom_rounded"><div class="search_bottom_rounded_inner"><!-- --></div></div>
-                        </div>
                         </div>
                     </div>
 

@@ -63,6 +63,7 @@ sakai.sitespages = function(tuid,showSettings){
     var $sitespages_page_options = $("#sitespages_page_options");
     var $more_revision_history = $("#more_revision_history");
     var $more_save_as_template = $("#more_save_as_template");
+    var $more_change_layout = $("#more_change_layout");
 
     sakai.sitespages.site_info = {};
     sakai.sitespages.site_info._pages = {};
@@ -113,7 +114,36 @@ sakai.sitespages = function(tuid,showSettings){
         // Load admin part from a separate file
         $.getScript(sakai.sitespages.siteAdminJS, function(e){
             if ($.isFunction(callback)) {
-                callback();
+                if (sakai.sitespages.adminReady === false) {
+                    $(window).bind("sakai-sitespages-admin-ready", function() {
+                        callback();
+                    });
+                } else {
+                    callback();
+                }
+            }
+        });
+
+    };
+
+    /**
+     * Load Templates. This function is no longer used within this js file. It
+     * is global and used by outside scripts. This, along with a number of other
+     * functions from this file should probably be moved into a Page-related api
+     * @return void
+     */
+    sakai.sitespages.loadTemplates = function() {
+        if (sakai.sitespages.versionHistoryNeedsReset) {
+            sakai.sitespages.resetVersionHistory();
+            sakai.sitespages.versionHistoryNeedsReset = false;
+        }
+
+        // Load template configuration file
+        sakai.api.Server.loadJSON("/~" + sakai.data.me.user.userid + "/private/templates", function(success, pref_data){
+            if (success) {
+                sakai.sitespages.mytemplates = pref_data;
+            } else {
+                sakai.sitespages.mytemplates = {};
             }
         });
 
@@ -195,10 +225,6 @@ sakai.sitespages = function(tuid,showSettings){
                     sakai.sitespages.openPage(pageToOpen);
                 }
 
-                // Load page templates
-                if (config.editMode) {
-                    sakai.sitespages.loadTemplates();
-                }
                 // Load site navigation
                 if (doLoadNav) {
                     sakai.sitespages.loadSiteNavigation();
@@ -289,16 +315,7 @@ sakai.sitespages = function(tuid,showSettings){
 
         // If no pageUrlName is supplied, default to the about page
         if (!pageUrlName) {
-            for (var i in sakai.sitespages.site_info._pages) {
-                if (sakai.sitespages.site_info._pages.hasOwnProperty(i)) {
-                    // TODO should make these next two based on config rather than hard coded
-                    if (sakai.sitespages.site_info._pages[i]["pageURLTitle"] === "about-this-group" || // default group page
-                        sakai.sitespages.site_info._pages[i]["pageURLTitle"] === "profile") { // defualt user page
-                        pageUrlName = i;
-                        break;
-                    }
-                }
-            }
+            pageUrlName = determineLowestPositionPage();
         }
 
         // Store currently selected page
@@ -384,14 +401,17 @@ sakai.sitespages = function(tuid,showSettings){
                 $li_edit_page_divider.show();
                 $sitespages_page_options.show();
                 $more_revision_history.show();
+                $more_change_layout.hide();
                 $more_save_as_template.show();
+                $more_change_layout.hide();
             } else if (pageType === "dashboard") {
-                $(".sakai_site .content_top").addClass("content_top_rounded");
+                $(".sakai_site .content_top").removeClass("content_top_rounded");
                 $sitespages_page_options.show();
                 $more_revision_history.hide();
-                $content_page_options.hide();
-                $li_edit_page_divider.hide();
+                $content_page_options.show();
+                $li_edit_page_divider.show();
                 $more_save_as_template.hide();
+                $more_change_layout.show();
             } else if (pageType === "profile") {
                 $(".sakai_site .content_top").addClass("content_top_rounded");
                 $sitespages_page_options.hide();
@@ -473,6 +493,18 @@ sakai.sitespages = function(tuid,showSettings){
         // Init site admin
         sakai.sitespages.site_admin();
 
+    };
+
+    var determineLowestPositionPage = function(){
+        var lowest = 9999999999999999;
+        var ret = false;
+        for (var i in sakai.sitespages.site_info._pages){
+            if (sakai.sitespages.site_info._pages.hasOwnProperty(i) && sakai.sitespages.site_info._pages[i]["pagePosition"] && parseInt(sakai.sitespages.site_info._pages[i]["pagePosition"], 10) < lowest) {
+                lowest = parseInt(sakai.sitespages.site_info._pages[i]["pagePosition"], 10);
+                ret = i;
+            }
+        }
+        return ret;
     };
 
     /**
@@ -571,7 +603,7 @@ sakai.sitespages = function(tuid,showSettings){
     };
 
     $(window).trigger("sakai.sitespages.ready");
-
+    sakai.sitespages.isReady = true;
 };
 
 sakai.api.Widgets.widgetLoader.informOnLoad("sitespages");

@@ -38,7 +38,9 @@ sakai.nopermissions = function(tuid, showSettings) {
             if (querystring.contains("redurl")){
                 redurl = querystring.get("redurl");
             }
-            $(".login-container a").attr("href", gatewayURL + "?url=" + escape(redurl));
+            $(".login-container button").bind("click", function(){
+                document.location = (gatewayURL + "?url=" + escape(redurl));
+            });
         } else {
             // Remove the sakai.index stylesheet as it would mess up the design
             $("LINK[href*='/dev/_css/sakai/sakai.index.css']").remove();
@@ -47,6 +49,8 @@ sakai.nopermissions = function(tuid, showSettings) {
             $(pageNotFoundError).append(renderedTemplate);
             $("#page_not_found_error").addClass("error_page_bringdown");
         }
+        sakai.api.Security.showPage();
+        document.title = document.title + sakai.api.i18n.General.getValueForKey("PAGE_NOT_FOUND");
     }
 
     doInit();
