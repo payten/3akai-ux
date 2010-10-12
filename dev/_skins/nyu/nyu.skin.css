@@ -1,14 +1,11 @@
 /* Page Background */
 html {
 background: #57068C url("images/body_nyu_bg.png") left top repeat-x !important;
-}   
+}
 /* Header */
-body {
-    background:transparent url("images/nyu_logos.png") top center no-repeat !important;
-} 
-     
-#topnavigationcontainer {
-	padding:80px 0 0 0 !important;	
+#top_banner {
+	background:transparent url("images/nyu_logos.png") top center no-repeat !important;
+	height:80px; 
 }
 /* Buttons */
 .s3d-button {   
@@ -62,7 +59,7 @@ html > body .s3d-button .s3d-button-inner {
     background-position: left -240px;
 }
 
-, .s3d-button:hover[disabled] .s3d-button-inner, .s3d-disabled.s3d-button-hover .s3d-button-inner  {
+.s3d-button:hover[disabled] .s3d-button-inner, .s3d-disabled.s3d-button-hover .s3d-button-inner  {
     background-position: left -240px;
 }
 
@@ -84,25 +81,30 @@ html > body .s3d-button .s3d-button-inner {
 }
 
 /* Page Links */
-a.s3d-action, .s3d-actions a {
-	color:#57068c;
-}
-.explore_nav .explore a{
+a.s3d-action, .s3d-actions a, 
+.explore_nav .explore a,
+.myprofile_widget .profile a.myprofile_name,
+.content_search a,
+a.directory_level_three_link 
+{
 	color:#57068c;
 }
 .people .find_more_people a {
     background: url("images/arrow_right_sm2_nyu_purple.png") no-repeat scroll right center;	
 	color:#57068c;
 }
-.fl-widget .fl-widget-options ul li a {
-	color:#57068c;
-}
+
 .myprofile_widget .profile .myprofile_name {
 	color:#57068c !important;
 }
-.content_search a {
-	color:#57068c;
-} 
+a.s3d-action, .s3d-actions a:visited, 
+.explore_nav .explore a:visited,
+.myprofile_widget .profile a.myprofile_name:visited,
+.content_search a:visited,
+a.directory_level_three_link:visited  
+{
+	color:#3C1354 !important:
+}
 
 /* Footer Links */
 
