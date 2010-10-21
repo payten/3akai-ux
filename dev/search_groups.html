@@ -20,9 +20,6 @@
         <link rel="stylesheet" type="text/css" href="_css/sakai/sakai.components.jq_pager.css" />
         <link rel="stylesheet" type="text/css" href="/dev/_css/lib/jquery.autoSuggest.css" />
 
-        <!-- NYU Skin CSS-->
-        <link rel="stylesheet" type="text/css" href="_skins/nyu/nyu.skin.css" />
-
         <!-- Sakai Config JS -->
         <script type="text/javascript" src="_configuration/widgets.js"></script>
         <script type="text/javascript" src="/var/widgets.json?callback=sakai.storeWidgets"></script>
@@ -126,27 +123,27 @@
 
                             <!-- TEMPLATE CONTAINING THE RESULTS -->
                             <div id="search_results_template"><!--
-                                {for i in items}
-                                    {if i['sakai:group-id']}
-                                    {var groupsFound = true}
-                                    <div class="fl-container fl-fix search_result">
-                                        {if i.picture}
-                                        <img src="${i.picture.picPath}" alt="group name">
-                                        {else}
-                                        <img src="/dev/_images/group_avatar_icon_64x64_nob.png" alt="group name">
-                                        {/if}
-                                        <div class="search_result_course_site_title"><a href="/~${i.pagepath}">${sakai.api.Util.shortenString(i["sakai:group-title"], 75)}</a></div>
-                                        <div class="search_result_course_site_url"><a href="/~${i.pagepath}">${sakai.api.Util.shortenString(i.pagepath, 75)}</a></div>
-                                        <div class="search_result_course_site_excerpt">${sakai.api.Util.shortenString(i["sakai:group-description"], 300)}</div>
-                                    </div>
-                                    {/if}
-                                {/for}
-                                {if !groupsFound}
-                                    <div class="search_no_groups">
-                                        __MSG__NO_GROUPS_FOUND__
-                                    </div>
-                                {/if}
-                            --></div>
+{for i in items}
+{if i['sakai:group-id']}
+{var groupsFound = true}
+<div class="fl-container fl-fix search_result">
+{if i.picture}
+<img src="${i.picture.picPath}" alt="group name">
+{else}
+<img src="/dev/_images/group_avatar_icon_64x64_nob.png" alt="group name">
+{/if}
+<div class="search_result_course_site_title"><a href="/~${i.pagepath}">${sakai.api.Util.shortenString(i["sakai:group-title"], 75)}</a></div>
+<div class="search_result_course_site_url"><a href="/~${i.pagepath}">${sakai.api.Util.shortenString(i.pagepath, 75)}</a></div>
+<div class="search_result_course_site_excerpt">${sakai.api.Util.shortenString(i["sakai:group-description"], 300)}</div>
+</div>
+{/if}
+{/for}
+{if !groupsFound}
+<div class="search_no_groups">
+__MSG__NO_GROUPS_FOUND__
+</div>
+{/if}
+--></div>
                             <div class="search_bottom_rounded"><div class="search_bottom_rounded_inner"><!-- --></div></div>
                         </div>
                         </div>
@@ -167,7 +164,7 @@
         <div id="creategroupcontainer" style="display:none;">
             <!-- We need this container to show the pop-up where you can add a group -->
             <div id="widget_creategroup" class="widget_inline"></div>
- 	    </div>
+  </div>
 
         <!-- FOOTER WIDGET -->
         <div id="widget_footer" class="widget_inline footercontainer"></div>
