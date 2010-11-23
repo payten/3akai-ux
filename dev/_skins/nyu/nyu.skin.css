@@ -25,7 +25,8 @@ a:active {
 }
 
 .explore_nav .explore li a, 
-.explore_nav .top_navigation li a {
+.explore_nav .top_navigation li a,
+.explore_nav .personal li a {
 color: #fff !important;
 }
 
@@ -118,9 +119,9 @@ a.directory_level_three_link:visited
 {
 	color:#3C1354 !important;
 }
-#navigation_tree ul.jstree-no-dots li.jstree-leaf a, 
-#navigation_tree ul.jstree-no-dots li.jstree-open a, 
-#navigation_tree ul.jstree-no-dots li.jstree-closed a {
+#navigation_tree ul.jstree-no-dots li.jstree-leaf a.jstree-clicked, 
+#navigation_tree ul.jstree-no-dots li.jstree-open a.jstree-clicked, 
+#navigation_tree ul.jstree-no-dots li.jstree-closed a.jstree-clicked  {
 	color:#fff !important;
   background-color: #3C1354 !important;
   border: none;
@@ -128,8 +129,8 @@ a.directory_level_three_link:visited
 #navigation_tree ul.jstree-no-dots li.jstree-leaf a.jstree-hovered, 
 #navigation_tree ul.jstree-no-dots li.jstree-open a.jstree-hovered, 
 #navigation_tree ul.jstree-no-dots li.jstree-closed a.jstree-hovered {
-	color:#fff !important;
-  background-color: #3C1354 !important;
+	color: #3C1354 !important;
+  background-color: #ddd !important;
   border: none;
 } 
 #user_link_menu li a {
@@ -228,7 +229,8 @@ background: #57068C url("images/body_nyu_home_bg.png") left top repeat-x !import
   height:168px;
   padding:20px;
 }                      
-.requireAnon .login-container-button {
+.requireAnon .login-container-button { 
+	margin-top:10px;
 	border:none;
 } 
 
