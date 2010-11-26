@@ -11,6 +11,6 @@
     "enabled": true,
     "url":"/devwidgets/text/text.html",
     "i18n": {
-        "default": "/devwidgets/text/bundles/default.properties"
-    },
+        "default": "/devwidgets/text/bundles/default.json"
+    }
 }
