@@ -189,12 +189,12 @@ sakai.show = function() {
             // Set the profile data object
             sakai.profile.main.data = $.extend(true, {}, userprofile);
 
+            postDataRetrieval();
+            sakai.api.Security.showPage();
+
             if (sakai.profile.main.data["sakai:customStyle"]) {
                 $.Load.requireCSS(sakai.profile.main.data["sakai:customStyle"]);
             }
-
-            postDataRetrieval();
-            sakai.api.Security.showPage();
         }
         
         var pageTitle = sakai.api.i18n.General.getValueForKey(sakai.config.PageTitles.prefix);
