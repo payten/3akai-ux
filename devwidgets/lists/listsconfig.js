@@ -9,15 +9,15 @@ sakai.Lists = {
             "multiple": false,
             "list": [
                 {
-                    "title":"PNP",
+                    "title":"MPA: PNP",
                     "link": "http://sakaiproject.org/product-overview"
                 },
                 {
-                    "title":"HPAM",
+                    "title":"MPA: HPAM",
                     "link": "http://sakaiproject.org/support-overview"
                 },
                 {
-                    "title":"UP",
+                    "title":"MUP",
                     "link": "http://sakaiproject.org/community-overview"
                 },
                 {
@@ -25,7 +25,7 @@ sakai.Lists = {
                     "link": "http://sakaiproject.org/try-sakai-overview"
                 },
                 {
-                    "title":"EMPA Nurse Leaders",
+                    "title":"EMPA: Nurse Leaders",
                     "link": "http://sakaiproject.org/news-events"
                 },
                 {
@@ -56,7 +56,7 @@ sakai.Lists = {
             ]
         },
         {
-            "Label": "Gradutation Date (Month)",
+            "Label": "Gradutation Date",
             "multiple": false,
             "list": [
             "January 2011",
