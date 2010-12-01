@@ -6,6 +6,9 @@
   "showinsakaigoodies":true,
   "id":"collections",
   "img":"/devwidgets/collections/images/portfolio.png",
+  "i18n": {
+      "default": "/devwidgets/collections/bundles/default.json"
+  },
   "name":"Collections",
   "url":"/devwidgets/collections/collections.html"
 }
