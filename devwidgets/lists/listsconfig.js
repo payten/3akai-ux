@@ -6,18 +6,18 @@ sakai.Lists = {
         "list": [
         {
             "Label": "Program",
-            "multiple": true,
+            "multiple": false,
             "list": [
                 {
-                    "title":"PNP",
+                    "title":"MPA: PNP",
                     "link": "http://sakaiproject.org/product-overview"
                 },
                 {
-                    "title":"HPAM",
+                    "title":"MPA: HPAM",
                     "link": "http://sakaiproject.org/support-overview"
                 },
                 {
-                    "title":"UP",
+                    "title":"MUP",
                     "link": "http://sakaiproject.org/community-overview"
                 },
                 {
@@ -25,7 +25,7 @@ sakai.Lists = {
                     "link": "http://sakaiproject.org/try-sakai-overview"
                 },
                 {
-                    "title":"EMPA Nurse Leaders",
+                    "title":"EMPA: Nurse Leaders",
                     "link": "http://sakaiproject.org/news-events"
                 },
                 {
@@ -56,23 +56,24 @@ sakai.Lists = {
             ]
         },
         {
-            "Label": "Gradutation Date (Month)",
+            "Label": "Gradutation Date",
             "multiple": false,
             "list": [
-            "May ",
-            "January",
-            "September"
-            ]
-        },
-        {
-            "Label": "Graduation Date (Year)",
-            "multiple": false,
-            "list": [
-            "2010",
-            "2011",
-            "2012",
-            "2013",
-            "2020"
+            "January 2011",
+            "May 2011",
+            "September 2011",
+            "January 2012",
+            "May 2012",
+            "September 2012",
+            "January 2013",
+            "May 2013",
+            "September 2013",
+            "January 2014",
+            "May 2014",
+            "September 2014",
+            "January 2015",
+            "May 2015",
+            "September 2015"
             ]
         },
         {
