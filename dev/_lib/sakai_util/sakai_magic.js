@@ -1413,7 +1413,7 @@ sakai.api.Security.sendToLogin = function(){
     return false;
 };
 
-sakai.api.Security.showPage = function(){
+sakai.api.Security.showPage = function(callback){
     // Show the background images used on anonymous user pages
     if ($.inArray(window.location.pathname, sakai.config.requireAnonymous) > -1){
         $('html').addClass("requireAnon");
@@ -1430,6 +1430,9 @@ sakai.api.Security.showPage = function(){
     document.title = pageTitle;
     // Show the actual page content
     $('body').show();
+    if ($.isFunction(callback)) {
+        callback();
+    }
 };
 
 
