@@ -136,8 +136,8 @@ sakai.show = function() {
         sakai.currentgroup.data = entityData;
         postDataRetrieval();
         sakai.api.Security.showPage(function() {
-            if (sakai.profile.main.data.authprofile["sakai:customStyle"]) {
-                sakai.api.Util.include.css(sakai.profile.main.data.authprofile["sakai:customStyle"]);
+            if (sakai.currentgroup.data.authprofile["sakai:customStyle"]) {
+                sakai.api.Util.include.css(sakai.currentgroup.data.authprofile["sakai:customStyle"]);
             }
         });
         var pageTitle = sakai.api.i18n.General.getValueForKey(sakai.config.PageTitles.prefix);
