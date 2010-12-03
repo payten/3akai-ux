@@ -144,7 +144,6 @@ sakai.collections = function(tuid, showSettings) {
     var saveWidgetData = function() {
         widgetData.collectionData = collectionData;
         widgetData.settings = settings;
-        console.debug(widgetData.collectionData.collections.length);
         sakai.api.Widgets.saveWidgetData(tuid, widgetData, function(success, data) {
             if (success) {
                 if (showSettings) {
@@ -888,7 +887,7 @@ sakai.collections = function(tuid, showSettings) {
                         $("#item_" + selectedItemID).addClass("selected");
                         sizeItemScrollbar();
                         $(".itemPreviewTitle span").html(stripHTML($(".itemPreviewTitle span").html()));
-                $(".itemPreviewTitle").ThreeDots({max_rows : 1,  allow_dangle:true, whole_word:false});
+                        $(".itemPreviewTitle").ThreeDots({max_rows : 1,  allow_dangle:true, whole_word:false});
                         return (value);
                     },
                     {
@@ -1704,6 +1703,7 @@ sakai.collections = function(tuid, showSettings) {
                     addItemFile(fileList.items[0].link, fileList.items[0].mimetype);
                 }
             });
+            return false;
         });
         $(".albumImage.editable", $rootel).die("click");
         $(".albumImage.editable", $rootel).live("click", function() {
@@ -1714,6 +1714,7 @@ sakai.collections = function(tuid, showSettings) {
                     addAlbumImage(fileList.items[0].link);
                 }
             });
+            return false;
         });
         $browseForFilesButton.die("click");
         $browseForFilesButton.live("click", function() {
@@ -1724,6 +1725,7 @@ sakai.collections = function(tuid, showSettings) {
                     addRoomImage(fileList.items[0].link);
                 }
             });
+            return false;
         });
         $browseForContentFileButton.die("click");
         $browseForContentFileButton.live("click", function() {
@@ -1735,6 +1737,7 @@ sakai.collections = function(tuid, showSettings) {
                     addContentMimetype(fileList.items[0].mimetype);
                 }
             });
+            return false;
         });
     };
 

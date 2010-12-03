@@ -68,6 +68,7 @@ sakai.fileupload = function(tuid, showSettings){
     var $fileUploadAddDescription = $("#fileupload_add_description");
     var $multiFileUpload = $("#multifile_upload", $rootel);
     var $newUploaderForm = $("#new_uploader form", $rootel);
+    var fileUploadUploadContent = "#upload_content";
     var $fileUploadAddTags = $("#fileupload_add_tags");
     var $fileUploadProgressId = $("#fileupload_upload_progress", $rootel);
     var $fileUploadPermissionsSelect = $("#fileupload_permissions_select");
@@ -122,8 +123,6 @@ sakai.fileupload = function(tuid, showSettings){
 
 
     var contextData = {};
-    var uploadingNewVersion = false;
-    var uploadingNewLink = false;
 
     ///////////////////////
     // Utility functions //
@@ -214,7 +213,7 @@ sakai.fileupload = function(tuid, showSettings){
         }).insertAfter("input[type='file'].multi");
 
         // If the base version is a link then only a new link can be uploaded
-        if (uploadingNewLink) {
+        if ($(fileUploadUploadContent).hasClass("new_link")) {
             $fileUploadLinkBox.show();
             $("#new_uploader").hide();
             $("#fileupload_upload_option").hide();
@@ -873,22 +872,7 @@ sakai.fileupload = function(tuid, showSettings){
     });
 
     $(window).unbind("sakai-fileupload-init");
-    /**
-     * Bind to sakai-fileupload-init
-     *
-     * @param {Object} ev The event
-     * @param {Object} data Data to configure the fileupload widget. Can contain:
-                {Boolean} newVersion If this is a new version, defaults to false
-                {Boolean} isLink If this new version of a file is a link, defaults to false
-                {String} contentPath The path to the existing content to add a new version to
-    */
-    $(window).bind("sakai-fileupload-init", function(ev, data){
-        var contentPath = "";
-        if (data) {
-            uploadingNewVersion = data.newVersion || false;
-            uploadingNewLink = data.isLink || false;
-            contentPath = data.contentPath || "";
-        }
+    $(window).bind("sakai-fileupload-init", function(ev){
         // Check if the uploads need to be associated with a group or not
         if (sakai.currentgroup && sakai.currentgroup.id && !$.isEmptyObject(sakai.currentgroup.id)) {
             groupContext = true;
@@ -896,18 +880,18 @@ sakai.fileupload = function(tuid, showSettings){
             $('#uploadfilescontainer').show();
             initialise();
         } else {
-            if (uploadingNewVersion) {
+            if ($(fileUploadUploadContent).hasClass("new_version")) {
                 // If the base version is a link then only a new link can be uploaded
-                if(uploadingNewLink){
+                if($(fileUploadUploadContent).hasClass("new_link")){
                     $multiFileForm.hide();
-                } else{
+                } else {
                     $multiFileForm.find("p").hide();
                     $fileUploadLinkBox.hide();
                 }
                 // A new version of the file needs to be uploaded
                 $fileUploadWidgetTitleNewVersion.show();
                 $fileUploadWidgetTitle.hide();
-                oldVersionPath = contentPath;
+                oldVersionPath = $(fileUploadUploadContent).data("hashpath").split("contentpath_")[1];
                 context = "new_version";
                 initialise();
             }

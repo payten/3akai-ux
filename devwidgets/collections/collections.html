@@ -121,7 +121,7 @@
         </div>
         </div>
         <div class="itemImage isEditable itemData">
-          <a class="itemLink" href="${item.url}">
+          {if item.url}<a class="itemLink" href="${item.url}">{/if}
           {if (item.mimeType.split("/")[0] == "image")}
             <img src="${item.url}" alt="${item.title} __MSG__IMAGE__"/>
           {elseif sakai.config.MimeTypes[item.mimeType]}
@@ -129,7 +129,7 @@
           {else}
             <img src="${sakai.config.MimeTypes["other"].URL}" alt="${sakai.config.MimeTypes["other"].description}" />
           {/if}
-          </a>
+          {if item.url}</a>{/if}
         </div>
         <div class="itemDesc isEditable itemData">${item.description}</div>
       </div>

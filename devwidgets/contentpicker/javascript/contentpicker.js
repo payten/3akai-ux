@@ -151,7 +151,7 @@ sakai.contentpicker = function(tuid, showSettings) {
                         });
                         add(suggestions);
                     }
-                }, {"q": query.split(" ").join("*") + "*", "page": 0, "items": 15});
+                }, {"q": "*" + query.replace(/\s+/g, "* OR *") + "*", "page": 0, "items": 15});
             },
             retrieveLimit: 10,
             asHtmlID: tuid,
