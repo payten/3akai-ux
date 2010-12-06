@@ -1,0 +1,8 @@
+{
+	"sling:resourceType": "sakai/page",
+	"pageTitle": "Resume",
+	"pageType": "profile",
+	"deletable": false,
+	"pagePosition": 400000,
+	"jcr:mixinTypes": "sakai:propertiesmix"
+}

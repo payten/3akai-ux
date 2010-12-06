@@ -1,10 +1,11 @@
 {
     "userpages": false,
-    "userdashboard": true,
+    "userdashboard": false,
     "grouppages": false,
-    "groupdashboard": true,
+    "groupdashboard": false,
     "description": "Text",
     "hasSettings": true,
+    "deletable": false,
     "id": "text",
     "name": "",
     "type": "sakai",
