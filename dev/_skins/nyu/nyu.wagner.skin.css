@@ -117,6 +117,14 @@ a.directory_level_three_link:visited
 .footer_main .fixed-container  a:active {
 	color:#cccccc !important;
 }        
+ 
+/*.footer_main {
+	background: url("images/nyu_wagner_footer.png") no-repeat 50% 100% !important;
+}  
+.footer_main .fixed-container {
+background: #000 !important;
+} 
+*/
 
 /* Top Naviagation changes */
 #explore_nav_container { 
@@ -132,11 +140,24 @@ a.directory_level_three_link:visited
 .explore_nav .explore .explore_nav_selected span {
 	background: url("images/topnav_nyu_wagner_hover_bg.gif") repeat !important;
 }
-/* Chat panel */
-#chat_online_connections_link {
-	background: #000 !important;
-}
 
-.footer_main {
-	background: url("images/nyu_wagner_footer.png") no-repeat 50% 100%;
+/* Background shadow and top rounded corners */
+.fixed-container {
+-webkit-box-shadow: #666 0px 2px 4px;
+-moz-box-shadow: #666 0px 2px 4px;
+box-shadow: #666 0px 2px 4px;
+/* IE only */
+background-color: #fff;
+zoom: 1;
+-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(color='#888888', Direction=90, Strength=2) progid:DXImageTransform.Microsoft.Shadow(color='#888888', Direction=270, Strength=2)";
+filter: progid:DXImageTransform.Microsoft.Shadow(color='#888888', Direction=90, Strength=2) progid:DXImageTransform.Microsoft.Shadow(color='#888888', Direction=270, Strength=2);
+ 
+}
+.header .fixed-container, 
+.search-container .content_search .fixed-container {
+background: white url("images/header_l_nyu_wagner.png") no-repeat 0% 0% !important;
+}
+.header .fixed-container .decor, 
+.search-container .content_search .fixed-container .decor {
+background: url("images/header_r_nyu_wagner.png") no-repeat 100% 0% !important;
 }
