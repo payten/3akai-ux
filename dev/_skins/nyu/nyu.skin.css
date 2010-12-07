@@ -143,7 +143,9 @@ a.directory_level_three_link:visited
 }
 
 /* Footer Links */
-
+.footer_main .fixed-container {
+background: none !important;
+]
 .footer_main .fixed-container a {
 color:#bebebe !important;
 } 
@@ -236,4 +238,6 @@ background: #57068C url("images/body_nyu_home_bg.png") left top repeat-x !import
 
 #login-failed {
   margin-top: 0px;
-} 
+}
+
+ 
