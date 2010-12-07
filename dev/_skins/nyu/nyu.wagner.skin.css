@@ -102,7 +102,10 @@ a.directory_level_three_link:visited
 {
 }
 
-/* Footer Links */
+/* Footer Links */ 
+.footer_main .fixed-container {
+background: none !important;
+]
 
 .footer_main .fixed-container a {
 	color:#bebebe !important;
@@ -142,7 +145,8 @@ background: #000 !important;
 }
 
 /* Background shadow and top rounded corners */
-.fixed-container {
+.fixed-container,
+.footer_main {
 -webkit-box-shadow: #666 0px 2px 4px;
 -moz-box-shadow: #666 0px 2px 4px;
 box-shadow: #666 0px 2px 4px;
