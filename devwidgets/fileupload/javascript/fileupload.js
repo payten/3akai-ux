@@ -60,42 +60,42 @@ sakai.fileupload = function(tuid, showSettings){
 
     // Classes
     var fileUploadProgressClass = "fileupload_upload_progress";
-    var $multiFileRemove = $(".MultiFile-remove", $rootel);
-    var $multiFileList = $(".MultiFile-list", $rootel);
-    var $fileUploadNameError = $(".fileupload_name_error", $rootel);
+    var $multiFileRemove = $(".MultiFile-remove");
+    var $multiFileList = $(".MultiFile-list");
+    var $fileUploadNameError = $(".fileupload_name_error");
 
     // ID
     var $fileUploadAddDescription = $("#fileupload_add_description");
-    var $multiFileUpload = $("#multifile_upload", $rootel);
-    var $newUploaderForm = $("#new_uploader form", $rootel);
+    var $multiFileUpload = $("#multifile_upload");
+    var $newUploaderForm = $("#new_uploader form");
     var fileUploadUploadContent = "#upload_content";
     var $fileUploadAddTags = $("#fileupload_add_tags");
-    var $fileUploadProgressId = $("#fileupload_upload_progress", $rootel);
+    var $fileUploadProgressId = $("#fileupload_upload_progress");
     var $fileUploadPermissionsSelect = $("#fileupload_permissions_select");
-    var $fileUploadWidgetTitle= $("#fileupload_widget_title", $rootel);
-    var $fileUploadWidgetTitleNewVersion= $("#fileupload_widget_title_new_version", $rootel);
-    var $fileUploadAddVersionDescription = $("#fileupload_add_version_description", $rootel);
+    var $fileUploadWidgetTitle= $("#fileupload_widget_title");
+    var $fileUploadWidgetTitleNewVersion= $("#fileupload_widget_title_new_version");
+    var $fileUploadAddVersionDescription = $("#fileupload_add_version_description");
 
-    var $fileUploadLinkBox = $("#fileupload_link_box", $rootel);
-    var $fileUploadLinkBoxInput= $("#fileupload_link_box_input", $rootel);
-    var $fileUploadAddLinkButton = $("#fileupload_add_link_button", $rootel);
+    var $fileUploadLinkBox = $("#fileupload_link_box");
+    var $fileUploadLinkBoxInput= $("#fileupload_link_box_input");
+    var $fileUploadAddLinkButton = $("#fileupload_add_link_button");
 
     // Form
-    var $multiFileForm = $("#multifile_form", $rootel);
+    var $multiFileForm = $("#multifile_form");
     var $fileUploadUpdateSubmit = $("#fileupload_update_submit");
     var $cancelButton = $(".fileupload_close");
 
     // Templates
-    var $fileUploadTaggingTemplate = $("#fileupload_tagging_template", $rootel);
-    var $fileUploadAddToTemplate = $("#fileupload_add_to_template", $rootel);
-    var $fileUploadNoLimitToUploadTemplate = $("#fileupload_no_limit_to_upload_template", $rootel);
-    var $fileUploadLimitToOneUploadTemplate = $("#fileupload_limit_to_one_upload_template", $rootel);
+    var $fileUploadTaggingTemplate = $("#fileupload_tagging_template");
+    var $fileUploadAddToTemplate = $("#fileupload_add_to_template");
+    var $fileUploadNoLimitToUploadTemplate = $("#fileupload_no_limit_to_upload_template");
+    var $fileUploadLimitToOneUploadTemplate = $("#fileupload_limit_to_one_upload_template");
 
     // Containers
-    var $fileUploadRenderedTagging = $("#fileupload_rendered_tagging", $rootel);
-    var $fileUploadContainer = $("#fileupload_container", $rootel);
-    var $fileUploadAddToTemplateContainer = $("#fileupload_add_to_template_container", $rootel);
-    var $fileuploadLimitContainer = $("#fileupload_limit_container", $rootel);
+    var $fileUploadRenderedTagging = $("#fileupload_rendered_tagging");
+    var $fileUploadContainer = $("#fileupload_container");
+    var $fileUploadAddToTemplateContainer = $("#fileupload_add_to_template_container");
+    var $fileuploadLimitContainer = $("#fileupload_limit_container");
 
     // Paths
     var uploadPath = "/system/pool/createfile";
@@ -310,12 +310,6 @@ sakai.fileupload = function(tuid, showSettings){
      */
     var showUploadDialog = function(hash) {
         hash.w.show();
-        $rootel = $("#" + hash.w.attr("id") + "." + hash.w.attr("class").split(" ").join("."));
-        $fileUploadAddDescription = $("#fileupload_add_description", $rootel);
-        $fileUploadAddTags = $("#fileupload_add_tags", $rootel);
-        $fileUploadPermissionsSelect = $("#fileupload_permissions_select", $rootel);
-        $cancelButton = $(".fileupload_close", $rootel);
-        $fileUploadUpdateSubmit = $("#fileupload_update_submit", $rootel);
     };
 
     /**
@@ -344,6 +338,8 @@ sakai.fileupload = function(tuid, showSettings){
         // Clear HTML, Clear file list
         $fileUploadRenderedTagging.html("");
         $fileUploadLinkBoxInput.val("");
+        $fileUploadLinkBoxInput.removeAttr("disabled");
+        $fileUploadProgressId.removeClass(fileUploadProgressClass);
 
         // Close the jqm box
         $fileUploadContainer.jqmHide();
@@ -352,16 +348,16 @@ sakai.fileupload = function(tuid, showSettings){
         if (context !== "new_version") {
             /* if (uploadedLink) {
                 if (filesUploaded) {
-                    sakai.api.Util.notification.show($(fileUploadLinkUploaded, $rootel).html(), $(fileUploadLinkSuccessfullyUploaded, $rootel).html());
+                    sakai.api.Util.notification.show($(fileUploadLinkUploaded).html(), $(fileUploadLinkSuccessfullyUploaded).html());
                 } else {
-                    sakai.api.Util.notification.show("", $(fileUploadFilesNotUploaded, $rootel).html());
+                    sakai.api.Util.notification.show("", $(fileUploadFilesNotUploaded).html());
                 }
             }
             else {
                 if (filesUploaded) {
-                    sakai.api.Util.notification.show($(fileUploadFilesUploaded, $rootel).html(), $(fileUploadFilesSuccessfullyUploaded, $rootel).html());
+                    sakai.api.Util.notification.show($(fileUploadFilesUploaded).html(), $(fileUploadFilesSuccessfullyUploaded).html());
                 } else {
-                    sakai.api.Util.notification.show("", $(fileUploadFilesNotUploaded, $rootel).html());
+                    sakai.api.Util.notification.show("", $(fileUploadFilesNotUploaded).html());
                 }
             } */
             if (uploadedLink) {
@@ -395,6 +391,7 @@ sakai.fileupload = function(tuid, showSettings){
         $fileUploadAddDescription = $($fileUploadAddDescription.selector);
         $fileUploadAddTags = $($fileUploadAddTags.selector);
         $fileUploadPermissionsSelect = $($fileUploadPermissionsSelect.selector);
+        $fileUploadLinkBoxInput = $($fileUploadLinkBoxInput.selector);
         // Batch link the files with the tags
         var batchDescriptionData = [];
         // Check if it's a link that's been uploaded
@@ -706,6 +703,7 @@ sakai.fileupload = function(tuid, showSettings){
                     // Files uploaded
                     filesUploaded = true;
 
+                    $multiFileList = $($multiFileList.selector);
                     // Get the values out of the name boxes
                     $multiFileList.find("input").each(function(index){
                         for (var i in extractedData){
@@ -804,22 +802,19 @@ sakai.fileupload = function(tuid, showSettings){
 
     /** FORM VALIDATION **/
     $("#fileupload_link_box form").validate({
-        onkeyup: false
-    });
-    $fileUploadLinkBoxInput.rules("add", {
-        required: true,
-        url: true,
+        onkeyup: false,
         messages: {
             url: $("#fileupload_enter_valid_url").html()
         }
     });
+
     $("#fileupload_link_box form").bind("submit",function(e){
 
         $("#fileupload_link_submit").attr("disabled","disabled");
         $fileUploadAddLinkButton.attr("disabled", "disabled");
-        $fileUploadLinkBoxInput.attr("disabled", "disabled");
 
         if ($fileUploadLinkBoxInput.valid() && !performedSubmit) {
+            $fileUploadLinkBoxInput.attr("disabled", "disabled");
             performedSubmit = true;
             if (context !== "new_version") {
                 uploadLink();
