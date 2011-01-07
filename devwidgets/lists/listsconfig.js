@@ -56,7 +56,7 @@ sakai.Lists = {
             ]
         },
         {
-            "Label": "Gradutation Date",
+            "Label": "Graduation Date",
             "multiple": false,
             "list": [
             "January 2011",
