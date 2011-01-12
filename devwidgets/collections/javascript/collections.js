@@ -1543,11 +1543,6 @@ sakai.collections = function(tuid, showSettings) {
                 alert("Please enter a title for this room before saving.");
                 return false;
             }
-            if (currentCollectionData.categories.length === 0) {
-                // need categories too, kid!
-                alert("Please add a category to this room before saving");
-                return false;
-            }
             currentCollectionData.title = $("#room_title", $rootel).val();
             currentCollectionData.image = $("#room_image", $rootel).val();
             currentCollectionData.description = tinyMCE.get("room_overview").getContent();
@@ -1686,8 +1681,8 @@ sakai.collections = function(tuid, showSettings) {
         return false;
     });
 
-    $("button.s3d-button.cancel-button").die("click");
-    $("button.s3d-button.cancel-button").live("click", function() {
+    $("button.s3d-button.cancel-button", $rootel).die("click");
+    $("button.s3d-button.cancel-button", $rootel).live("click", function() {
         hideEverything();
         $collections_map.show();
         return false;
