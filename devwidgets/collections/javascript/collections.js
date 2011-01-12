@@ -128,7 +128,11 @@ sakai.collections = function(tuid, showSettings) {
                     $collections_header.show();
                     $.TemplateRenderer(collectionsHeaderTemplate, settings, $collections_header);
                     $.TemplateRenderer($collectionsHeaderSelectLayoutTemplate, settings, $collectionsHeaderSelectLayout);
-                    parseState();
+                    if (sakai.show.canEdit() && $.bbq.getState("mode") !== "edit") {
+                        $.bbq.pushState({'mode': 'edit'});
+                    } else {
+                        parseState();
+                    }
                 }
             } else {
                 collectionData = {
@@ -279,12 +283,16 @@ sakai.collections = function(tuid, showSettings) {
                 $.bbq.pushState({"view":"mapView"});
                 return;
             } else if (settings.displayStyle == "albumView") {
-                $.bbq.pushState({"view":"albumView"});
+                if (sakai.show.canEdit()) {
+                    $.bbq.pushState({"view":"albumView", "mode": "edit"});
+                } else {
+                    $.bbq.pushState({"view":"albumView"});
+                }
                 return;
             }
         }
 
-        if (view == "albumView") {
+        if (view === "albumView") {
           if (item) {
               selectedCollectionID = collection;
               setCollectionData();
@@ -308,7 +316,11 @@ sakai.collections = function(tuid, showSettings) {
               hideEverything();
               renderAlbumView();
               if (mode === "edit") {
-                  showAddAlbum();
+                  if (!$("#collections_header div").hasClass("expanded")) {
+                      $("#collections_header div a#configure_widget", $rootel).trigger("click");
+                  } else {
+                      showAddAlbum();
+                  }
               }
           }
         } else if (view == "mapView") {
@@ -335,6 +347,11 @@ sakai.collections = function(tuid, showSettings) {
               } else {
                 hideEverything();
                 renderMapView();
+                if (mode === "edit") {
+                    if (!$("#collections_header div").hasClass("expanded")) {
+                        $("#collections_header div a#configure_widget", $rootel).trigger("click");
+                    }
+                }
             }
         }
 
