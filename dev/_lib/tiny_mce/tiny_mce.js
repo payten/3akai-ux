@@ -7424,8 +7424,10 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				try {
 					// Design mode must be set here once again to fix a bug where
 					// Ctrl+A/Delete/Backspace didn't work if the editor was added using mceAddControl then removed then added again
-					d.designMode = 'Off';
-					d.designMode = 'On';
+					setTimeout(function() {
+					    d.designMode = 'Off';
+    					d.designMode = 'On';
+					}, 0);
 				} catch (ex) {
 					// Will fail on Gecko if the editor is placed in an hidden container element
 					// The design mode will be set ones the editor is focused
