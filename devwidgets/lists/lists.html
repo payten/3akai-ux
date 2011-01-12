@@ -29,7 +29,7 @@
                     {if opt.Label}
                         <option value="${escape(opt.Label)}"{if opt.selected} selected="selected"{/if}>${opt.Label}</option>
                     {elseif opt.title}
-                        <option value="${escape(opt.title)}"{if opt.selected} selected="selected"{/if}{if opt.link} title="${opt.link}"{/if}>${opt}</option>
+                        <option value="${escape(opt.title)}"{if opt.selected} selected="selected"{/if}{if opt.link} title="${opt.link}"{/if}>${opt.title}</option>
                     {else}
                         <option value="${escape(opt)}"{if opt.selected} selected="selected"{/if}{if opt.link} title="${opt.link}"{/if}>${opt}</option>
                     {/if}
