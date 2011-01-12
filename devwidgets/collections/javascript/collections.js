@@ -1267,9 +1267,12 @@ sakai.collections = function(tuid, showSettings) {
             var d = new Date();
             currentCollectionData.id = d.getTime() + "" + Math.floor(Math.random() * 101);
         }
+        $collections_map_room_edit = $($collections_map_room_edit.selector);
         $.TemplateRenderer(collectionsEditRoomTemplate, {"room": currentCollectionData}, $collections_map_room_edit);
+        $categories_listing_body = $($categories_listing_body.selector);
         if (currentCollectionData.categories) {
-            $.TemplateRenderer(categoriesListingBodyTemplate, {"categories": currentCollectionData.categories}, $categories_listing_body);
+            var catHTML = $.TemplateRenderer(categoriesListingBodyTemplate, {"categories": currentCollectionData.categories});
+            $categories_listing_body.html(catHTML);
             sortCategoriesDisplay();
         }
         tinyMCE.execCommand('mceAddControl', false, 'room_overview');
@@ -1458,6 +1461,7 @@ sakai.collections = function(tuid, showSettings) {
     var addCategory = function(catToAdd) {
         var newCategory;
         var canAdd = true;
+        $categories_listing_body = $($categories_listing_body.selector);
         if (currentCollectionData.categories) {
             for (var j = 0; j < currentCollectionData.categories.length; j++) {
                 if (currentCollectionData.categories[j].name == catToAdd) {
@@ -1465,7 +1469,6 @@ sakai.collections = function(tuid, showSettings) {
                 }
             }
         }
-
         if (canAdd) {
             var d = new Date();
             var catID = d.getTime() + "" + Math.floor(Math.random() * 101);
@@ -1487,7 +1490,7 @@ sakai.collections = function(tuid, showSettings) {
                 }));
             }
             currentCollectionData.categories.push(newCategory);
-            $addCategoryTextField.val('');
+            $("#add_category", $rootel).val('');
         } else {
             // name conflict, cannot add
             alert('There already exists a category named "' + catToAdd + '". Please rename your category and try adding again.');
@@ -1500,7 +1503,7 @@ sakai.collections = function(tuid, showSettings) {
 
     $addCategoryButton.die("click");
     $addCategoryButton.live("click", function() {
-        var catToAdd = $.trim($addCategoryTextField.val());
+        var catToAdd = $.trim($("#add_category", $rootel).val());
         if (catToAdd !== "") {
             addCategory(catToAdd);
         } /*else {
