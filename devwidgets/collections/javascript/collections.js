@@ -764,7 +764,7 @@ sakai.collections = function(tuid, showSettings) {
     var showAddItem = function() {
         if ($(".configureCategory").hasClass("expanded")) {
             if ($(".addItem").length === 0) {
-                $(".scroll-content").prepend("<div class='scroll-content-item addItem'><div class='scrollItemContainer'></div></div>");
+                $(".scroll-content").prepend("<div class='scroll-content-item addItem' title='Add New Item'><div class='scrollItemContainer'></div></div>");
             } else {
                 $(".addItem").show();
             }
@@ -841,6 +841,9 @@ sakai.collections = function(tuid, showSettings) {
                 } /*else if ($(this).hasClass("albumImage")) {
 
                 }*/
+                if ($(this).find(".clickToEditText").length && $(this).hasClass("albumImage") && $(this).find("img").attr("src") === "") {
+                    $(this).find(".clickToEditText").text("Click to add content");
+                }
                 $(this).editable("enable");
             }
             $(this).toggleClass("editable");
@@ -930,7 +933,7 @@ sakai.collections = function(tuid, showSettings) {
                         $("#item_" + selectedItemID).addClass("selected");
                         sizeItemScrollbar();
                         $(".itemPreviewTitle span").html(stripHTML($(".itemPreviewTitle span").html()));
-                $(".itemPreviewTitle").ThreeDots({max_rows : 1,  allow_dangle:true, whole_word:false});
+                        $(".itemPreviewTitle").ThreeDots({max_rows : 1,  allow_dangle:true, whole_word:false});
                         return (value);
                     },
                     {
@@ -942,6 +945,9 @@ sakai.collections = function(tuid, showSettings) {
                 } /*else if ($(this).hasClass("itemImage")) {
 
                 }*/
+                if ($(this).find(".clickToEditText").length && $(this).hasClass("itemImage") && $(this).find("img").attr("src") === "") {
+                    $(this).find(".clickToEditText").text("Click to add content");
+                }
                 $(this).editable("enable");
             }
             $(this).toggleClass("editable");
@@ -951,6 +957,7 @@ sakai.collections = function(tuid, showSettings) {
     var addAlbumImage = function(url) {
         currentCollectionData.image = url;
         $(".albumImage img").attr("src", url);
+        $(".clickToEditText").text('');
         saveCollectionData();
     };
 
@@ -964,6 +971,7 @@ sakai.collections = function(tuid, showSettings) {
         } else {
             $(".itemImage img").attr("src", sakai.config.MimeTypes["other"].URL);
         }
+        $(".clickToEditText").text('');
         $("a.itemLink").attr("href", url);
         saveItemData();
         $.TemplateRenderer($collectionsAlbumShowCategoryTemplate, {
