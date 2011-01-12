@@ -307,6 +307,9 @@ sakai.collections = function(tuid, showSettings) {
             } else {
               hideEverything();
               renderAlbumView();
+              if (mode === "edit") {
+                  showAddAlbum();
+              }
           }
         } else if (view == "mapView") {
               if (item) {
@@ -481,21 +484,22 @@ sakai.collections = function(tuid, showSettings) {
             $("#collections_header div span#choose_layout a span#chosen_layout").text("Album View");
             settings.displayStyle = "albumView";
             $.bbq.pushState({
-                'view': 'albumView'
+                'view': 'albumView',
+                'mode': 'edit'
             });
-            showAddAlbum();
         } else if ($(this).attr("id") == "mapView") {
             if (collectionData.collections.length > 10) {
                 alert("You cannot change to this view, you have too many collections");
                 $.bbq.pushState({
-                    'view': 'albumView'
+                    'view': 'albumView',
+                    'mode': 'edit'
                 });
-                showAddAlbum();
             } else {
                 $("#collections_header div span#choose_layout a span#chosen_layout").text("Architectural View");
                 settings.displayStyle = "mapView";
                 $.bbq.pushState({
-                    'view': 'mapView'
+                    'view': 'mapView',
+                    'mode': 'edit'
                 });
             }
         }
@@ -633,11 +637,8 @@ sakai.collections = function(tuid, showSettings) {
 
     var showAddAlbum = function() {
         if ($("#collections_header div").hasClass("expanded")) {
-            if ($(".addAlbum").length === 0) {
-                $("#collections_albums").append("<div class='albumCover addAlbum'></div>");
-            } else {
-                $(".addAlbum").show();
-            }
+            $(".addAlbum", $rootel).remove();
+            $("#collections_albums", $rootel).append("<div class='albumCover addAlbum'></div>");
         }
     };
 
