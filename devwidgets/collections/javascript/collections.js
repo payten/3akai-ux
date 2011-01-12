@@ -1158,7 +1158,7 @@ sakai.collections = function(tuid, showSettings) {
             }
             if ($(this).attr("id").split("_")[0] != "item") {
               clickedItemID = -1;
-        }
+            }
         }
     });
 
@@ -1679,8 +1679,8 @@ sakai.collections = function(tuid, showSettings) {
         return false;
     });
 
-    $("button.s3d-button.s3d-button-primary.save_button").die("click");
-    $("button.s3d-button.s3d-button-primary.save_button").live("click", function() {
+    $("button.s3d-button.s3d-button-primary.save_button", $rootel).die("click");
+    $("button.s3d-button.s3d-button-primary.save_button", $rootel).live("click", function() {
         hideEverything();
         $collections_map.show();
         return false;
