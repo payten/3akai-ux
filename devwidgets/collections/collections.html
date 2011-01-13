@@ -7,7 +7,7 @@
   <!-- Header -->
   <div id="collections_header" style="display:none"></div>
   <div id="collections_header_template"><!--
-    <h1>${widgetTitle}</h1>
+    <h1 class="isEditable">${widgetTitle}</h1>
     <div style="display:none">
       <span style="display:none" id="choose_layout">
         <a id="layout_selector" href="javascript:;"><span id="chosen_layout">{if displayStyle == 'albumView'}__MSG__ALBUM_VIEW__{elseif displayStyle == 'mapView'}__MSG__ARCHITECTURAL_VIEW__{/if}</span>
@@ -323,7 +323,6 @@
       <div id="collections_map_show_content_item"></div>
     
       <div id="collections_map_show_content_item_template"><!--
-      
         <h2>${item.title}</h2>
         <div>${item.description}</div>
         {if item.mimeType.split('/')[0] == "image"}
