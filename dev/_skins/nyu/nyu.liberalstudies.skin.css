@@ -121,7 +121,7 @@ a.directory_level_three_link:visited
 	color:#cccccc !important;
 }        
 
-/* Background shadow and top rounded corners */
+/* Background shadows */
 .fixed-container {
 -webkit-box-shadow: #666 0px 4px 4px;
 -moz-box-shadow: #666 0px 4px 4px;
