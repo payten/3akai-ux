@@ -55,7 +55,9 @@
     <div id="collections_albums_show_album_template" style="display:none" class="albumView"><!--
       <div class="albumHero">
         <div class="albumHead">
-          <div class="albumTitleContainer"><h1 class="isEditable albumTitle">${album.title}</h1></div>
+          <div class="albumTitleContainer">
+          <h1>Chapter:</h1>
+          <h1 class="isEditable albumTitle">${album.title}</h1></div>
           <div class="configureAlbum configure" style="display:none"><button class="s3d-button s3d-button-primary" style="display:none"><span class="s3d-button-inner">__MSG__DELETE_ALBUM__</span></button><a href="javascript:;"><img src="/devwidgets/collections/images/config_icon.png" alt="__MSG__CONFIGURE_THIS_ALBUM__" title="__MSG__CONFIGURE_THIS_ALBUM__"/></a></div>
         </div>
         <div class="albumImage isEditable">
@@ -80,9 +82,10 @@
   
     <div id="collections_albums_show_category" style="display:none" class="albumView"></div>
     <div id="collections_albums_show_category_template" style="display:none" class="albumView"><!--
-      <h1>${album.title}</h1>
+      <h1>Chapter: ${album.title}</h1>
       <div class="itemsContainer">
         <div class="itemsContainerHead">
+          <h2>Category:</h2>
           <div class="categoryTitleContainer"><h2 class="isEditable categoryTitle categoryData">${category.name}</h2></div>
           <div class="configureCategory configure" style="display:none">
             <button class="s3d-button s3d-button-primary" style="display:none"><span class="s3d-button-inner">__MSG__DELETE_CATEGORY__</span></button>
@@ -117,6 +120,7 @@
     <div id="collections_albums_show_item_template" style="display:none" class="albumView"><!--
       <div class="itemHero">
         <div class="itemHead">
+        <h1>Item:</h1>
         <div class="itemTitleContainer"><h1 class="itemTitle isEditable itemData">${item.title}</h1></div>
         <div class="configureItem configure" style="display:none">
             <button class="s3d-button s3d-button-primary" style="display:none"><span class="s3d-button-inner">Delete Item</span></button>
@@ -247,6 +251,7 @@
       <span id="room_edit_links"><a href="javascript:;" class="edit_this_room_link">__MSG__EDIT_ROOM__</a><a href="javascript:;" class="add_content_link">__MSG__ADD_CONTENT__</a></span>
       <div id="collections_map_show_room"></div>
       <div id="collections_map_show_room_template"><!--
+        <h2>Room:</h2>
         <h2>${room.title}</h2>
         {if room.image}
         <img src="${room.image}" alt="${room.title} __MSG__IMAGE__" class="room_image_full"/>
@@ -255,6 +260,7 @@
         <p>${room.description}</p>
         {/if}
         <div class="room_categories">
+        <h3>Categories:</h3>
         {for cat in room.categories}
           <h4>${cat.name}</h4>
           {for item in cat.items}
