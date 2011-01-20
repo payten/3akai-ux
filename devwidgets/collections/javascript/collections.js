@@ -662,7 +662,7 @@ sakai.collections = function(tuid, showSettings) {
     var showAddAlbum = function() {
         if ($("#collections_header div").hasClass("expanded")) {
             $(".addAlbum", $rootel).remove();
-            $("#collections_albums", $rootel).append("<div class='albumCover addAlbum'></div>");
+            $("#collections_albums", $rootel).append("<div class='albumCover addAlbum' title='Add New Chapter'></div>");
         }
     };
 
@@ -823,10 +823,11 @@ sakai.collections = function(tuid, showSettings) {
                 tooltip: 'Click to change title',
                 cssclass: 'inlineEditBtn'
             });
-        $("#collections_header h1.isEditable").addClass("editable");
+            $("#collections_header h1.isEditable").addClass("editable");
         } else {
             $("#collections_header h1.isEditable").editable("destroy");
             $("#collections_header h1.isEditable").removeClass("editable");
+            $("#collections_header h1.isEditable").attr("title", "");
         }
 
     };
@@ -850,7 +851,7 @@ sakai.collections = function(tuid, showSettings) {
                     {
                         type: 'mce',
                         submit: 'OK',
-                        tooltip: 'Click to add a description of this album',
+                        tooltip: 'Click to add a description of this chapter',
                         onblur: 'ignore',
                         cssclass: 'inlineEditBtn'
                     });
@@ -863,7 +864,7 @@ sakai.collections = function(tuid, showSettings) {
                     {
                         type: 'text',
                         submit: 'OK',
-                        tooltip: 'Click to add the album title',
+                        tooltip: 'Click to add the chapter title',
                         cssclass: 'inlineEditBtn'
                     });
                 } /*else if ($(this).hasClass("albumImage")) {
@@ -942,7 +943,7 @@ sakai.collections = function(tuid, showSettings) {
                     {
                         type: 'mce',
                         submit: 'OK',
-                        tooltip: 'Click to add a description of this album',
+                        tooltip: 'Click to add a description of this item',
                         onblur: 'ignore',
                         cssclass: 'inlineEditBtn'
                     });
@@ -967,7 +968,7 @@ sakai.collections = function(tuid, showSettings) {
                     {
                         type: 'text',
                         submit: 'OK',
-                        tooltip: 'Click to add the album title',
+                        tooltip: 'Click to add the item title',
                         cssclass: 'inlineEditBtn'
                     });
                 } /*else if ($(this).hasClass("itemImage")) {
