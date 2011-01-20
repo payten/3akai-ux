@@ -482,7 +482,9 @@ sakai.collections = function(tuid, showSettings) {
 
     $("#collections_header h1", $rootel).die("click");
     $("#collections_header h1", $rootel).live("click", function() {
-        $.bbq.removeState('item', 'category', 'collection', 'fromShow', 'mode', 'pos');
+        if (!$(this).hasClass("editable")) {
+            $.bbq.removeState('item', 'category', 'collection', 'fromShow', 'mode', 'pos');
+        }
     });
 
     $("#collections_header div a#configure_widget", $rootel).die("click");
@@ -1601,8 +1603,9 @@ sakai.collections = function(tuid, showSettings) {
             currentCollectionData.title = $("#room_title", $rootel).val();
             currentCollectionData.image = $("#room_image", $rootel).val();
             currentCollectionData.description = tinyMCE.get("room_overview").getContent();
+            currentCollectionData.id = $.bbq.getState("collection");
             saveCollectionData();
-            $.bbq.removeState("fromShow", "pos", "mode", "collection");
+            $.bbq.removeState("fromShow", "pos", "mode");
         }
         return false;
     });
