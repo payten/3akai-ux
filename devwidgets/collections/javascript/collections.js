@@ -111,7 +111,9 @@ sakai.collections = function(tuid, showSettings) {
         clickedCategoryID = -1,
         selectedCategoryID = -1,
         clickedItemID = -1,
-        selectedItemID = -1;
+        selectedItemID = -1,
+        firstRender = true;
+
 
     /**
      * Universal Functions
@@ -281,17 +283,16 @@ sakai.collections = function(tuid, showSettings) {
         if (!view) {
           if (settings.displayStyle == "mapView") {
                 $.bbq.pushState({"view":"mapView"});
-                return;
             } else if (settings.displayStyle == "albumView") {
                 if (sakai.show.canEdit()) {
                     $.bbq.pushState({"view":"albumView", "mode": "edit"});
                 } else {
                     $.bbq.pushState({"view":"albumView"});
                 }
-                return;
             }
+            return;
         }
-
+        renderGlobals();
         if (view === "albumView") {
           if (item) {
               selectedCollectionID = collection;
@@ -414,6 +415,16 @@ sakai.collections = function(tuid, showSettings) {
         } catch(e) {}
         $(".mapView").hide();
         $(".albumView").hide();
+    };
+
+    var renderGlobals = function() {
+        if (sakai.show.canEdit() && firstRender) {
+            $("#collections_header div", $rootel).show();
+            if (!$("#collections_header div").hasClass("expanded")) {
+                $("#collections_header div a#configure_widget").trigger("click");
+            }
+            firstRender = false;
+        }
     };
 
     /**
@@ -567,15 +578,10 @@ sakai.collections = function(tuid, showSettings) {
         initializeAlbumView();
         $collectionsAlbums.show();
         $.TemplateRenderer($collectionsAlbumsTemplate, collectionData, $collectionsAlbums);
-        if (sakai.show.canEdit()) {
-            $("#collections_header div", $rootel).show();
-            if (collectionData.collections.length === 0) {
-                if (!$("#collections_header div").hasClass("expanded")) {
-                    $("#collections_header div a#configure_widget").trigger("click");
-                } else {
-                    showAddAlbum();
-                }
-            }
+        if (sakai.show.canEdit() &&
+            collectionData.collections.length === 0 &&
+            $("#collections_header div").hasClass("expanded")) {
+                showAddAlbum();
         }
 
         $(".albumCoverTitle span").each(function(elt) {
@@ -817,14 +823,16 @@ sakai.collections = function(tuid, showSettings) {
                 tooltip: 'Click to change title',
                 cssclass: 'inlineEditBtn'
             });
+        $("#collections_header h1.isEditable").addClass("editable");
         } else {
             $("#collections_header h1.isEditable").editable("destroy");
+            $("#collections_header h1.isEditable").removeClass("editable");
         }
-        $("#collections_header h1.isEditable").toggleClass("editable");
+
     };
 
     var toggleAlbumEditable = function() {
-        $(".isEditable").each(function(elt) {
+        $(".albumView .isEditable").each(function(elt) {
             if ($(this).hasClass("editable")) {
                 //tinyMCE.execCommand("mceRemoveControl", false, $(this).attr("id")+'_mce');
                 $(this).editable("disable");
