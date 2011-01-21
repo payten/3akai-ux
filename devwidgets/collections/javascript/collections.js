@@ -130,11 +130,7 @@ sakai.collections = function(tuid, showSettings) {
                     $collections_header.show();
                     $.TemplateRenderer(collectionsHeaderTemplate, settings, $collections_header);
                     $.TemplateRenderer($collectionsHeaderSelectLayoutTemplate, settings, $collectionsHeaderSelectLayout);
-                    if (sakai.show.canEdit() && $.bbq.getState("mode") !== "edit") {
-                        $.bbq.pushState({'mode': 'edit'});
-                    } else {
-                        parseState();
-                    }
+                    parseState();
                 }
             } else {
                 collectionData = {
@@ -270,7 +266,6 @@ sakai.collections = function(tuid, showSettings) {
     };
 
     var parseState = function() {
-
         var collection = $.bbq.getState("collection");
         var mode = $.bbq.getState("mode");
         var pos = $.bbq.getState("pos");
@@ -284,15 +279,11 @@ sakai.collections = function(tuid, showSettings) {
           if (settings.displayStyle == "mapView") {
                 $.bbq.pushState({"view":"mapView"});
             } else if (settings.displayStyle == "albumView") {
-                if (sakai.show.canEdit()) {
-                    $.bbq.pushState({"view":"albumView", "mode": "edit"});
-                } else {
-                    $.bbq.pushState({"view":"albumView"});
-                }
+                $.bbq.pushState({"view":"albumView"});
             }
             return;
         }
-        renderGlobals();
+
         if (view === "albumView") {
           if (item) {
               selectedCollectionID = collection;
@@ -314,15 +305,15 @@ sakai.collections = function(tuid, showSettings) {
               selectedCollectionID = collection;
               viewAlbum();
             } else {
-              hideEverything();
-              renderAlbumView();
-              if (mode === "edit") {
-                  if (!$("#collections_header div").hasClass("expanded")) {
-                      $("#collections_header div a#configure_widget", $rootel).trigger("click");
-                  } else {
-                      showAddAlbum();
-                  }
-              }
+                hideEverything();
+                renderAlbumView();
+                if (mode === "edit") {
+                    if (!$("#collections_header div").hasClass("expanded")) {
+                        $("#collections_header div a#configure_widget", $rootel).trigger("click");
+                    } else {
+                        showAddAlbum();
+                    }
+                }
           }
         } else if (view == "mapView") {
               if (item) {
@@ -344,7 +335,6 @@ sakai.collections = function(tuid, showSettings) {
                 } else {
                     showRoom();
                 }
-
               } else {
                 hideEverything();
                 renderMapView();
@@ -358,6 +348,10 @@ sakai.collections = function(tuid, showSettings) {
 
         if (sakai.show.canEdit()) {
             $(".configure").show();
+        }
+        renderGlobals();
+        if (firstRender) {
+            firstRender = false;
         }
     };
 
@@ -423,7 +417,6 @@ sakai.collections = function(tuid, showSettings) {
             if (!$("#collections_header div").hasClass("expanded")) {
                 $("#collections_header div a#configure_widget").trigger("click");
             }
-            firstRender = false;
         }
     };
 
@@ -1377,9 +1370,10 @@ sakai.collections = function(tuid, showSettings) {
         }
 
         $.TemplateRenderer(collectionsAddContentTemplate, {"content": currentContentItemData}, $collections_map_add_content);
+        $category_dropdown = $($category_dropdown.selector);
         $.TemplateRenderer(collectionsCategoryDropdownTemplate, {"room": currentCollectionData }, $category_dropdown);
 
-        if (contentItemID !== 0) {
+        if (contentItemID != 0) {
             $collectionsReturnToContentFromEditLink.show();
             $collectionsReturnToRoomFromEdit.hide();
         } else {
@@ -1587,7 +1581,7 @@ sakai.collections = function(tuid, showSettings) {
             saveCurrentContentData();
             saveCollectionData();
             $.bbq.removeState("fromShow", "pos", "mode", "collection");
-            $.bbq.setState({"item": selectedItemID});
+            $.bbq.pushState({"item": selectedItemID});
         }
         return false;
     });
@@ -1723,6 +1717,7 @@ sakai.collections = function(tuid, showSettings) {
 
     $collectionsReturnToContentFromEditLink.die("click");
     $collectionsReturnToContentFromEditLink.live("click", function() {
+        hideEverything();
         showContentItem();
     });
 

@@ -248,9 +248,17 @@
 
     <div id="collections_map_show_room_conatiner" style="display:none" class="mapView">
       <a href="javascript:;" class="return_to_floorplan_link" id="return_to_floorplan_from_show">__MSG__RETURN_TO_FLOORPLAN__</a>
-      <span id="room_edit_links"><a href="javascript:;" class="edit_this_room_link">__MSG__EDIT_ROOM__</a><a href="javascript:;" class="add_content_link">__MSG__ADD_CONTENT__</a></span>
       <div id="collections_map_show_room"></div>
       <div id="collections_map_show_room_template"><!--
+        <span id="room_edit_links">
+          <a href="javascript:;" class="edit_this_room_link">__MSG__EDIT_ROOM__</a>
+          {if room.categories && room.categories.length}
+            <a href="javascript:;" class="add_content_link">__MSG__ADD_CONTENT__</a>
+          {else}
+            <a href="javascript:;" class="add_content_link_disabled disabled">__MSG__ADD_CONTENT__</a><br/>
+            <span><i>add a category to this room to enable adding content</i></span>
+          {/if}
+        </span>
         <h2>Room:</h2>
         <h2>${room.title}</h2>
         {if room.image}
