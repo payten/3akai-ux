@@ -672,7 +672,7 @@ sakai.config = {
             "label" : "PEOPLE"
         },
         {
-            "url" : "/dev/directory.html",
+            "url" : "javascript:;",
             "label" : "DIRECTORY"
         }
     ],
