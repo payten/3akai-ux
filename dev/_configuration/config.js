@@ -269,7 +269,7 @@ sakai.config = {
                     "email": {
                         "label": "__MSG__PROFILE_BASIC_EMAIL_LABEL__",
                         "required": false,
-                        "display": true,
+                        "display": false,
                         "type": "email"
                     },
                     "status": {
