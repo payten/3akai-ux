@@ -1,0 +1,9 @@
+{
+	"pageTitle": "Collections Album",
+	"sling:resourceType": "sakai/page",
+	"pageType": "webpage", 
+	"pagePosition": 200000,
+	"deletable": false,
+	"editable": false,
+	"jcr:mixinTypes": "sakai:propertiesmix"
+}

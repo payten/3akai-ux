@@ -1,0 +1,6 @@
+{
+	"jcr:primaryType": "nt:folder",
+	"jcr:mixinTypes" : ["sakai:propertiesmix"],
+	"sling:resourceType": "sakai/pagecontent",
+	"sakai:pagecontent": "<p><img src=\"http://localhost:8080/devwidgets/collections/images/portfolio.png\" mce_src=\"devwidgets/collections/images/portfolio.png\" id=\"widget_collections_id303208807\" class=\"widget_inline\" style=\"display: block; padding: 10px; margin: 4px;\" mce_style=\"display:block; padding: 10px; margin: 4px\" border=\"1\"><br mce_bogus=\"1\"><\/p>"
+}

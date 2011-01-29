@@ -335,13 +335,17 @@ sakai.sitespages = function(tuid,showSettings){
             $("#more_make_two_column").hide();
         }
         */
-
+        var editable = config.editMode;
         if (sakai.sitespages.site_info._pages[pageUrlName] != undefined) {
           // Get page type
           pageType = sakai.sitespages.site_info._pages[pageUrlName]["pageType"];
 
           // Set page title
           $pagetitle.html(sakai.api.Security.saneHTML(sakai.sitespages.site_info._pages[pageUrlName]["pageTitle"]));
+
+          if (sakai.sitespages.site_info._pages[pageUrlName].hasOwnProperty("editable") && sakai.sitespages.site_info._pages[pageUrlName]["editable"] === false) {
+              editable = false;
+          }
         }
 
         // UI setup
@@ -392,7 +396,7 @@ sakai.sitespages = function(tuid,showSettings){
             }
         }
 
-        if (!config.editMode) {
+        if (!editable) {
             $content_page_options.hide();
             $(".sakai_site .content_top").addClass("content_top_rounded");
         } else {
