@@ -764,7 +764,9 @@ sakai.collections = function(tuid, showSettings) {
             isNewCategory = false;
         }
 
-        $(".itemPreviewTitle span", $rootel).html(stripHTML($(".itemPreviewTitle span", $rootel).html()));
+        $(".itemPreviewTitle span", $rootel).each(function(elt) {
+           $(this).html(stripHTML($(this).html()));
+        });
         $(".itemPreviewTitle", $rootel).ThreeDots({max_rows : 1,  allow_dangle:true, whole_word:false});
 
     };
@@ -951,7 +953,9 @@ sakai.collections = function(tuid, showSettings) {
                         }
                         $("#item_" + selectedItemID, $rootel).addClass("selected");
                         sizeItemScrollbar();
-                        $(".itemPreviewTitle span", $rootel).html(stripHTML($(".itemPreviewTitle span", $rootel).html()));
+                        $(".itemPreviewTitle span", $rootel).each(function(elt) {
+                           $(this).html(stripHTML($(this).html()));
+                        });
                         $(".itemPreviewTitle", $rootel).ThreeDots({max_rows : 1,  allow_dangle:true, whole_word:false});
                         return (value);
                     },
@@ -976,7 +980,9 @@ sakai.collections = function(tuid, showSettings) {
                         }
                         $("#item_" + selectedItemID, $rootel).addClass("selected");
                         sizeItemScrollbar();
-                        $(".itemPreviewTitle span", $rootel).html(stripHTML($(".itemPreviewTitle span", $rootel).html()));
+                        $(".itemPreviewTitle span", $rootel).each(function(elt) {
+                           $(this).html(stripHTML($(this).html()));
+                        });
                         $(".itemPreviewTitle", $rootel).ThreeDots({max_rows : 1,  allow_dangle:true, whole_word:false});
                         return (value);
                     },
