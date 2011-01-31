@@ -1,5 +1,5 @@
 {
-	"pageTitle": "Memory Palace",
+	"pageTitle": "Floorplan",
 	"sling:resourceType": "sakai/page",
 	"pageType": "webpage", 
 	"pagePosition": 300000,

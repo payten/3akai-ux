@@ -1,5 +1,5 @@
 {
-	"pageTitle": "Collections Album",
+	"pageTitle": "Album",
 	"sling:resourceType": "sakai/page",
 	"pageType": "webpage", 
 	"pagePosition": 200000,
