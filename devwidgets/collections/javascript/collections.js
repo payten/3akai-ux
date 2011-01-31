@@ -1600,7 +1600,7 @@ sakai.collections = function(tuid, showSettings) {
         if (sakai.show.canEdit()) {
             saveCurrentContentData();
             saveCollectionData();
-            $.bbq.removeState("fromShow", "pos", "mode", "collection");
+            $.bbq.removeState("fromShow", "pos", "mode");
             $.bbq.pushState({"item": selectedItemID});
         }
         return false;
