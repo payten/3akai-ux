@@ -468,10 +468,10 @@ sakai.config = {
          */
         "contacts": [
             {"name": "Classmate", "definition": "is my classmate", "selected": false},
-            {"name": "Supervisor", "inverse": "Supervised", "definition": "is my supervisor", "selected": false},
-            {"name": "Supervised", "inverse": "Supervisor", "definition": "is being supervised by me", "selected": false},
-            {"name": "Lecturer", "inverse": "Student", "definition": "is my lecturer", "selected": false},
-            {"name": "Student", "inverse": "Lecturer", "definition": "is my student", "selected": false},
+            {"name": "Advisor", "inverse": "Advisee", "definition": "is my advisor", "selected": false},
+            {"name": "Advisee", "inverse": "Advisor", "definition": "is my advisee", "selected": false},
+            {"name": "Instructor", "inverse": "Student", "definition": "is my instructor", "selected": false},
+            {"name": "Student", "inverse": "Instructor", "definition": "is my student", "selected": false},
             {"name": "Colleague", "definition": "is my colleague", "selected": false},
             {"name": "Fellow Student", "definition": "is my fellow student", "selected": false},
             {"name": "Shares Interests", "definition": "shares an interest with me", "selected": false},
