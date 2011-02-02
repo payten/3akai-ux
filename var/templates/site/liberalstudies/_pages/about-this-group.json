@@ -1,9 +1,8 @@
 {
-	"pageTitle": "Album",
 	"sling:resourceType": "sakai/page",
-	"pageType": "webpage", 
-	"pagePosition": 300000,
+	"pageTitle": "About This Group",
+	"pageType": "profile",
 	"deletable": false,
-	"editable": false,
+	"pagePosition": 100000,
 	"jcr:mixinTypes": "sakai:propertiesmix"
 }

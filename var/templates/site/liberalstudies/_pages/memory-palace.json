@@ -2,7 +2,7 @@
 	"pageTitle": "Floorplan",
 	"sling:resourceType": "sakai/page",
 	"pageType": "webpage", 
-	"pagePosition": 300000,
+	"pagePosition": 400000,
 	"deletable": false,
 	"editable": false,
 	"jcr:mixinTypes": "sakai:propertiesmix"
