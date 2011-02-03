@@ -405,8 +405,8 @@ sakai.collectionsarchview = function(tuid, showSettings) {
 
     var hideEverything = function() {
         try {
-            tinyMCE.execCommand('mceRemoveControl', false, 'room_overview');
-            tinyMCE.execCommand('mceRemoveControl', false, 'content_description');
+            tinyMCE.execCommand('mceRemoveControl', false, 'arch_room_overview');
+            tinyMCE.execCommand('mceRemoveControl', false, 'arch_content_description');
         } catch(e) {}
         $(".mapView", $rootel).hide();
         $(".albumView", $rootel).hide();
@@ -1360,7 +1360,7 @@ sakai.collectionsarchview = function(tuid, showSettings) {
             $categories_listing_body.html(catHTML);
             sortCategoriesDisplay();
         }
-        tinyMCE.execCommand('mceAddControl', false, 'room_overview');
+        tinyMCE.execCommand('mceAddControl', false, 'arch_room_overview');
     };
 
     var getRoom = function(id) {
@@ -1415,7 +1415,7 @@ sakai.collectionsarchview = function(tuid, showSettings) {
             $collectionsReturnToContentFromEditLink.hide();
             $collectionsReturnToRoomFromEdit.show();
         }
-        tinyMCE.execCommand('mceAddControl', false, 'content_description');
+        tinyMCE.execCommand('mceAddControl', false, 'arch_content_description');
 
     };
 
@@ -1445,7 +1445,7 @@ sakai.collectionsarchview = function(tuid, showSettings) {
         }
         currentContentItemData.title = $("#content_title", $rootel).val();
         currentContentItemData.url = $("#content_url", $rootel).val();
-        currentContentItemData.description = tinyMCE.get("content_description").getContent();
+        currentContentItemData.description = tinyMCE.get("arch_content_description").getContent();
         currentContentItemData.mimeType = $("#content_mimetype", $rootel).val();
         for (var i = 0; i < currentCollectionData.categories.length; i++) {
             if (currentCollectionData.categories[i].name == $("#category_dropdown select option:selected", $rootel).val()) {
@@ -1640,7 +1640,7 @@ sakai.collectionsarchview = function(tuid, showSettings) {
             }
             currentCollectionData.title = $("#room_title", $rootel).val();
             currentCollectionData.image = $("#room_image", $rootel).val();
-            currentCollectionData.description = tinyMCE.get("room_overview").getContent();
+            currentCollectionData.description = tinyMCE.get("arch_room_overview").getContent();
             currentCollectionData.id = $.bbq.getState("collection");
             saveCollectionData();
             $.bbq.removeState("fromShow", "pos", "mode");
@@ -1848,8 +1848,8 @@ sakai.collectionsarchview = function(tuid, showSettings) {
      */
     var doInit = function() {
         getWidgetData();
-        mpinitTinyMCE('room_overview');
-        mpinitTinyMCE('content_description');
+        mpinitTinyMCE('arch_room_overview');
+        mpinitTinyMCE('arch_content_description');
         if (showSettings) {
             $collections_settings.show();
             $collections_main_container.hide();
