@@ -700,22 +700,30 @@ sakai.collections = function(tuid, showSettings) {
                 for (var j in cat.items) {
                     if (cat.items.hasOwnProperty(j)) {
                         var item = cat.items[j];
+                        var itemURL = "";
                         if (item.mimeType && item.mimeType.split("/")[0] === "image") {
-                            $("<img/>")[0].src = item.url;
-                            // load/cache the image
-                            if (!setFirstImage) {
-                                setFirstImage = true;
-                                $("#category_" + cat.id + " div img", $rootel).attr("src", item.url);
-                                categoryImages[cat.id] = {};
-                                categoryImages[cat.id].currentImage = 0;
-                                categoryImages[cat.id].images = [];
+                            itemURL = item.url;
+                        } else {
+                            if (item.mimeType && sakai.config.MimeTypes[item.mimeType]) {
+                                itemURL = sakai.config.MimeTypes[item.mimeType].URL;
+                            } else {
+                                itemURL = sakai.config.MimeTypes["other"].URL;
                             }
-                            categoryImages[cat.id].images.push(item.url);
                         }
+                        $("<img/>")[0].src = itemURL;
+                        // load/cache the image
+                        if (!setFirstImage) {
+                            setFirstImage = true;
+                            $("#category_" + cat.id + " div img", $rootel).attr("src", itemURL);
+                            categoryImages[cat.id] = {};
+                            categoryImages[cat.id].currentImage = 0;
+                            categoryImages[cat.id].images = [];
+                        }
+                        categoryImages[cat.id].images.push(itemURL);
                     }
                 }
                 if (!categoryImages[cat.id]) {
-                    $("#category_" + cat.id + " div img", $rootel).attr("src", "/dev/images/mimetypes/empty.png");
+                    $("#category_" + cat.id + " div img", $rootel).attr("src", "/dev/_images/mimetypes/empty.png");
                 }
             }
         }
