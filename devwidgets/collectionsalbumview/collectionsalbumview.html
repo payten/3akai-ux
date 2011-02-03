@@ -128,7 +128,7 @@
         </div>
         </div>
         <div class="itemImage isEditable itemData">
-          {if item.url}<a class="itemLink" href="{if item.mimeType === "x-sakai/link"}http://${item.url.split("http://")[1]}{else}${item.url}{/if}">{/if}
+          <a class="itemLink" href="{if item.url}{if item.mimeType === "x-sakai/link"}http://${item.url.split("http://")[1]}{else}${item.url}{/if}{else}#{/if}">
           {if item && item.mimeType}
               {if (item.mimeType.split("/")[0] === "image")}
                 <img src="${item.url}" alt="${item.title} __MSG__IMAGE__"/>
