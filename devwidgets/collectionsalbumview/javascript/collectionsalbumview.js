@@ -1031,6 +1031,9 @@ sakai.collectionsalbumview = function(tuid, showSettings) {
             $(".itemImage img", $rootel).attr("src", sakai.config.MimeTypes["other"].URL);
         }
         $(".clickToEditText", $rootel).text('');
+        if (mimeType === "x-sakai/link") {
+            url = "http://" + url.split("http://")[1];
+        }
         $("a.itemLink", $rootel).attr("href", url);
         saveItemData();
         $.TemplateRenderer($collectionsAlbumShowCategoryTemplate, {
