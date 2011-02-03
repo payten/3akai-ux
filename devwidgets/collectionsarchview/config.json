@@ -1,5 +1,5 @@
 {
-  "description":"Memory Palace",
+  "description":"Collections - Floorplan layout widget",
   "userpages": true,
   "grouppages": true,
   "hasSettings":true,
@@ -9,6 +9,6 @@
   "i18n": {
       "default": "/devwidgets/collectionsarchview/bundles/default.json"
   },
-  "name":"Memory Palace",
+  "name":"Collections - Floorplan",
   "url":"/devwidgets/collectionsarchview/collectionsarchview.html"
 }

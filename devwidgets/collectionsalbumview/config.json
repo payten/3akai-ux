@@ -1,5 +1,5 @@
 {
-  "description":"Collections - Albums",
+  "description":"Collections - Album layout widget",
   "userpages": true,
   "grouppages": true,
   "hasSettings":true,
@@ -9,6 +9,6 @@
   "i18n": {
       "default": "/devwidgets/collectionsalbumview/bundles/default.json"
   },
-  "name":"Collections - Albums",
+  "name":"Collections - Album",
   "url":"/devwidgets/collectionsalbumview/collectionsalbumview.html"
 }
