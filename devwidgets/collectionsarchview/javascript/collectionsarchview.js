@@ -1445,7 +1445,7 @@ sakai.collectionsarchview = function(tuid, showSettings) {
         }
         currentContentItemData.title = $("#content_title", $rootel).val();
         currentContentItemData.url = $("#content_url", $rootel).val();
-        currentContentItemData.description = $("#content_description", $rootel).val();
+        currentContentItemData.description = tinyMCE.get("content_description").getContent();
         currentContentItemData.mimeType = $("#content_mimetype", $rootel).val();
         for (var i = 0; i < currentCollectionData.categories.length; i++) {
             if (currentCollectionData.categories[i].name == $("#category_dropdown select option:selected", $rootel).val()) {
@@ -1610,14 +1610,23 @@ sakai.collectionsarchview = function(tuid, showSettings) {
         return false;
     });
 
-    $collectionsAddContentForm.die("submit");
-    $collectionsAddContentForm.live("submit", function() {
-        if (sakai.show.canEdit()) {
-            saveCurrentContentData();
-            saveCollectionData();
-            $.bbq.removeState("fromShow", "pos", "mode");
-            $.bbq.pushState({"item": selectedItemID});
+    $("#save_add_content").die("click");
+    $("#save_add_content").live("click", function(e) {
+        if (sakai.show.canEdit() && e.pageX !== 0) {
+            if ($.trim($("#content_title", $rootel).val()) !== "") {
+                saveCurrentContentData();
+                saveCollectionData();
+                $.bbq.removeState("fromShow", "pos", "mode");
+                $.bbq.pushState({"item": selectedItemID});                
+            } else {
+                alert("You must add a title to save this content");
+            }
         }
+        return false;
+    });
+
+    $collectionsAddContentForm.die("submit");
+    $collectionsAddContentForm.live("submit", function(e) {
         return false;
     });
 
@@ -1675,7 +1684,7 @@ sakai.collectionsarchview = function(tuid, showSettings) {
     });
 
     $("#cancel_add_content", $rootel).die("click");
-    $("#cancel_add_content", $rootel).live("click", function() {
+    $("#cancel_add_content", $rootel).live("click", function(e) {
         hideEverything();
         currentContentItemData = {};
         showRoom();
