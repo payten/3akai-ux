@@ -1327,7 +1327,7 @@ sakai.discussion = function(tuid, showSettings){
             }
 
             if (canAddTopics) {
-                $(discussionAddNewTopic).show();
+                $(discussionAddNewTopic, rootel).show();
             }
 
             if (!sakai.api.Widgets.isOnDashboard(tuid)) {
