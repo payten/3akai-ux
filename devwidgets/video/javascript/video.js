@@ -141,8 +141,9 @@ sakai.video = function(tuid, showSettings) {
               video.videoContainer = tuid + "_video_container";
               $(container, rootel).html($.TemplateRenderer(videoTemplate, video));
 
-              var videoWidth = rootel.width() - 6 + "px";
-              var so = new SWFObject('/devwidgets/video/jwplayer/player.swf','ply', videoWidth, '100%','9','#ffffff');
+              var videoWidth = rootel.width() - 6;
+              var videoHeight = videoWidth*3/4;
+              var so = new SWFObject('/devwidgets/video/jwplayer/player.swf','ply', videoWidth + "px", videoHeight + "px",'9','#ffffff');
               so.addParam('allowfullscreen','true');
               so.addParam('allowscriptaccess','always');
               so.addParam('wmode','opaque');
