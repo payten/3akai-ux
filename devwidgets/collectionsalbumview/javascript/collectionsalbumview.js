@@ -1038,6 +1038,9 @@ sakai.collectionsalbumview = function(tuid, showSettings) {
             "album": currentCollectionData
         },
         $collectionsAlbumShowCategory);
+        if (sakai.show.canEdit()) {
+            $(".configure", $rootel).show();
+        }
     };
 
     /**
