@@ -333,7 +333,6 @@ sakai.video = function(tuid, showSettings) {
      * @param {Boolean} showSettings Show the settings of the widget or not
      */
     sakai.api.Widgets.loadWidgetData(tuid, function (success, data) {
-
         if (success) {
             // we have a video set
             ShowVideoSakaiPlayer(data, videoShowMain);
