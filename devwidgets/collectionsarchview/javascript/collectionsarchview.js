@@ -1630,9 +1630,9 @@ sakai.collectionsarchview = function(tuid, showSettings) {
         return false;
     });
 
-    $collectionsEditForm.die("submit");
-    $collectionsEditForm.live("submit", function(e) {
-        if (sakai.show.canEdit()) {
+    $("#save_room", $rootel).die("click");
+    $("#save_room", $rootel).live("click", function(e) {
+        if (sakai.show.canEdit() && e.pageX !== 0) {
             if ($.trim($("#room_title", $rootel).val()) === "") {
                 // need a title, son!
                 alert("Please enter a title for this room before saving.");
@@ -1645,6 +1645,11 @@ sakai.collectionsarchview = function(tuid, showSettings) {
             saveCollectionData();
             $.bbq.removeState("fromShow", "pos", "mode");
         }
+        return false;
+    });
+
+    $collectionsEditForm.die("submit");
+    $collectionsEditForm.live("submit", function(e) {
         return false;
     });
 
@@ -1673,12 +1678,14 @@ sakai.collectionsarchview = function(tuid, showSettings) {
     });
 
     $("#cancel_edit_room", $rootel).die("click");
-    $("#cancel_edit_room", $rootel).live("click", function() {
-        hideEverything();
-        if (fromViewRoom) {
-            showRoom();
-        } else {
-            $collections_map.show();
+    $("#cancel_edit_room", $rootel).live("click", function(e) {
+        if (e.pageX !== 0) {
+            hideEverything();
+            if (fromViewRoom) {
+                showRoom();
+            } else {
+                $collections_map.show();
+            }
         }
         return false;
     });
