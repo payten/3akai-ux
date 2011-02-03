@@ -1,6 +1,9 @@
 /* GENERAL */
 #dashboard_container strong {color: #000;}
 #dashboard_container .dialog_buttons .button {color: #666;}
+#dashboard_container .inline_class_widget_nofloat,
+#dashboard_container .inline_class_widget_rightfloat,
+#dashboard_container .inline_class_widget_leftfloat {overflow:visible;}
 
 /* OPTIONS */
 #dashboard_container .dashboard_options {text-align: right; width:620px; padding-right:10px;}
