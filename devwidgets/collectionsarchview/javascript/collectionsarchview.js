@@ -1768,8 +1768,8 @@ sakai.collectionsarchview = function(tuid, showSettings) {
 
     $collectionsReturnToContentFromEditLink.die("click");
     $collectionsReturnToContentFromEditLink.live("click", function() {
-        hideEverything();
-        showContentItem();
+        $.bbq.removeState("mode");
+        return false;
     });
 
     $rootel.find("#edit_page", "#delete_confirm", "#createpage_save").bind("click", function() {
