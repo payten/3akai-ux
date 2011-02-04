@@ -663,9 +663,8 @@ sakai.collectionsalbumview = function(tuid, showSettings) {
 
         if (!currentCollectionData.title || currentCollectionData.title === "") {
             $(".configureAlbum a", $rootel).trigger("click");
-        } else {
-            setupCategoryPreviewImages();
         }
+        setupCategoryPreviewImages();
 
         $(".categoryPreviewName span", $rootel).each(function(elt) {
           $(this).html(stripHTML($(this).html()));
