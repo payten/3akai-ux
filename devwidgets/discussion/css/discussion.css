@@ -17,6 +17,8 @@
  */
 
 /* Main Container */
+#discussion_main_container {clear:both; float:left; width:100%;}
+#dashboard_container #discussion_main_container {float:none; clear:none;}
 #discussion_main_container .fl-widget-content {padding:10px;}
 #discussion_main_container label, #discussion_settings label {width:100%;padding: 6px;font-weight:bold;}
 #discussion_main_container label.error, #discussion_settings label.error {color:#9f3333;}

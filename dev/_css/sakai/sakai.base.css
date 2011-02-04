@@ -108,8 +108,6 @@ a:hover {
  * styles used to programmatically set placement of widgets on the page
  */
 
-.inline_class_widget_nofloat, .inline_class_widget_rightfloat, .inline_class_widget_leftfloat { overflow:auto; zoom:1;}
-
 .inline_class_widget_rightfloat {
     float: right;
 }
