@@ -1378,6 +1378,9 @@ sakai.collectionsarchview = function(tuid, showSettings) {
         currentCollectionData = getRoom(selectedCollectionID);
         hideEverything();
         $collections_map_show_room_conatiner.show();
+        currentCollectionData.categories.sort(function(a,b){
+            return a.position - b.position;
+        });
         $.TemplateRenderer(collectionsShowRoomTemplate, {"room": currentCollectionData }, $collections_map_show_room);
         if (!sakai.show.canEdit()) {
             $("span#room_edit_links", $rootel).hide();
@@ -1490,10 +1493,17 @@ sakai.collectionsarchview = function(tuid, showSettings) {
             for (var j = 0; j < catIDs.length; j++) {
                 if (currentCollectionData.categories[i].id == catIDs[j]) {
                     currentCollectionData.categories.splice(i, 1);
-                    $("#cat_" + catIDs[j], $rootel).parent().parent().fadeOut();
+                    $("#cat_" + catIDs[j], $rootel).parent().parent().fadeOut().remove();
                 }
             }
         }
+        var catOrders = $("#categories_listing_body input[type='text']:visible", $rootel);
+        catOrders.each(function(index, elt) {
+            index = index+1;
+            if (index !== $(elt).val()) {
+                $(elt).val(index);
+            }
+        });
     };
 
     var updateCategoryOrder = function() {
