@@ -309,7 +309,7 @@ sakai.collectionsalbumview = function(tuid, showSettings) {
                 hideEverything();
                 renderAlbumView();
                 if (mode === "edit") {
-                    if (!$("#collections_header div", $rootel).hasClass("expanded")) {
+                    if (!$("#collections_header h1", $rootel).hasClass("editable")) {
                         $("#collections_header div a#configure_widget", $rootel).trigger("click");
                     } else {
                         showAddAlbum();
@@ -340,7 +340,7 @@ sakai.collectionsalbumview = function(tuid, showSettings) {
                 hideEverything();
                 renderMapView();
                 if (mode === "edit") {
-                    if (!$("#collections_header div", $rootel).hasClass("expanded")) {
+                    if (!$("#collections_header h1", $rootel).hasClass("editable")) {
                         $("#collections_header div a#configure_widget", $rootel).trigger("click");
                     }
                 }
@@ -415,7 +415,7 @@ sakai.collectionsalbumview = function(tuid, showSettings) {
     var renderGlobals = function() {
         if (sakai.show.canEdit() && firstRender) {
             $("#collections_header div", $rootel).show();
-            if (!$("#collections_header div", $rootel).hasClass("expanded")) {
+            if (!$("#collections_header h1", $rootel).hasClass("editable")) {
                 $("#collections_header div a#configure_widget", $rootel).trigger("click");
             }
         }
@@ -596,7 +596,7 @@ sakai.collectionsalbumview = function(tuid, showSettings) {
         $.TemplateRenderer($collectionsAlbumsTemplate, collectionData, $collectionsAlbums);
         if (sakai.show.canEdit() &&
             collectionData.collections.length === 0 &&
-            $("#collections_header div", $rootel).hasClass("expanded")) {
+            $("#collections_header h1", $rootel).hasClass("editable")) {
                 showAddAlbum();
         }
 
