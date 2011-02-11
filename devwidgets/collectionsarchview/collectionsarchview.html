@@ -336,7 +336,7 @@
         {if item.mimeType.split('/')[0] == "image"}
           <a href="${item.url}" target="_blank"><img src="${item.url}" alt="${item.title} __MSG__IMAGE__" class="content_image"/></a>
         {elseif item.url}
-          <a href="${item.url}" class="content_link" target="_blank">${item.url.split("/")[item.url.split("/").length-1]}</a>
+          <a href="{if item.mimeType === "x-sakai/link"}http://${item.url.split("http://")[1]}{else}${item.url}{/if}" class="content_link" target="_blank">${item.url.split("/")[item.url.split("/").length-1]}</a>
         {/if}
       --></div>
     
