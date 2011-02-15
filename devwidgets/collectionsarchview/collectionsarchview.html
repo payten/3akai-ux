@@ -1,5 +1,5 @@
 <!-- CSS -->
-<link rel="stylesheet" type="text/css" href="/devwidgets/collections/css/collections.css"/>
+<link rel="stylesheet" type="text/css" href="/devwidgets/collectionsarchview/css/collectionsarchview.css"/>
 
 <!-- MAIN CONTAINER -->
 <div id="collections_main_container" style="display:none;" class="fl-widget-content">
@@ -189,9 +189,9 @@
             {/if}
             </div>
             <div class="form_item">
-              <label for="room_overview">Room Overview</label>
+              <label for="arch_room_overview">Room Overview</label>
               <div id="placeholderforeditor" class="textarea">
-                  <textarea id="room_overview" name="room_overview" rows="15" cols="80" style="width: 100%">
+                  <textarea id="arch_room_overview" name="arch_room_overview" rows="15" cols="80" style="width: 100%">
                       {if room.description}${room.description}{/if}
                   </textarea>
               </div>
@@ -234,11 +234,11 @@
             </div>
             <div>&nbsp;</div>
             <div class="form_item" id="action_buttons">
-              <button type="cancel" name="cancel_edit_room" id="cancel_edit_room" class="s3d-button">
-                <span class="s3d-button-inner">Cancel</span>
-              </button>
               <button type="submit" name="submit" id="save_room" class="s3d-button s3d-button-primary">
                 <span class="s3d-button-inner">Save</span>
+              </button>
+              <button type="cancel" name="cancel_edit_room" id="cancel_edit_room" class="s3d-button">
+                <span class="s3d-button-inner">Cancel</span>
               </button>
             </div>
           </form>
@@ -301,9 +301,9 @@
             {/if}
           </div>
           <div class="form_item">
-            <label for="content_description">Description</label>
+            <label for="arch_content_description">Description</label>
             <div id="placeholderforeditor" class="textarea">
-                <textarea id="content_description" name="content_description" rows="15" cols="80" style="width: 100%">
+                <textarea id="arch_content_description" name="arch_content_description" rows="15" cols="80" style="width: 100%">
                     ${content.description}
                 </textarea>
             </div>
@@ -311,7 +311,7 @@
           <div id="category_dropdown">
           </div>
           <div class="form_item" id="action_buttons">
-            <button type="cancel" name="cancel_add_content" class="s3d-button" id="cancel_add_content"><span class="s3d-button-inner">__MSG__CANCEL__</span></button><button type="submit" name="submit" class="s3d-button s3d-button-primary" id="save_add_content"><span class="s3d-button-inner">__MSG__SAVE__</span></button>
+            <button type="submit" name="submit" class="s3d-button s3d-button-primary" id="save_add_content"><span class="s3d-button-inner">__MSG__SAVE__</span></button><button type="cancel" name="cancel_add_content" class="s3d-button" id="cancel_add_content"><span class="s3d-button-inner">__MSG__CANCEL__</span></button>
           </div>
         </form>
       --></div>
@@ -334,9 +334,9 @@
         <h2>${item.title}</h2>
         <div>${item.description}</div>
         {if item.mimeType.split('/')[0] == "image"}
-          <a href="${item.url}"><img src="${item.url}" alt="${item.title} __MSG__IMAGE__" class="content_image"/></a>
+          <a href="${item.url}" target="_blank"><img src="${item.url}" alt="${item.title} __MSG__IMAGE__" class="content_image"/></a>
         {elseif item.url}
-          <a href="${item.url}" class="content_link">${item.url.split("/")[item.url.split("/").length-1]}</a>
+          <a href="{if item.mimeType === "x-sakai/link"}http://${item.url.split("http://")[1]}{else}${item.url}{/if}" class="content_link" target="_blank">${item.url.split("/")[item.url.split("/").length-1]}</a>
         {/if}
       --></div>
     
@@ -376,4 +376,4 @@
 
 <span style="display:none;" id="collections_title_empty">__MSG__PLEASE_INPUT_A_TITLE__</span>
 <!-- JAVASCRIPT -->
-<script src="/devwidgets/collections/javascript/collections.js" type="text/javascript" charset="utf-8"></script>
+<script src="/devwidgets/collectionsarchview/javascript/collectionsarchview.js" type="text/javascript" charset="utf-8"></script>

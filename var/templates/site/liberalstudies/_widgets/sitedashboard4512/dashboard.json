@@ -1,4 +1,4 @@
 {
-	"layout": "dev",
+	"layout": "onecolumn",
 	"jcr:mixinTypes": "sakai:propertiesmix"
 }

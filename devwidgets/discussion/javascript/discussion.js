@@ -1168,25 +1168,25 @@ sakai.discussion = function(tuid, showSettings){
         /*
          * Bind the submit button
          */
-        $(discussionReplySubmit, rootel).bind("click", function(e, ui){
+        $(discussionReplySubmit, rootel).live("click", function(e, ui){
             replyPost(currentReplyId);
         });
 
         // Bind the add topic button
-        $(discussionAddNewTopic, rootel).bind("click", function(e, ui){
+        $(discussionAddNewTopic, rootel).live("click", function(e, ui){
             showAddTopic();
         });
 
         // Bind the add topic submit
-        $(discussionAddContainer + " form", rootel).bind("submit", function(e, ui){
-            if ($(discussionAddContainer + " form").valid()) {
+        $(discussionAddContainer + " form", rootel).live("submit", function(e, ui){
+            if ($(discussionAddContainer + " form", rootel).valid()) {
                 addNewTopic();
             }
             return false;
         });
 
         // Bind the add topic cancel
-        $(discussionAddTopicCancel, rootel).bind("click", function(e, ui){
+        $(discussionAddTopicCancel, rootel).live("click", function(e, ui){
 
             // Clear everything in the add topic fields
             clearAddTopicFields();
@@ -1198,7 +1198,7 @@ sakai.discussion = function(tuid, showSettings){
         /*
          * Bind the cancel button
          */
-        $(discussionReplyCancel, rootel).bind("click", function(e, ui){
+        $(discussionReplyCancel, rootel).live("click", function(e, ui){
 
             // Clear everything in the reply fields
             clearReplyFields();
@@ -1208,35 +1208,35 @@ sakai.discussion = function(tuid, showSettings){
         });
 
         // Bind the settings submit button.
-        $(discussionSettingsSubmit, rootel).bind("click", function(e, ui){
+        $(discussionSettingsSubmit, rootel).live("click", function(e, ui){
             submitSettings();
         });
 
         /*
          * Bind the settings cancel button
          */
-        $("#discussion_settings_cancel", rootel).bind("click", function(e, ui){
+        $("#discussion_settings_cancel", rootel).live("click", function(e, ui){
             sakai.api.Widgets.Container.informCancel(tuid, "discussion");
         });
 
         /*
          * Bind the new discussion tab
          */
-        $(discussionSettingsNewTab, rootel).bind("click", function(e, ui){
+        $(discussionSettingsNewTab, rootel).live("click", function(e, ui){
             showTab("new");
         });
 
         /*
          * Bind the existing discussion tab
          */
-        $(discussionSettingsExistingTab, rootel).bind("click", function(e, ui){
+        $(discussionSettingsExistingTab, rootel).live("click", function(e, ui){
             showTab("existing");
         });
 
         /*
          * Bind the display_options discussion tab
          */
-        $(discussionSettingsDisplayOptionsTab, rootel).bind("click", function(e, ui){
+        $(discussionSettingsDisplayOptionsTab, rootel).live("click", function(e, ui){
             showTab("display_options");
         });
 
@@ -1327,7 +1327,7 @@ sakai.discussion = function(tuid, showSettings){
             }
 
             if (canAddTopics) {
-                $(discussionAddNewTopic).show();
+                $(discussionAddNewTopic, rootel).show();
             }
 
             if (!sakai.api.Widgets.isOnDashboard(tuid)) {

@@ -1,5 +1,5 @@
 <!-- CSS -->
-<link rel="stylesheet" type="text/css" href="/devwidgets/collections/css/collections.css"/>
+<link rel="stylesheet" type="text/css" href="/devwidgets/collectionsalbumview/css/collectionsalbumview.css"/>
 
 <!-- MAIN CONTAINER -->
 <div id="collections_main_container" style="display:none;" class="fl-widget-content">
@@ -128,7 +128,7 @@
         </div>
         </div>
         <div class="itemImage isEditable itemData">
-          {if item.url}<a class="itemLink" href="{if item.mimeType === "x-sakai/link"}http://${item.url.split("http://")[1]}{else}${item.url}{/if}">{/if}
+          <a class="itemLink" href="{if item.url}{if item.mimeType === "x-sakai/link"}http://${item.url.split("http://")[1]}{else}${item.url}{/if}{else}#{/if}" target="_blank">
           {if item && item.mimeType}
               {if (item.mimeType.split("/")[0] === "image")}
                 <img src="${item.url}" alt="${item.title} __MSG__IMAGE__"/>
@@ -376,4 +376,4 @@
 
 <span style="display:none;" id="collections_title_empty">__MSG__PLEASE_INPUT_A_TITLE__</span>
 <!-- JAVASCRIPT -->
-<script src="/devwidgets/collections/javascript/collections.js" type="text/javascript" charset="utf-8"></script>
+<script src="/devwidgets/collectionsalbumview/javascript/collectionsalbumview.js" type="text/javascript" charset="utf-8"></script>

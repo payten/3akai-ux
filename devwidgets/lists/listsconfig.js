@@ -14,7 +14,7 @@ sakai.Lists = {
                 },
                 {
                     "title":"MPA: HPAM",
-                    "link": "http://sakaiproject.org/support-overview"
+                    "link": "https://atlas.nyu.edu/~mpa--hpam"
                 },
                 {
                     "title":"MUP",

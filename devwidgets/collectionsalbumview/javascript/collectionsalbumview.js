@@ -26,7 +26,7 @@ var sakai = sakai || {};
  * @param {String} tuid Unique id of the widget
  * @param {Boolean} showSettings Show the settings of the widget or not
  */
-sakai.collections = function(tuid, showSettings) {
+sakai.collectionsalbumview = function(tuid, showSettings) {
 
     var rootel = "#" + tuid;
     var $rootel = $("#" + tuid);
@@ -123,6 +123,7 @@ sakai.collections = function(tuid, showSettings) {
         sakai.api.Widgets.loadWidgetData(tuid, function(success, data) {
             if (success) {
                 settings = data.settings;
+                settings.displayStyle = "albumView";
                 collectionData = data.collectionData;
                 if (showSettings) {
                     $widget_title.val(settings.widgetTitle);
@@ -283,7 +284,7 @@ sakai.collections = function(tuid, showSettings) {
             }
             return;
         }
-
+        view = "albumView";
         if (view === "albumView") {
           if (item) {
               selectedCollectionID = collection;
@@ -308,7 +309,7 @@ sakai.collections = function(tuid, showSettings) {
                 hideEverything();
                 renderAlbumView();
                 if (mode === "edit") {
-                    if (!$("#collections_header div", $rootel).hasClass("expanded")) {
+                    if (!$("#collections_header h1", $rootel).hasClass("editable")) {
                         $("#collections_header div a#configure_widget", $rootel).trigger("click");
                     } else {
                         showAddAlbum();
@@ -339,7 +340,7 @@ sakai.collections = function(tuid, showSettings) {
                 hideEverything();
                 renderMapView();
                 if (mode === "edit") {
-                    if (!$("#collections_header div", $rootel).hasClass("expanded")) {
+                    if (!$("#collections_header h1", $rootel).hasClass("editable")) {
                         $("#collections_header div a#configure_widget", $rootel).trigger("click");
                     }
                 }
@@ -414,7 +415,7 @@ sakai.collections = function(tuid, showSettings) {
     var renderGlobals = function() {
         if (sakai.show.canEdit() && firstRender) {
             $("#collections_header div", $rootel).show();
-            if (!$("#collections_header div", $rootel).hasClass("expanded")) {
+            if (!$("#collections_header h1", $rootel).hasClass("editable")) {
                 $("#collections_header div a#configure_widget", $rootel).trigger("click");
             }
         }
@@ -482,8 +483,8 @@ sakai.collections = function(tuid, showSettings) {
 
     $("#collections_header div a#configure_widget", $rootel).die("click");
     $("#collections_header div a#configure_widget", $rootel).live("click", function() {
-        $("#collections_header div", $rootel).toggleClass("expanded");
-        $("#collections_header div span#choose_layout", $rootel).toggle();
+        //$("#collections_header div", $rootel).toggleClass("expanded");
+        //$("#collections_header div span#choose_layout", $rootel).toggle();
         if (sakai.show.canEdit()) {
             toggleTitleEditable();
             if (settings.displayStyle == "albumView" && !$(".addAlbum", $rootel).is(":visible")) {
@@ -595,7 +596,7 @@ sakai.collections = function(tuid, showSettings) {
         $.TemplateRenderer($collectionsAlbumsTemplate, collectionData, $collectionsAlbums);
         if (sakai.show.canEdit() &&
             collectionData.collections.length === 0 &&
-            $("#collections_header div", $rootel).hasClass("expanded")) {
+            $("#collections_header h1", $rootel).hasClass("editable")) {
                 showAddAlbum();
         }
 
@@ -662,9 +663,8 @@ sakai.collections = function(tuid, showSettings) {
 
         if (!currentCollectionData.title || currentCollectionData.title === "") {
             $(".configureAlbum a", $rootel).trigger("click");
-        } else {
-            setupCategoryPreviewImages();
         }
+        setupCategoryPreviewImages();
 
         $(".categoryPreviewName span", $rootel).each(function(elt) {
           $(this).html(stripHTML($(this).html()));
@@ -675,7 +675,7 @@ sakai.collections = function(tuid, showSettings) {
     };
 
     var showAddAlbum = function() {
-        if ($("#collections_header div", $rootel).hasClass("expanded")) {
+        if ($("#collections_header h1", $rootel).hasClass("editable")) {
             $(".addAlbum", $rootel).remove();
             $("#collections_albums", $rootel).append("<div class='albumCover addAlbum' title='Add New Chapter'></div>");
         }
@@ -1030,6 +1030,9 @@ sakai.collections = function(tuid, showSettings) {
             $(".itemImage img", $rootel).attr("src", sakai.config.MimeTypes["other"].URL);
         }
         $(".clickToEditText", $rootel).text('');
+        if (mimeType === "x-sakai/link") {
+            url = "http://" + url.split("http://")[1];
+        }
         $("a.itemLink", $rootel).attr("href", url);
         saveItemData();
         $.TemplateRenderer($collectionsAlbumShowCategoryTemplate, {
@@ -1037,6 +1040,9 @@ sakai.collections = function(tuid, showSettings) {
             "album": currentCollectionData
         },
         $collectionsAlbumShowCategory);
+        if (sakai.show.canEdit()) {
+            $(".configure", $rootel).show();
+        }
     };
 
     /**
@@ -1853,4 +1859,4 @@ sakai.collections = function(tuid, showSettings) {
 
 };
 
-sakai.api.Widgets.widgetLoader.informOnLoad("collections");
+sakai.api.Widgets.widgetLoader.informOnLoad("collectionsalbumview");

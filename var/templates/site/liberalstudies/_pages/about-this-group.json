@@ -1,6 +1,6 @@
 {
 	"sling:resourceType": "sakai/page",
-	"pageTitle": "About This Group",
+	"pageTitle": "About This Portfolio",
 	"pageType": "profile",
 	"deletable": false,
 	"pagePosition": 100000,
