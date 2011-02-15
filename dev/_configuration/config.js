@@ -246,12 +246,14 @@ sakai.config = {
                         "label": "__MSG__PROFILE_BASIC_FIRSTNAME_LABEL__",
                         "required": true,
                         "display": true,
+                        "editable": false,
                         "limitDisplayLength": 50
                     },
                     "lastName": {
                         "label": "__MSG__PROFILE_BASIC_LASTNAME_LABEL__",
                         "required": true,
                         "display": true,
+                        "editable": false,
                         "limitDisplayLength": 50
                     },
                     "picture": {
@@ -267,7 +269,7 @@ sakai.config = {
                     "email": {
                         "label": "__MSG__PROFILE_BASIC_EMAIL_LABEL__",
                         "required": false,
-                        "display": true,
+                        "display": false,
                         "type": "email"
                     },
                     "status": {
@@ -283,7 +285,6 @@ sakai.config = {
                         "select_elements": {
                             "academic_related_staff":"__MSG__PROFILE_BASIC_ROLE_ACADEMIC_RELATED_STAFF_LABEL__",
                             "academic_staff":"__MSG__PROFILE_BASIC_ROLE_ACADEMIC_STAFF_LABEL__",
-                            "assistent_staff":"__MSG__PROFILE_BASIC_ROLE_ASSISTENT_STAFF_LABEL__",
                             "graduate_student":"__MSG__PROFILE_BASIC_ROLE_GRADUATE_STUDENT_LABEL__",
                             "undergraduate_student":"__MSG__PROFILE_BASIC_ROLE_UNDERGRADUATE_STUDENT_LABEL__",
                             "non_academic_staff":"__MSG__PROFILE_BASIC_ROLE_NON_ACADEMIC_STAFF_LABEL__",
@@ -300,12 +301,12 @@ sakai.config = {
                     "college": {
                         "label": "__MSG__PROFILE_BASIC_COLLEGE_LABEL__",
                         "required": false,
-                        "display": true
+                        "display": false
                     },
                     "dateofbirth": {
                         "label": "__MSG__PROFILE_BASIC_DATEOFBIRTH_LABEL__",
                         "required": false,
-                        "display": true,
+                        "display": false,
                         "type": "oldDateITA",
                         "example": "__MSG__DATE_OF_BIRTH_ITA_EXAMPLE__"
                         //"type": "oldDate",
@@ -456,7 +457,7 @@ sakai.config = {
          */
         JoinRequest: {
             title: "${user} has requested to join your group: ${group}",
-            body: "Hi, \n\n ${user} has requested to join your group: ${group}. Use the links below to respond to this request. \n\n Kind regards,\n\nThe Sakai Team"
+            body: "Hi, \n\n ${user} has requested to join your group: ${group}. Use the links below to respond to this request. \n\n Kind regards,\n\nThe ATLAS Network Team"
         }
     },
 
@@ -465,14 +466,15 @@ sakai.config = {
          * Relationships used by the add contacts widget to define what relationship the contacts can have
          */
         "contacts": [
-            {"name": "Classmate", "definition": "is my classmate", "selected": true},
-            {"name": "Supervisor", "inverse": "Supervised", "definition": "is my supervisor", "selected": false},
-            {"name": "Supervised", "inverse": "Supervisor", "definition": "is being supervised by me", "selected": false},
-            {"name": "Lecturer", "inverse": "Student", "definition": "is my lecturer", "selected": false},
-            {"name": "Student", "inverse": "Lecturer", "definition": "is my student", "selected": false},
+            {"name": "Classmate", "definition": "is my classmate", "selected": false},
+            {"name": "Advisor", "inverse": "Advisee", "definition": "is my advisor", "selected": false},
+            {"name": "Advisee", "inverse": "Advisor", "definition": "is my advisee", "selected": false},
+            {"name": "Instructor", "inverse": "Student", "definition": "is my instructor", "selected": false},
+            {"name": "Student", "inverse": "Instructor", "definition": "is my student", "selected": false},
             {"name": "Colleague", "definition": "is my colleague", "selected": false},
-            {"name": "College Mate", "definition": "is my college mate", "selected": false},
-            {"name": "Shares Interests", "definition": "shares an interest with me", "selected": false}
+            {"name": "Fellow Student", "definition": "is my fellow student", "selected": false},
+            {"name": "Shares Interests", "definition": "shares an interest with me", "selected": false},
+            {"name": "Other", "definition": "other", "selected": false}
         ]
     },
 
@@ -669,7 +671,7 @@ sakai.config = {
             "label" : "PEOPLE"
         },
         {
-            "url" : "/dev/directory.html",
+            "url" : "javascript:;",
             "label" : "DIRECTORY"
         }
     ],

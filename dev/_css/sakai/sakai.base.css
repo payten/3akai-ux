@@ -107,6 +107,7 @@ a:hover {
 /* PROGRAMMATICALLY SET STYLES
  * styles used to programmatically set placement of widgets on the page
  */
+
 .inline_class_widget_rightfloat {
     float: right;
 }

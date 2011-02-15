@@ -48,7 +48,7 @@ sakai.contentpicker = function(tuid, showSettings) {
     var $contentpicker_new_item_template = $("#contentpicker_new_item_template", $rootel);
 
     var $fileuploadContainer = $("#fileupload_container", $rootel);
-    var $uploadContentLink = $("#upload_content", $rootel);
+    var $uploadContentLink = $("#upload_content");
 
     var selectedItems = [];
     var firstTime = true;
@@ -282,7 +282,8 @@ sakai.contentpicker = function(tuid, showSettings) {
         $contentpicker_dialog.jqmHide();
     });
 
-    $uploadContentLink.bind("click", function() {
+    $uploadContentLink.die("click");
+    $uploadContentLink.live("click", function() {
         $(window).trigger("sakai-fileupload-init");
     });
 

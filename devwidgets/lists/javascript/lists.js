@@ -72,7 +72,7 @@ sakai.lists = function(tuid, showSettings) {
             if (!sakai.api.Widgets.isOnDashboard(tuid)) {
                 $listTitle.show();
                 $listTitle.find("h1").text(widgetData.title);
-                $rootel.find(".lists_widget").addClass("on_page");
+                $(".lists_widget", $rootel).addClass("on_page");
             } else {
                 sakai.api.Widgets.changeWidgetTitle(tuid, widgetData.title);
             }
@@ -83,19 +83,19 @@ sakai.lists = function(tuid, showSettings) {
     };
 
     var getSaveData = function() {
-        if (($("select.list_final").length > 0 && $("select.list_final option:selected").length > 0) ||
-             $(".lists_multi input[type=checkbox]:checked").length > 0) {
+        if (($("select.list_final", $rootel).length > 0 && $("select.list_final option:selected", $rootel).length > 0) ||
+             $(".lists_multi input[type=checkbox]:checked", $rootel).length > 0) {
 
             widgetData.selections = [];
             widgetData.parents = [];
-            $(".list_final").parents(".list_container").each(function(i,val) {
+            $(".list_final", $rootel).parents(".list_container", $rootel).each(function(i,val) {
                 if (i === 0) {
                     widgetData.title = unescape($(val).attr("id"));
                 }
                 widgetData.parents[i] = unescape($(val).attr("id"));
             });
-            if ($("select.list_final option:selected").length > 0) {
-                $("select.list_final option:selected").each(function(i,val){
+            if ($("select.list_final option:selected", $rootel).length > 0) {
+                $("select.list_final option:selected", $rootel).each(function(i,val){
                     var obj = {"title": unescape($(this).val())};
                     if ($(this).attr("title")) {
                         obj.link = $(this).attr("title");
@@ -103,7 +103,7 @@ sakai.lists = function(tuid, showSettings) {
                     widgetData.selections.push(obj);
                 });
             } else {
-                $(".lists_multi input[type=checkbox]:checked").each(function(i,val){
+                $(".lists_multi input[type=checkbox]:checked", $rootel).each(function(i,val){
                     var obj = {"title": unescape($(this).val())};
                     if ($(this).attr("title")) {
                         obj.link = $(this).attr("title");
@@ -189,22 +189,22 @@ sakai.lists = function(tuid, showSettings) {
         var $parentDiv = $(this).parent("div");
         var list = getList(sakai.Lists, unescape($(this).find("option:selected").val()));
         if (list) {
-            if ($(".list_parent_" + id).length) {
+            if ($(".list_parent_" + id, $rootel).length) {
                 // replace the current list display
-                $(".list_parent_" + id).replaceWith($.TemplateRenderer($listsTemplate, {"data":list, "parentLabel": unescape(id), "hasLists": list.list[0].list ? true : false}));
+                $(".list_parent_" + id, $rootel).replaceWith($.TemplateRenderer($listsTemplate, {"data":list, "parentLabel": unescape(id), "hasLists": list.list[0].list ? true : false}));
             } else {
                 // append to the parent div for easy hiding
                 $parentDiv.append($.TemplateRenderer($listsTemplate, {"data":list, "parentLabel": unescape(id), "hasLists": list.list[0].list ? true : false}));
                 $(".list_select:not(.triggered):has(option:selected)", $rootel).addClass("triggered").trigger("change"); // trigger change if there are more
-                if ($(".list_select.list_final").length) { // if the final list is available, select the selections
+                if ($(".list_select.list_final", $rootel).length) { // if the final list is available, select the selections
                     $(widgetData.selections).each(function(i,val) {
-                        $(".list_final").find("option[value='" + escape(val) + "']").attr("selected", "selected");
+                        $(".list_final", $rootel).find("option[value='" + escape(val) + "']").attr("selected", "selected");
                     });
                 }
             }
         } else {
             // remove the children
-            $(".list_parent_" + id).remove();
+            $(".list_parent_" + id, $rootel).remove();
         }
     });
 
@@ -226,7 +226,8 @@ sakai.lists = function(tuid, showSettings) {
         loadWidget(function() {
             if (showSettings) {
                 renderInitialLists();
-                sakai.api.Widgets.changeWidgetTitle(tuid, "Lists");
+                var title = widgetData.title || "Lists";
+                sakai.api.Widgets.changeWidgetTitle(tuid, title);
                 $listsSettings.show();
             } else {
                 showLists();

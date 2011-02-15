@@ -7,14 +7,14 @@
   <!-- Header -->
   <div id="collections_header" style="display:none"></div>
   <div id="collections_header_template"><!--
-    <h1>${widgetTitle}</h1>
+    <h1 class="isEditable">${widgetTitle}</h1>
     <div style="display:none">
       <span style="display:none" id="choose_layout">
         <a id="layout_selector" href="javascript:;"><span id="chosen_layout">{if displayStyle == 'albumView'}__MSG__ALBUM_VIEW__{elseif displayStyle == 'mapView'}__MSG__ARCHITECTURAL_VIEW__{/if}</span>
         </a>
       </span>
       <a href="javascript:;" id="configure_widget">
-        <img src="/devwidgets/collections/images/config_icon.png" alt="__MSG__CONFIGURE_THIS_COLLECTIONS_WIDGET__" title="__MSG__CONFIGURE_THIS_COLLECTIONS_WIDGET"/>
+        <img src="/devwidgets/collections/images/config_icon.png" alt="__MSG__CONFIGURE_THIS_COLLECTIONS_WIDGET__" title="__MSG__CONFIGURE_THIS_COLLECTIONS_WIDGET__"/>
       </a>
     </div>
   --></div>
@@ -55,10 +55,15 @@
     <div id="collections_albums_show_album_template" style="display:none" class="albumView"><!--
       <div class="albumHero">
         <div class="albumHead">
-          <div class="albumTitleContainer"><h1 class="isEditable albumTitle">${album.title}</h1></div>
+          <div class="albumTitleContainer">
+          <h1>Chapter:</h1>
+          <h1 class="isEditable albumTitle">${album.title}</h1></div>
           <div class="configureAlbum configure" style="display:none"><button class="s3d-button s3d-button-primary" style="display:none"><span class="s3d-button-inner">__MSG__DELETE_ALBUM__</span></button><a href="javascript:;"><img src="/devwidgets/collections/images/config_icon.png" alt="__MSG__CONFIGURE_THIS_ALBUM__" title="__MSG__CONFIGURE_THIS_ALBUM__"/></a></div>
         </div>
-        <div class="albumImage isEditable"><img src="${album.image}"/></div>
+        <div class="albumImage isEditable">
+            <img src="${album.image}"/>
+            <span class="clickToEditText"></span>
+        </div>
         <div class="albumDesc isEditable" id="${album.id}_description">${album.description}</div>
       </div>
       <div class="albumCategories">
@@ -77,9 +82,10 @@
   
     <div id="collections_albums_show_category" style="display:none" class="albumView"></div>
     <div id="collections_albums_show_category_template" style="display:none" class="albumView"><!--
-      <h1>${album.title}</h1>
+      <h1>Chapter: ${album.title}</h1>
       <div class="itemsContainer">
         <div class="itemsContainerHead">
+          <h2>Category:</h2>
           <div class="categoryTitleContainer"><h2 class="isEditable categoryTitle categoryData">${category.name}</h2></div>
           <div class="configureCategory configure" style="display:none">
             <button class="s3d-button s3d-button-primary" style="display:none"><span class="s3d-button-inner">__MSG__DELETE_CATEGORY__</span></button>
@@ -114,20 +120,26 @@
     <div id="collections_albums_show_item_template" style="display:none" class="albumView"><!--
       <div class="itemHero">
         <div class="itemHead">
+        <h1>Item:</h1>
         <div class="itemTitleContainer"><h1 class="itemTitle isEditable itemData">${item.title}</h1></div>
         <div class="configureItem configure" style="display:none">
             <button class="s3d-button s3d-button-primary" style="display:none"><span class="s3d-button-inner">Delete Item</span></button>
-            <a href="javascript:;"><img src="/devwidgets/collections/images/config_icon.png" alt="Configure this Album" title="Configure this Album"/></a>
+            <a href="javascript:;"><img src="/devwidgets/collections/images/config_icon.png" alt="Configure this item" title="Configure this item"/></a>
         </div>
         </div>
         <div class="itemImage isEditable itemData">
-          {if item.url}<a class="itemLink" href="${item.url}">{/if}
-          {if (item.mimeType.split("/")[0] == "image")}
-            <img src="${item.url}" alt="${item.title} __MSG__IMAGE__"/>
-          {elseif sakai.config.MimeTypes[item.mimeType]}
-            <img src="${sakai.config.MimeTypes[item.mimeType].URL}" alt="${sakai.config.MimeTypes[item.mimeType].description}" />
+          {if item.url}<a class="itemLink" href="{if item.mimeType === "x-sakai/link"}http://${item.url.split("http://")[1]}{else}${item.url}{/if}">{/if}
+          {if item && item.mimeType}
+              {if (item.mimeType.split("/")[0] === "image")}
+                <img src="${item.url}" alt="${item.title} __MSG__IMAGE__"/>
+              {elseif sakai.config.MimeTypes[item.mimeType]}
+                <img src="${sakai.config.MimeTypes[item.mimeType].URL}" alt="${sakai.config.MimeTypes[item.mimeType].description}" />
+              {else}
+                <img src="${sakai.config.MimeTypes["other"].URL}" alt="${sakai.config.MimeTypes["other"].description}" />
+              {/if}
           {else}
-            <img src="${sakai.config.MimeTypes["other"].URL}" alt="${sakai.config.MimeTypes["other"].description}" />
+            <img src=""/>
+            <span class="clickToEditText"></span>
           {/if}
           {if item.url}</a>{/if}
         </div>
@@ -236,9 +248,18 @@
 
     <div id="collections_map_show_room_conatiner" style="display:none" class="mapView">
       <a href="javascript:;" class="return_to_floorplan_link" id="return_to_floorplan_from_show">__MSG__RETURN_TO_FLOORPLAN__</a>
-      <span id="room_edit_links"><a href="javascript:;" class="edit_this_room_link">__MSG__EDIT_ROOM__</a><a href="javascript:;" class="add_content_link">__MSG__ADD_CONTENT__</a></span>
       <div id="collections_map_show_room"></div>
       <div id="collections_map_show_room_template"><!--
+        <span id="room_edit_links">
+          <a href="javascript:;" class="edit_this_room_link">__MSG__EDIT_ROOM__</a>
+          {if room.categories && room.categories.length}
+            <a href="javascript:;" class="add_content_link">__MSG__ADD_CONTENT__</a>
+          {else}
+            <a href="javascript:;" class="add_content_link_disabled disabled">__MSG__ADD_CONTENT__</a><br/>
+            <span><i>add a category to this room to enable adding content</i></span>
+          {/if}
+        </span>
+        <h2>Room:</h2>
         <h2>${room.title}</h2>
         {if room.image}
         <img src="${room.image}" alt="${room.title} __MSG__IMAGE__" class="room_image_full"/>
@@ -247,6 +268,7 @@
         <p>${room.description}</p>
         {/if}
         <div class="room_categories">
+        <h3>Categories:</h3>
         {for cat in room.categories}
           <h4>${cat.name}</h4>
           {for item in cat.items}
@@ -309,7 +331,6 @@
       <div id="collections_map_show_content_item"></div>
     
       <div id="collections_map_show_content_item_template"><!--
-      
         <h2>${item.title}</h2>
         <div>${item.description}</div>
         {if item.mimeType.split('/')[0] == "image"}

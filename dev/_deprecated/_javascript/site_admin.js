@@ -718,7 +718,8 @@ sakai.site.site_admin = function(){
             // Put back original content
             $("#" + sakai.site.selectedpage).html(sakai.api.Security.saneHTML(sakai.site.pagecontents[sakai.site.selectedpage]["sakai:pagecontent"]));
 
-            if (sakai.site.site_info._pages[sakai.site.selectedpage]["pageType"] === "webpage") {
+            if (sakai.site.site_info._pages[sakai.site.selectedpage]["pageType"] === "webpage" && 
+                (!sakai.site.site_info._pages[sakai.site.selectedpage].hasOwnProperty("editable") || sakai.site.site_info._pages[sakai.site.selectedpage]["editable"] === true)) {
                 $("#webpage_edit").show();
             }
 

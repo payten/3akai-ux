@@ -1567,7 +1567,7 @@ sakai.sitespages.site_admin = function(){
      */
     var showHideMoreMenu = function(hideOnly){
         var el = $("#more_menu");
-        if (el) {
+        if (el && el.css("display")) {
             if (el.css("display").toLowerCase() !== "none" || hideOnly) {
                 $("#more_link").removeClass("clicked");
                 el.hide();

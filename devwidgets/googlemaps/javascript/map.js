@@ -19,7 +19,7 @@
 // Init google map object with Cambridge location as the center position
 var map = new google.maps.Map(document.getElementById("googlemaps_map_canvas"), {
     zoom: 8,
-    center: new google.maps.LatLng(52.2025441, 0.1312368),
+    center: new google.maps.LatLng(40.72963, -73.99640),
     mapTypeControlOptions: { style: google.maps.MapTypeControlStyle.DROPDOWN_MENU },
     mapTypeId: google.maps.MapTypeId.ROADMAP,
     navigationControlOptions: { style: google.maps.NavigationControlStyle.ZOOM_PAN }
@@ -27,8 +27,8 @@ var map = new google.maps.Map(document.getElementById("googlemaps_map_canvas"), 
 
 // Init google marker object with Cambridge location as the center position
 var marker = new google.maps.Marker({
-    position: new google.maps.LatLng(52.2025441, 0.1312368),
-    title: 'Point A',
+    position: new google.maps.LatLng(40.72963, -73.99640),
+    title: 'New York University',
     map: map,
     draggable: false
 });
@@ -45,7 +45,7 @@ var json = {
     "mapzoom": map.getZoom(),
     "mapinput": "",
     "mapsize": "",
-    "maphtml": "Cambridge, UK"
+    "maphtml": "New York, NY"
 };
 
 /**

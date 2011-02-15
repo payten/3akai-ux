@@ -55,6 +55,7 @@ sakai.embedcontent = function(tuid, showSettings) {
     var $embedcontent_new_item_template = $("#embedcontent_new_item_template", $rootel);
 
     var $fileuploadContainer = $("#fileupload_container", $rootel);
+    var $uploadContentLink = $("#upload_content");
 
     var selectedItems = [];
     var firstTime = true;
@@ -356,6 +357,11 @@ sakai.embedcontent = function(tuid, showSettings) {
         }
         return false;
     };
+
+    $uploadContentLink.die("click");
+    $uploadContentLink.live("click", function() {
+        $(window).trigger("sakai-fileupload-init");
+    });
 
     // Bind Events
     $embedcontent_place_content.bind("click", function() {
