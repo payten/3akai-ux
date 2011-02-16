@@ -56,14 +56,6 @@
 
         <div class="index-container fl-centered permissions_error"><span style="display:none;"><br /></span>
             <div id="permission_error_logged_out_template" style="display:none;"><!--
-                <div class="header-title">
-                    <img src="/dev/_images/sakai_logo_index.png" alt="__MSG__INSTANCE_NAME__"/>
-                </div>
-    
-                <div class="header-byline">
-                    __MSG__HEADER_BYLINE__
-                </div>
-    
                 <div class="login-box">
                     <div id="permission_error">
                         <div class="preview-box">
