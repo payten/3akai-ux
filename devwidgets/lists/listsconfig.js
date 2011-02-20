@@ -125,7 +125,7 @@ sakai.Lists = {
             "Region - Former Soviet Republics",
             "Region - Middle East",
             "Region - North America",
-            "Region – Russia",
+            "Region - Russia",
             "Region - South America",
             "Region - United States",
             "Social Entrepreneurship",
@@ -161,7 +161,7 @@ sakai.Lists = {
             "Wagner Student Association for Africa(WSAFA)",
             "Wagner Transportation Association (WTA)",
             "Wagner Volunteer Corps (WVC)",
-            "Wagner Women’s Caucus (WWC)"
+            "Wagner Women's Caucus (WWC)"
             ]
         }
         ]
