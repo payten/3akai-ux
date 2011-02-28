@@ -1,5 +1,6 @@
 {
     "title":"Previous Job and/or Internship",
     "text":"",
-    "jcr:primaryType":"sling:Folder"
+    "jcr:primaryType":"sling:Folder",
+    "titleEditable": false
 }

@@ -1,5 +1,6 @@
 {
     "title":"Me in 3",
     "text":"",
-    "jcr:primaryType":"sling:Folder"
+    "jcr:primaryType":"sling:Folder",
+    "titleEditable": false
 }
