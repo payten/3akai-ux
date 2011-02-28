@@ -10,27 +10,27 @@ sakai.Lists = {
             "list": [
                 {
                     "title":"MPA: PNP",
-                    "link": "http://sakaiproject.org/product-overview"
+                    "loc": "http://sakaiproject.org/product-overview"
                 },
                 {
                     "title":"MPA: HPAM",
-                    "link": "https://atlas.nyu.edu/~mpa--hpam"
+                    "loc": "https://atlas.nyu.edu/~mpa--hpam"
                 },
                 {
                     "title":"MUP",
-                    "link": "http://sakaiproject.org/community-overview"
+                    "loc": "http://sakaiproject.org/community-overview"
                 },
                 {
                     "title":"EMPA",
-                    "link": "http://sakaiproject.org/try-sakai-overview"
+                    "loc": "http://sakaiproject.org/try-sakai-overview"
                 },
                 {
                     "title":"EMPA: Nurse Leaders",
-                    "link": "http://sakaiproject.org/news-events"
+                    "loc": "http://sakaiproject.org/news-events"
                 },
                 {
                     "title":"PhD",
-                    "link": "http://sakaiproject.org/contact"
+                    "loc": "http://sakaiproject.org/contact"
                 }
             ]
         },

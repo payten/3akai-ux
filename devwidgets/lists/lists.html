@@ -29,9 +29,9 @@
                     {if opt.Label}
                         <option value="${escape(opt.Label)}"{if opt.selected} selected="selected"{/if}>${opt.Label}</option>
                     {elseif opt.title}
-                        <option value="${escape(opt.title)}"{if opt.selected} selected="selected"{/if}{if opt.link} title="${opt.link}"{/if}>${opt.title}</option>
+                        <option value="${escape(opt.title)}"{if opt.selected} selected="selected"{/if}{if opt.loc} title="${opt.loc}"{/if}>${opt.title}</option>
                     {else}
-                        <option value="${escape(opt)}"{if opt.selected} selected="selected"{/if}{if opt.link} title="${opt.link}"{/if}>${opt}</option>
+                        <option value="${escape(opt)}"{if opt.selected} selected="selected"{/if}{if opt.loc} title="${opt.loc}"{/if}>${opt}</option>
                     {/if}
                 {/for}
             </select>
@@ -43,7 +43,7 @@
                             <input type="checkbox" value="${escape(opt.Label)}"{if opt.selected} checked="checked"{/if} name="${escape(opt.Label)}"/>
                             <label for="${escape(opt.Label)}">${opt.Label}</label>
                         {elseif opt.title}
-                            <input type="checkbox" value="${escape(opt.title)}"{if opt.selected} checked="checked"{/if} name="${escape(opt.title)}"{if opt.link} title="${opt.link}"{/if}/>
+                            <input type="checkbox" value="${escape(opt.title)}"{if opt.selected} checked="checked"{/if} name="${escape(opt.title)}"{if opt.loc} title="${opt.loc}"{/if}/>
                             <label for="${escape(opt.title)}">${opt.title}</label>
                         {else}
                             <input type="checkbox" value="${escape(opt)}"{if opt.selected} checked="checked"{/if} name="${escape(opt)}"/>
@@ -59,7 +59,7 @@
     <div id="lists_list_display_template"><!--
         <ul>
         {for item in data}
-            <li>{if item.link}<a href="${item.link}" class="s3d-action">{/if}${item.title}{if item.link}</a>{/if}</li>
+            <li>{if item.loc}<a href="${item.loc}" class="s3d-action">{/if}${item.title}{if item.loc}</a>{/if}</li>
         {/for}
         </ul>
     -->

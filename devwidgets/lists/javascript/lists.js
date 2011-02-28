@@ -50,6 +50,7 @@ sakai.lists = function(tuid, showSettings) {
     var $listTitle = $("#lists_title", $rootel);
 
     var widgetData = {};
+    var thisList = {};
 
     ////////////////////
     // Main functions //
@@ -98,7 +99,7 @@ sakai.lists = function(tuid, showSettings) {
                 $("select.list_final option:selected", $rootel).each(function(i,val){
                     var obj = {"title": unescape($(this).val())};
                     if ($(this).attr("title")) {
-                        obj.link = $(this).attr("title");
+                        obj.loc = $(this).attr("title");
                     }
                     widgetData.selections.push(obj);
                 });
@@ -106,7 +107,7 @@ sakai.lists = function(tuid, showSettings) {
                 $(".lists_multi input[type=checkbox]:checked", $rootel).each(function(i,val){
                     var obj = {"title": unescape($(this).val())};
                     if ($(this).attr("title")) {
-                        obj.link = $(this).attr("title");
+                        obj.loc = $(this).attr("title");
                     }
                     widgetData.selections.push(obj);
                 });
@@ -124,7 +125,7 @@ sakai.lists = function(tuid, showSettings) {
 
     var renderInitialLists = function() {
         setSelected();
-        $listsOfLists.html($.TemplateRenderer($listsTemplate, {"data":sakai.Lists, "hasLists": true, "parentLabel": ""}));
+        $listsOfLists.html($.TemplateRenderer($listsTemplate, {"data":thisList, "hasLists": true, "parentLabel": ""}));
         $(".list_select:not(.triggered):has(option:selected)", $rootel).addClass("triggered").trigger("change");
     };
 
@@ -133,11 +134,11 @@ sakai.lists = function(tuid, showSettings) {
             // select the parents
             for (var i=widgetData.parents.length-1, j=-1; i>j; i--) {
                 var thisLabel = widgetData.parents[i];
-                doSetSelectedRecursive(sakai.Lists, widgetData.parents, thisLabel);
+                doSetSelectedRecursive(thisList, widgetData.parents, thisLabel);
             }
             // select the selections
             $(widgetData.selections).each(function(i,val) {
-                doSetSelectedRecursive(sakai.Lists, widgetData.parents, val.title);
+                doSetSelectedRecursive(thisList, widgetData.parents, val.title);
             });
         }
     };
@@ -145,7 +146,13 @@ sakai.lists = function(tuid, showSettings) {
     var doSetSelectedRecursive = function(lists, parents, label) {
         $(lists).each(function(i,val) {
             if (label === val.Label || (val.title && label === val.title) || label === val) {
+                if (label === val) {
+                    var tmp = val;
+                    val = {};
+                    val.title = tmp;
+                }
                 val.selected = true;
+                lists[i] = val;
             }
         });
         $(lists).each(function(i,val) {
@@ -187,7 +194,7 @@ sakai.lists = function(tuid, showSettings) {
     $listSelect.live("change", function(e){
         var id = $(this).attr("id").split("list_select_")[1];
         var $parentDiv = $(this).parent("div");
-        var list = getList(sakai.Lists, unescape($(this).find("option:selected").val()));
+        var list = getList(thisList, unescape($(this).find("option:selected").val()));
         if (list) {
             if ($(".list_parent_" + id, $rootel).length) {
                 // replace the current list display
@@ -223,6 +230,7 @@ sakai.lists = function(tuid, showSettings) {
 
 
     var doInit = function(){
+        thisList = $.extend(true, {}, sakai.Lists);
         loadWidget(function() {
             if (showSettings) {
                 renderInitialLists();
