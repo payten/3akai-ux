@@ -1122,6 +1122,7 @@ sakai.discussion = function(tuid, showSettings){
 
         $("div form", rootel).validate();
 
+        $('.discussion_compact_post_link a', rootel).die('click');
         $('.discussion_compact_post_link a', rootel).live('click', function(e, ui){
             var id = this.id.split("_")[this.id.split("_").length - 1];
 
@@ -1134,6 +1135,7 @@ sakai.discussion = function(tuid, showSettings){
 
         });
 
+        $(discussionToggleShowHideAllClass, rootel).die("click");
         $(discussionToggleShowHideAllClass, rootel).live("click", function(e, ui){
             var id = this.id.split("_")[this.id.split("_").length - 1];
             $(discussionPosts + id, rootel).toggle();
@@ -1141,6 +1143,7 @@ sakai.discussion = function(tuid, showSettings){
         });
 
         // Bind the reply button
+        $(discussionContentReplyClass, rootel).die("click");
         $(discussionContentReplyClass, rootel).live("click", function(e, ui){
             if (editing) {
                 stopEditing(currentEditId);
@@ -1149,15 +1152,18 @@ sakai.discussion = function(tuid, showSettings){
             showReply(currentReplyId);
         });
         // Bind the delete button
+        $(discussionContentDeleteClass, rootel).die("click");
         $(discussionContentDeleteClass, rootel).live("click", function(e, ui){
             deletePost($(this).attr("id").split("_")[$(this).attr("id").split("_").length - 1], true);
         });
         // Bind the undelete button
+        $(discussionContentUnDeleteClass, rootel).die("click");
         $(discussionContentUnDeleteClass, rootel).live("click", function(e, ui){
             deletePost($(this).attr("id").split("_")[$(this).attr("id").split("_").length - 1], false);
         });
 
         // Bind the edit button
+        $(discussionContentEditClass, rootel).die("click");
         $(discussionContentEditClass, rootel).live("click", function(e, ui){
             clearReplyFields();
             // Hide the input form
@@ -1168,16 +1174,19 @@ sakai.discussion = function(tuid, showSettings){
         /*
          * Bind the submit button
          */
+        $(discussionReplySubmit, rootel).die("click");
         $(discussionReplySubmit, rootel).live("click", function(e, ui){
             replyPost(currentReplyId);
         });
 
         // Bind the add topic button
+        $(discussionAddNewTopic, rootel).die("click");
         $(discussionAddNewTopic, rootel).live("click", function(e, ui){
             showAddTopic();
         });
 
         // Bind the add topic submit
+        $(discussionAddContainer + " form", rootel).die("submit");
         $(discussionAddContainer + " form", rootel).live("submit", function(e, ui){
             if ($(discussionAddContainer + " form", rootel).valid()) {
                 addNewTopic();
@@ -1186,6 +1195,7 @@ sakai.discussion = function(tuid, showSettings){
         });
 
         // Bind the add topic cancel
+        $(discussionAddTopicCancel, rootel).die("click");
         $(discussionAddTopicCancel, rootel).live("click", function(e, ui){
 
             // Clear everything in the add topic fields
@@ -1198,6 +1208,7 @@ sakai.discussion = function(tuid, showSettings){
         /*
          * Bind the cancel button
          */
+        $(discussionReplyCancel, rootel).die("click");
         $(discussionReplyCancel, rootel).live("click", function(e, ui){
 
             // Clear everything in the reply fields
@@ -1208,6 +1219,7 @@ sakai.discussion = function(tuid, showSettings){
         });
 
         // Bind the settings submit button.
+        $(discussionSettingsSubmit, rootel).die("click");
         $(discussionSettingsSubmit, rootel).live("click", function(e, ui){
             submitSettings();
         });
@@ -1215,6 +1227,7 @@ sakai.discussion = function(tuid, showSettings){
         /*
          * Bind the settings cancel button
          */
+        $("#discussion_settings_cancel", rootel).die("click");
         $("#discussion_settings_cancel", rootel).live("click", function(e, ui){
             sakai.api.Widgets.Container.informCancel(tuid, "discussion");
         });
@@ -1222,6 +1235,7 @@ sakai.discussion = function(tuid, showSettings){
         /*
          * Bind the new discussion tab
          */
+        $(discussionSettingsNewTab, rootel).die("click");
         $(discussionSettingsNewTab, rootel).live("click", function(e, ui){
             showTab("new");
         });
@@ -1229,6 +1243,7 @@ sakai.discussion = function(tuid, showSettings){
         /*
          * Bind the existing discussion tab
          */
+        $(discussionSettingsExistingTab, rootel).die("click");
         $(discussionSettingsExistingTab, rootel).live("click", function(e, ui){
             showTab("existing");
         });
@@ -1236,6 +1251,7 @@ sakai.discussion = function(tuid, showSettings){
         /*
          * Bind the display_options discussion tab
          */
+        $(discussionSettingsDisplayOptionsTab, rootel).die("click");
         $(discussionSettingsDisplayOptionsTab, rootel).live("click", function(e, ui){
             showTab("display_options");
         });
@@ -1246,6 +1262,7 @@ sakai.discussion = function(tuid, showSettings){
          * @param {Object} e
          * @param {Object} ui
          */
+        $("." + discussionSettingsListItemClass, rootel).die("click");
         $("." + discussionSettingsListItemClass, rootel).live("click", function(e, ui){
             // Unselect the other one.
             $("." + discussionSettingsListItemSelectedClass, rootel).addClass(discussionSettingsListItemClass);
@@ -1260,6 +1277,7 @@ sakai.discussion = function(tuid, showSettings){
          * @param {Object} e
          * @param {Object} ui
          */
+        $("." + discussionSettingsListItemSelectedClass, rootel).die("click");
         $("." + discussionSettingsListItemSelectedClass, rootel).live("click", function(e, ui){
             selectedExistingDiscussionID = false;
             e.target.className = discussionSettingsListItemClass;
