@@ -28,3 +28,4 @@
 .lists_widget.on_page #lists_title h1 {margin:10px 0px 0px 10px;}
 #lists_settings .lists_multi {width:100%; float:left;}
 #lists_settings .lists_multi label, #lists_settings .lists_multi input {width:auto;float:none;}
+.list_nonEditable {display:none;}

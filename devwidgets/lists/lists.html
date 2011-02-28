@@ -21,9 +21,9 @@
     </div>
     <div id="lists_list_edit_template"><!--
         <div id="${escape(data.Label)}" class="list_parent_${escape(parentLabel)} list_container">
-            <label for="list_select_${escape(data.Label)}">${data.Label}</label>
+            <label for="list_select_${escape(data.Label)}" {if hasLists && !editParents} class="list_nonEditable"{/if}>${data.Label}</label>
             {if !data.multiple}
-            <select name="list_select_${escape(data.Label)}" class="list_select{if !hasLists} list_final{/if}" id="list_select_${escape(data.Label)}"{if data.multiple} multiple="true"{/if}>
+            <select name="list_select_${escape(data.Label)}" class="list_select{if !hasLists} list_final{/if}{if hasLists && !editParents} list_nonEditable{/if}" id="list_select_${escape(data.Label)}"{if data.multiple} multiple="true"{/if}>
                 <option></option>
                 {for opt in data.list}
                     {if opt.Label}

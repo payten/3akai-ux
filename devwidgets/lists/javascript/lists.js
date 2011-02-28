@@ -125,7 +125,7 @@ sakai.lists = function(tuid, showSettings) {
 
     var renderInitialLists = function() {
         setSelected();
-        $listsOfLists.html($.TemplateRenderer($listsTemplate, {"data":thisList, "hasLists": true, "parentLabel": ""}));
+        $listsOfLists.html($.TemplateRenderer($listsTemplate, {"data":thisList, "hasLists": true, "parentLabel": "", "editParents": widgetData.editParents === false ? false : true}));
         $(".list_select:not(.triggered):has(option:selected)", $rootel).addClass("triggered").trigger("change");
     };
 
@@ -198,10 +198,10 @@ sakai.lists = function(tuid, showSettings) {
         if (list) {
             if ($(".list_parent_" + id, $rootel).length) {
                 // replace the current list display
-                $(".list_parent_" + id, $rootel).replaceWith($.TemplateRenderer($listsTemplate, {"data":list, "parentLabel": unescape(id), "hasLists": list.list[0].list ? true : false}));
+                $(".list_parent_" + id, $rootel).replaceWith($.TemplateRenderer($listsTemplate, {"data":list, "parentLabel": unescape(id), "hasLists": list.list[0].list ? true : false, "editParents": widgetData.editParents === false ? false : true}));
             } else {
                 // append to the parent div for easy hiding
-                $parentDiv.append($.TemplateRenderer($listsTemplate, {"data":list, "parentLabel": unescape(id), "hasLists": list.list[0].list ? true : false}));
+                $parentDiv.append($.TemplateRenderer($listsTemplate, {"data":list, "parentLabel": unescape(id), "hasLists": list.list[0].list ? true : false, "editParents": widgetData.editParents === false ? false : true}));
                 $(".list_select:not(.triggered):has(option:selected)", $rootel).addClass("triggered").trigger("change"); // trigger change if there are more
                 if ($(".list_select.list_final", $rootel).length) { // if the final list is available, select the selections
                     $(widgetData.selections).each(function(i,val) {
