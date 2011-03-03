@@ -44,7 +44,7 @@ sakai.ebook = function(tuid, showSettings){
 
     var rootel = "#" + tuid;
     var resultJSON={};
-    var bookUrl = "";  // the AWDL book pid
+    var bookURL = "";  // the AWDL book pid
     var bookData = {}; // the JSON data returned from the AWDL service
 
     // Main ids
@@ -78,6 +78,7 @@ sakai.ebook = function(tuid, showSettings){
     
     // Messages
     var ebookNoSearchResults = "#ebook_no_search_results";
+    var ebookBookURLRequired = "#ebook_book_url_required";
 
 
     ////////////////////
@@ -85,7 +86,7 @@ sakai.ebook = function(tuid, showSettings){
     ////////////////////
     var addBinding = function(){
 
-        $(ebookSettingsCancel, rootel).live("click",function(e,ui){
+        $(ebookSettingsCancel, rootel).click(function(e,ui){
             sakai.api.Widgets.Container.informCancel(tuid, "ebook");
         });
 
@@ -95,6 +96,9 @@ sakai.ebook = function(tuid, showSettings){
         });
 
         $(ebookSettingsSubmit, rootel).click(function(e,ui) {
+            // no action if disabled
+            if ($(this).hasClass("s3d-disabled")) return false;
+
             var object = getSettingsObject();
             if(object !== false){
                 sakai.api.Widgets.saveWidgetData(tuid, object, function(success, data){
@@ -138,13 +142,16 @@ sakai.ebook = function(tuid, showSettings){
      * Perform a JSONP ajax request to the AWDL service.
      */
     var performAWDLSearch = function() {
-        var bookURL = $(ebookSearchBookURL).val();
+        bookURL = $(ebookSearchBookURL).val();        
         if (bookURL == null || bookURL == "") {
             //display warning...
+            sakai.api.Util.notification.show("", $(ebookBookURLRequired).html());
+            // re-activate button
             $(ebookSearchButton, rootel).removeClass("s3d-disabled");
             //then bail
             return false;
         }
+        $(ebookSettingsSearchResults).empty();
         var url = sakai.config.URL.AWDL_SERVICE + bookURL + sakai.config.URL.AWDL_SERVICE_METADATA;
         $.getJSON(url, "callback=?", function(dataJSON) {
             handleAWDLSearch(dataJSON);
@@ -170,7 +177,8 @@ sakai.ebook = function(tuid, showSettings){
      * Display a preview of the AWDL service result
      * @param {object} ebook data
      */
-    var loadSearchResults = function(bookDataJSON) {      
+    var loadSearchResults = function(bookDataJSON) {
+      $(ebookSettingsSubmit).removeClass("s3d-disabled");
       $(ebookSettingsSearchResults).html($.TemplateRenderer(ebookSearchResultTemplate, bookDataJSON));
       
     };
@@ -180,7 +188,8 @@ sakai.ebook = function(tuid, showSettings){
      * @param {object} error data
      */
     var handleSearchError = function(errorDataJSON) {
-      $(ebookSettingsSearchResults).html($.TemplateRenderer(ebookSearchErrorTemplate, errorDataJSON));            
+      $(ebookSettingsSubmit).addClass("s3d-disabled");
+      sakai.api.Util.notification.show("", $.TemplateRenderer(ebookSearchErrorTemplate, errorDataJSON));
     };
 
 
@@ -193,9 +202,13 @@ sakai.ebook = function(tuid, showSettings){
         $(ebookSettings,rootel).show();
 
         if (exists) {
+            $(ebookSettingsSubmit).removeClass("s3d-disabled");
             $(ebookSearchBookURL).val(resultJSON.bookURL)
             loadSearchResults(resultJSON.bookData)
         } else {
+            // disable submit
+            $(ebookSettingsSubmit).addClass("s3d-disabled");
+            // add a default value
             $(ebookSearchBookURL).val("diekulturdesalte00biss");
         }
     };

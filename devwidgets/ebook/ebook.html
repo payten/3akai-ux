@@ -12,7 +12,7 @@
     </div>
     <div class="dialog_buttons">
         <button type="button" class="s3d-button ebook_settings_btnCancel"><span class="s3d-button-inner">__MSG__CANCEL_SETTINGS__</span></button>
-        <button type="button" class="s3d-button s3d-button-primary" id="ebook_settings_btnSubmit"><span class="s3d-button-inner">__MSG__SETTINGS_ADD_BOOK_BUTTON__</span></button>
+        <button type="button" class="s3d-button s3d-button-primary s3d-disabled" id="ebook_settings_btnSubmit"><span class="s3d-button-inner">__MSG__SETTINGS_ADD_BOOK_BUTTON__</span></button>
     </div>
 </div>
 
@@ -35,12 +35,13 @@
 --></div>
 <div id="ebook_search_error_template" style="display: none;"><!--
   <div>__MSG__SEARCH_NO_RESULTS__ for: ${argument}</div>
-  <div>Error message: ${message}</div>
-  <div>Error code: ${code}</div>
+  <p>Error message: ${message}</p>
+  <p>Error code: ${code}</p>
 --></div>
 
 <!-- MESSAGES -->
-<div class="ebook_no_search_results" style="display: none">__MSG__SEARCH_NO_RESULTS__</div>
+<div id="ebook_no_search_results" style="display: none">__MSG__SEARCH_NO_RESULTS__</div>
+<div id="ebook_book_url_required" style="display: none">__MSG__SEARCH_BOOK_URL_REQUIRED__</div>
 
 <!-- JAVASCRIPT -->
 <script type="text/javascript" src="/devwidgets/ebook/javascript/ebook.js" />
