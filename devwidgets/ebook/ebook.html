@@ -1,0 +1,46 @@
+<!-- CSS -->
+<link rel="stylesheet" type="text/css" href="/devwidgets/ebook/css/ebook.css" />
+
+<!-- SETTINGS VIEW -->
+<div id="ebook_settings" class="fl-widget-content" style="display:none">
+    <div id="ebook_settings_search_form">        
+        <input type="text" id="ebook_search_bookURL"/>
+        <button type="button" class="s3d-button s3d-button-primary ebook_search_btnSearchURL"><span class="s3d-button-inner">__MSG__SEARCH_BUTTON__</span></button>        
+    </div>
+    <div id="ebook_settings_search_results">
+
+    </div>
+    <div class="dialog_buttons">
+        <button type="button" class="s3d-button ebook_settings_btnCancel"><span class="s3d-button-inner">__MSG__CANCEL_SETTINGS__</span></button>
+        <button type="button" class="s3d-button s3d-button-primary" id="ebook_settings_btnSubmit"><span class="s3d-button-inner">__MSG__SETTINGS_ADD_BOOK_BUTTON__</span></button>
+    </div>
+</div>
+
+<!-- MAIN VIEW -->
+<div  id="ebook_display" class="fl-widget-content" style="display:none">
+    <div id="ebook_no_book_set" style="display: none;">__MSG__NO_BOOK_SET__</div>
+</div>
+
+<!-- WIDGET FOOTER-->
+<div class="fl-widget-no-options fl-fix"><div class="widget-no-options-inner"><!-- --></div></div>
+
+<!-- TEMPLATES -->
+<div id="ebook_search_result_template" style="display: none;"><!--
+  <div class="ebook_preview">
+      <a href="${path}" target="_blank" class="ebook_thumbnail_link"><img src="${thumbnail}" alt="" /></a>
+      <h2 id="book-${nid}"><a href="${path}" target="_blank">${title}</a></h2>
+      <p>by ${author}</p>
+      <div class="fl-push"></div>
+  </div>
+--></div>
+<div id="ebook_search_error_template" style="display: none;"><!--
+  <div>__MSG__SEARCH_NO_RESULTS__ for: ${argument}</div>
+  <div>Error message: ${message}</div>
+  <div>Error code: ${code}</div>
+--></div>
+
+<!-- MESSAGES -->
+<div class="ebook_no_search_results" style="display: none">__MSG__SEARCH_NO_RESULTS__</div>
+
+<!-- JAVASCRIPT -->
+<script type="text/javascript" src="/devwidgets/ebook/javascript/ebook.js" />

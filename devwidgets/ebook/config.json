@@ -1,0 +1,17 @@
+{
+    "userpages": true,
+    "userdashboard": true,
+    "grouppages": true,
+    "groupdashboard": true,
+    "description":"Digital Library eBook",
+    "hasSettings": true,
+    "id":"ebook",
+    "img":"/devwidgets/ebook/images/ebook.png",
+    "name":"Digital Library eBook",
+    "showinsakaigoodies": true,
+    "url":"/devwidgets/ebook/ebook.html",
+    "i18n": {
+        "default": "/devwidgets/ebook/bundles/default.json",
+        "en_US": "/devwidgets/ebook/bundles/en_US.json"        
+    }
+}

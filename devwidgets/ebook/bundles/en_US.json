@@ -1,0 +1,9 @@
+{
+"name": "eBook",
+"description": "Library DLTS eBooks",
+"SEARCH_BUTTON": "Get Book",
+"SEARCH_NO_RESULTS":"Failed to find book",
+"NO_BOOK_SET":"No book set",
+"SETTINGS_ADD_BOOK_BUTTON": "Set Book",
+"CANCEL_SETTINGS": "Cancel"
+}

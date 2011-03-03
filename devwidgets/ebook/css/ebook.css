@@ -1,0 +1,31 @@
+/*
+ * Licensed to the Sakai Foundation (SF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The SF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
+
+/* Settings */
+#ebook_settings {padding:2px 10px 0;}
+#ebook_settings_search_form ul {margin-left: 20px;}
+
+/* Display */
+#ebook_display {padding-top:10px;}
+.ebook_preview {padding: 4px; border: 1px dotted #CCC;}
+.ebook_preview .ebook_thumbnail_link {float: left; margin-right: 4px;}
+#ebook_no_book_set {padding: 0 10px;}
+#ebook_display .ebook_preview {margin: 4px; border: none;}
+
+/* Widget icon */
+.ebook.fl-widget .fl-widget-titlebar .widget_title {background: url('/devwidgets/ebook/images/ebook_icon.png') 17px 18px no-repeat;}
