@@ -3,11 +3,11 @@
     "userdashboard": true,
     "grouppages": true,
     "groupdashboard": true,
-    "description":"Digital Library eBook",
+    "description":"Digital Library eBooks",
     "hasSettings": true,
     "id":"ebook",
     "img":"/devwidgets/ebook/images/ebook.png",
-    "name":"Digital Library eBook",
+    "name":"Digital Library eBooks",
     "showinsakaigoodies": true,
     "url":"/devwidgets/ebook/ebook.html",
     "i18n": {

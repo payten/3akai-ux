@@ -3,6 +3,10 @@
 
 <!-- SETTINGS VIEW -->
 <div id="ebook_settings" class="fl-widget-content" style="display:none">
+    <div id="ebook_settings_existing_selection">
+        
+    </div>
+    
     <div id="ebook_settings_search_form">        
         <input type="text" id="ebook_search_bookURL"/>
         <button type="button" class="s3d-button s3d-button-primary ebook_search_btnSearchURL"><span class="s3d-button-inner">__MSG__SEARCH_BUTTON__</span></button>        
@@ -11,9 +15,10 @@
 
     </div>
     <div class="dialog_buttons">
-        <button type="button" class="s3d-button ebook_settings_btnCancel"><span class="s3d-button-inner">__MSG__CANCEL_SETTINGS__</span></button>
+        <button type="button" class="s3d-button s3d-button-secondary" id="ebook_settings_btnCancel"><span class="s3d-button-inner">__MSG__CANCEL_SETTINGS__</span></button>
         <button type="button" class="s3d-button s3d-button-primary s3d-disabled" id="ebook_settings_btnSubmit"><span class="s3d-button-inner">__MSG__SETTINGS_ADD_BOOK_BUTTON__</span></button>
     </div>
+    <hr class='fl-hidden fl-push'>
 </div>
 
 <!-- MAIN VIEW -->
@@ -25,13 +30,27 @@
 <div class="fl-widget-no-options fl-fix"><div class="widget-no-options-inner"><!-- --></div></div>
 
 <!-- TEMPLATES -->
-<div id="ebook_search_result_template" style="display: none;"><!--
+<div id="ebook_display_template" style="display: none;"><!--
+  {for i in books}
   <div class="ebook_preview">
-      <a href="${path}" target="_blank" class="ebook_thumbnail_link"><img src="${thumbnail}" alt="" /></a>
-      <h2 id="book-${nid}"><a href="${path}" target="_blank">${title}</a></h2>
-      <p>by ${author}</p>
-      <div class="fl-push"></div>
+      <a href="${i.path}" target="_blank" class="ebook_thumbnail_link"><img src="${i.thumbnail}" alt="" /></a>
+      <h2 id="book-${i.nid}"><a href="${i.path}" target="_blank">${i.title}</a></h2>
+      <p>by ${i.author}</p>
+      <hr class='fl-hidden fl-push'>
   </div>
+  {/for}
+--></div>
+<div id="ebook_settings_selected_template" style="display: none;"><!--
+  {for i in books}
+  <div class="ebook_preview">
+      <a href="${i.path}" target="_blank" class="ebook_thumbnail_link"><img src="${i.thumbnail}" alt="" /></a>
+      <h2 id="book-${i.nid}"><a href="${i.path}" target="_blank">${i.title}</a></h2>
+      <p>by ${i.author}</p>
+      <input type="hidden" name="id" value="${i.nid}"/>
+      <button type="button" class="s3d-button s3d-button-primary ebook_settings_btnRemove"><span class="s3d-button-inner">__MSG__REMOVE_BUTTON__</span></button>
+      <div class="fl-push"></div>      
+  </div>
+  {/for}
 --></div>
 <div id="ebook_search_error_template" style="display: none;"><!--
   <div>__MSG__SEARCH_NO_RESULTS__ for: ${argument}</div>
@@ -42,6 +61,7 @@
 <!-- MESSAGES -->
 <div id="ebook_no_search_results" style="display: none">__MSG__SEARCH_NO_RESULTS__</div>
 <div id="ebook_book_url_required" style="display: none">__MSG__SEARCH_BOOK_URL_REQUIRED__</div>
+<div id="ebook_book_already_added" style="display: none">__MSG__ALREADY_ADDED__</div>
 
 <!-- JAVASCRIPT -->
 <script type="text/javascript" src="/devwidgets/ebook/javascript/ebook.js" />

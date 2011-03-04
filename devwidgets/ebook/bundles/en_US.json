@@ -2,9 +2,11 @@
 "name": "eBook",
 "description": "Library DLTS eBooks",
 "SEARCH_BUTTON": "Get Book",
+"REMOVE_BUTTON": "Remove",
 "SEARCH_NO_RESULTS":"Failed to find book",
 "SEARCH_BOOK_URL_REQUIRED": "Please provide a book ID",
 "NO_BOOK_SET":"No book set",
-"SETTINGS_ADD_BOOK_BUTTON": "Set Book",
+"SETTINGS_ADD_BOOK_BUTTON": "Add Book",
+"ALREADY_ADDED": "Book has already been selected above",
 "CANCEL_SETTINGS": "Cancel"
 }
