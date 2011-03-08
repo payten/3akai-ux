@@ -104,21 +104,13 @@ sakai.ebook = function(tuid, showSettings){
             var settings = getSettingsObject();
             if(settings !== false){
                 // remove this book from the object
-                var newBooks = [];
-                var id = $(this).parents(ebookPreview).find("input[name='id']").val();
-
-                for (var i=0; i<settings.books.length; i++) {
-                    if (settings.books[i].nid == id) {
-                        // do nothing at the moment
-                    } else {
-                        newBooks.push(settings.books[i]);
+                var nid = $(this).parents(ebookPreview).find("input[name='nid']").val();
+                for (var bookId in settings.books) {
+                    if (bookId == nid) {
+                        delete settings.books[nid];
+                        break;
                     }
-                }
-                if (newBooks.length > 0) {
-                    settings.books = newBooks;
-                } else {
-                    delete settings["books"];
-                }
+                }                                
                 
                 // update widget details
                 updateSettings(settings);
@@ -139,14 +131,12 @@ sakai.ebook = function(tuid, showSettings){
             var settings = getSettingsObject();
             if(settings !== false){
                 // check if book is already added
-                for (var i=0; i<settings.books.length; i++) {
-                    if (settings.books[i].nid == bookData.nid) {
-                        sakai.api.Util.notification.show("", $(ebookAlreadyAdded).html());
-                        return false;
-                    }
+                if (settings.books[bookData.nid] != null) {
+                    sakai.api.Util.notification.show("", $(ebookAlreadyAdded).html());
+                    return false;
                 }
-                // add new book
-                settings.books.push(bookData);
+                // add book to widget settings
+                settings.books[bookData.nid] = bookData;
                 updateSettings(settings)
             }
         });
@@ -240,10 +230,7 @@ sakai.ebook = function(tuid, showSettings){
         $(ebookSettings,rootel).show();
 
         if (exists) {
-            //$(ebookSettingsSubmit).removeClass("s3d-disabled");
-            //$(ebookSearchBookURL).val(resultJSON.bookURL)
-            //loadSearchResults(resultJSON.bookData)
-            if (resultJSON.books == null || resultJSON.books.length == 0) {
+            if (resultJSON.books == null || resultJSON.books == "") {
                 $(ebookSettingsSelectedBooks).remove();
             }
             $(ebookSettingsSelectedBooks).html($.TemplateRenderer(ebookSettingsSelectedTemplate, resultJSON));
@@ -260,7 +247,7 @@ sakai.ebook = function(tuid, showSettings){
      * @return false if fail, otherwise {object}
      */
     var getSettingsObject = function(){
-        resultJSON.books = resultJSON.books || [];                      
+        resultJSON.books = resultJSON.books || {};
         return resultJSON;
     };
 
@@ -309,7 +296,7 @@ sakai.ebook = function(tuid, showSettings){
             $(ebookDisplay,rootel).show();
 
             sakai.api.Widgets.loadWidgetData(tuid, function(success, data){
-                if (success && data.books && data.books.length > 0) {
+                if (success && data.books && !$.isEmptyObject(data.books)) {
                     resultJSON = data;
                     displayBook();
                 } else {
