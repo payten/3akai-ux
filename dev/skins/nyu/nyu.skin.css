@@ -164,13 +164,57 @@ a:visited {
     background-image: url("images/footer_logo.png") !important;
 } 
 
-/* homepage styles */
+/* homepage styles - explore.html */
+body.explore #top_banner_logo {
+    background:#fff url("images/nyu_logo.png") top left no-repeat !important;    
+}
+
 a.categories_item_header_link {
     color: white !important;
 }
 
 #explore_navigation {
-    background-color: #F4F4F5;
+    background-color: #e5e6e7;
+}
+
+.header-byline {   
+	color: #222;
+	padding:0; 
+	font-size: 1em;
+	font-weight:normal;  
+}
+.header-byline h2 {
+	color: #572d88;
+	font-size: 30px;
+	margin:0; 
+        line-height: 1.2em;
+} 
+.header-byline p {
+	font-weight:normal;
+	font-size: 18px; 
+        line-height: 1.2em;
+        color: #222222;
+}
+.header-smallline {
+	font-size: 21px;
+        line-height: 1.2em;
+}
+.homepage-header {
+	width:222px; 
+	padding:0 10px;
+        float:left;
+        display:inline;
+}
+.homepage-header.first {
+    padding-left: 0;
+}
+.homepage-header.last {
+    padding-right: 0;
+}
+
+.homepage-header-logo {
+    margin: 10px 0;
+    text-align: center;
 }
 
 /* sharecontent overrides */
