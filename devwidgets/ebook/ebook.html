@@ -62,7 +62,6 @@
     <!-- TEMPLATES -->
     <div id="ebook_display_template" style="display: none;"><!--
       <div class="ebook_preview_wrapper">
-      {var index = 0}
       {for id in order}
           <div class="ebook_preview">
               <div class="ebook_bookshelf">
@@ -90,10 +89,9 @@
               {/if}
               <div class="fl-push"></div>
           </div>
-          {if index%2 == 1}
+          {if id_index%2 == 1}
             <div class="fl-push"></div>
           {/if}
-          {var index = index + 1}
       {/for}
       <div class="fl-push"></div>
       </div>

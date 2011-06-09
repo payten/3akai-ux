@@ -164,7 +164,9 @@
     padding: 10px 8px;
 }
 
-.fl-col-fixed .ebook_preview, .fl-col-flex .ebook_preview {
+.fl-col-fixed .ebook_preview, 
+.fl-col-flex .ebook_preview,
+#s3d-page-container .ebook_preview {
     margin: 0 !important;
     padding: 4px 0px 12px;
     float: left;

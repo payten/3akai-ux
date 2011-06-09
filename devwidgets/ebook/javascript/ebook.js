@@ -768,7 +768,7 @@ require(
                         if (callback) callback();
                     }
                 },
-                true
+                false
             );
         }
 
