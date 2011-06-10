@@ -218,5 +218,22 @@ a.categories_item_header_link {
 }
 
 /* sharecontent overrides */
-.mylibrary_item:hover .mylibrary_item_share_icon {background-image: url("images/searchcontent_share_icon_active.png") !important;}
-.mylibrary_item:hover .mylibrary_item_author_icon {background-image: url("images/searchcontent_author_icon_active.png") !important;}
+.mylibrary_item:hover .mylibrary_item_share_icon {background-image: url("images/share_icon.png") !important;}
+.mylibrary_item:hover .mylibrary_item_author_icon {background-image: url("images/author_icon.png") !important;}
+
+/* featurecontent overrides */
+.featuredcontent_widget .featuredcontent_content_actions_addtolibrary {background-image: url("images/add_to_library_icon.png") !important;}
+.featuredcontent_widget .featuredcontent_content_actions_share {background-image: url("images/share_icon.png") !important;}
+
+/* searchcontent and searchpeople overrides */
+.searchgroups_result:hover .searchgroups_result_message_icon {background-image: url("images/message_icon.png") !important;}
+.searchpeople_result:hover .searchpeople_result_message_icon {background-image: url("images/message_icon.png") !important;}
+
+button.searchpeople_result_plus, 
+button.searchcontent_result_plus  {color: #E4E4E4 !important}
+
+.searchpeople_result:hover button.searchpeople_result_plus,
+.searchcontent_result:hover button.searchcontent_result_plus  {color: #57068c !important;}
+
+.searchcontent_result:hover .searchcontent_result_author_icon {background-image: url("images/author_icon.png") !important;}
+.searchcontent_result:hover .searchcontent_result_share_icon {background-image: url("images/share_icon.png") !important;}
