@@ -237,3 +237,7 @@ button.searchcontent_result_plus  {color: #E4E4E4 !important}
 
 .searchcontent_result:hover .searchcontent_result_author_icon {background-image: url("images/author_icon.png") !important;}
 .searchcontent_result:hover .searchcontent_result_share_icon {background-image: url("images/share_icon.png") !important;}
+
+/* all categories overrides */
+.allcategories_widget .allcategories_item .allcategories_item_header:hover {background-image: url("images/allcategories_item_header_hover_bg.png") !important; background-color: #3c1354 !important;}
+.allcategories_widget .allcategories_item:hover {background-color: #eae7f4 !important;}
