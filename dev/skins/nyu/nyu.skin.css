@@ -35,6 +35,10 @@ a:visited {
     display: none;
 }
 
+.explore .s3d-page-header {    
+    margin-top: 40px;
+}
+
 .s3d-page-header {    
     margin-top: 120px;
 }
