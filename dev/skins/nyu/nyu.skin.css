@@ -35,8 +35,8 @@ a:visited {
     display: none;
 }
 
-.s3d-page-header {
-    background: none;
+.s3d-page-header {    
+    margin-top: 110px;
 }
 
 #top_banner {
