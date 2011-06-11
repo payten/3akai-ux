@@ -35,10 +35,6 @@ a:visited {
     display: none;
 }
 
-.explore .s3d-page-header {    
-    margin-top: 40px;
-}
-
 .s3d-page-header {    
     margin-top: 120px;
 }
@@ -169,8 +165,12 @@ a:visited {
 } 
 
 /* homepage styles - explore.html */
-body.explore #top_banner_logo {
+/*body.explore #top_banner_logo {
     background:#fff url("images/nyu_logo.png") top left no-repeat !important;    
+}*/
+
+body.explore .s3d-page-header {    
+    margin-top: 40px;
 }
 
 a.categories_item_header_link {
