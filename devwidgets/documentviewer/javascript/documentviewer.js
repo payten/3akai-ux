@@ -120,6 +120,20 @@ require(["jquery", "sakai/sakai.api.core", "/devwidgets/documentviewer/lib/docum
             $("#documentviewer_externalhtml_iframe").attr("frameborder", "0");
         };
 
+         var renderKalturaPlayer = function(data){     
+            var kaltura_id = data["kaltura-id"];            
+            var url = sakai_global.KALTURA_SERVER_URL + "/kwidget/wid/_"+sakai_global.KALTURA_PARTNER_ID;
+            
+            var so = createSWFObject(url, {}, {});            
+            so.addVariable('stretching','uniform');
+            so.addVariable('image', data["kaltura-thumbnail"]);
+            so.addVariable('entryId',kaltura_id);
+            so.addParam('allowscriptaccess', 'always');
+            //swfobject.embedSWF(url, "#documentviewer_video_" + tuid, '100%', '560', "9.0.0", false, flashVars, params);
+            
+            so.write("documentviewer_video_" + tuid);
+        };
+
         var renderVideoPlayer = function(url, preview_avatar){
             var so = createSWFObject(false, {}, {});
             so.addVariable('file', url);
@@ -242,8 +256,10 @@ require(["jquery", "sakai/sakai.api.core", "/devwidgets/documentviewer/lib/docum
         if (sakai.api.Content.hasPreview(widgetData.data)){
             var data = widgetData.data;
             var mimeType = sakai.api.Content.getMimeType(widgetData.data);
-
-            if (sakai.api.Content.isJwPlayerSupportedVideo(mimeType)){
+            
+            if (sakai.api.Content.isKalturaPlayerSupportedVideo(mimeType)) {
+                renderKalturaPlayer(data);            
+            } else if (sakai.api.Content.isJwPlayerSupportedVideo(mimeType)){
                 renderVideoPlayer(getPath(data));
             } else if (mimeType === "audio/mp3" || mimeType === "audio/x-aac") {
                 renderAudioPlayer(data);

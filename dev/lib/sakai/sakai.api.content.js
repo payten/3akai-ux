@@ -433,6 +433,10 @@ define(
             return supported;
         },
 
+        isKalturaPlayerSupportedVideo : function(mimeType) {            
+            return mimeType === "kaltura/video";
+        },
+
         getCreatorProfile : function(content, callback) {
             $.ajax({
                 url: "/~" + content["sakai:pool-content-created-for"] + "/public/authprofile.infinity.json",
@@ -457,6 +461,7 @@ define(
                     sakai_content.getThumbnail(content) ||
                     mimeType.substring(0,6) === "image/" ||
                     mimeType.substring(0,5) === "text/" ||
+                    sakai_content.isKalturaPlayerSupportedVideo(mimeType) ||
                     sakai_content.isJwPlayerSupportedVideo(mimeType)) {
                 result = true;
             }

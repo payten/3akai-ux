@@ -807,7 +807,12 @@ define(function(){
                 cssClass: "icon-unknown-sprite",
                 URL: "/dev/images/mimetypes/unknown.png",
                 description: "OTHER_DOCUMENT"
-            }
+            },
+            "kaltura/video": {
+                cssClass: "icon-video-sprite",
+                URL: "/dev/images/mimetypes/video.png",
+                description: "KALTURA_VIDEO_FILE"
+            }            
         },
 
         Authentication: {
