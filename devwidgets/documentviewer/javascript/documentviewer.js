@@ -128,6 +128,7 @@ require(["jquery", "sakai/sakai.api.core", "/devwidgets/documentviewer/lib/docum
             so.addVariable('stretching','uniform');
             so.addVariable('image', data["kaltura-thumbnail"]);
             so.addVariable('entryId',kaltura_id);
+            //so.addVariable('uiConfId',sakai_global.KALTURA_PLAYER_ID);
             //so.addParam('allowscriptaccess', 'always');
             //swfobject.embedSWF(url, "#documentviewer_video_" + tuid, '100%', '560', "9.0.0", false, flashVars, params);
             
