@@ -121,18 +121,20 @@ require(["jquery", "sakai/sakai.api.core", "/devwidgets/documentviewer/lib/docum
         };
 
          var renderKalturaPlayer = function(data){     
-            var kaltura_id = data["kaltura-id"];            
-            var url = sakai_global.KALTURA_SERVER_URL + "/kwidget/wid/_"+sakai_global.KALTURA_PARTNER_ID;
-            
-            var so = createSWFObject(url, {}, {});            
-            so.addVariable('stretching','uniform');
-            so.addVariable('image', data["kaltura-thumbnail"]);
-            so.addVariable('entryId',kaltura_id);
-            //so.addVariable('uiConfId',sakai_global.KALTURA_PLAYER_ID);
-            //so.addParam('allowscriptaccess', 'always');
-            //swfobject.embedSWF(url, "#documentviewer_video_" + tuid, '100%', '560', "9.0.0", false, flashVars, params);
-            
-            so.write("documentviewer_video_" + tuid);
+            var html5FlashCompatibilityURL = sakai.config.kaltura.serverURL +"/p/"+sakai.config.kaltura.partnerId+"/sp/"+sakai.config.kaltura.partnerId+"00/embedIframeJs/uiconf_id/"+sakai.config.kaltura.playerId+"/partner_id/"+sakai.config.kaltura.partnerId;
+            $.getScript(html5FlashCompatibilityURL, function() {                                        
+                var kaltura_id = data["kaltura-id"];            
+                var url = sakai.config.kaltura.serverURL + "/kwidget/wid/_"+sakai.config.kaltura.partnerId;                                 
+                var so = createSWFObject(url, {}, {});            
+                so.addVariable('stretching','uniform');
+                so.addVariable('image', data["kaltura-thumbnail"]);
+                so.addVariable('entryId',kaltura_id);
+                //so.addVariable('uiConfId',sakai.config.kaltura.playerId);
+                //so.addParam('allowscriptaccess', 'always');
+                //swfobject.embedSWF(url, "#documentviewer_video_" + tuid, '100%', '560', "9.0.0", false, flashVars, params);
+
+                so.write("documentviewer_video_" + tuid);
+            });                         
         };
 
         var renderVideoPlayer = function(url, preview_avatar){
