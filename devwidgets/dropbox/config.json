@@ -1,0 +1,22 @@
+{
+    "grouppages": true,
+    "groupdashboard": true,
+    "userdashboard": true,
+    "userpages": true,
+    "sakaidocs": true,   
+    "showinsakaigoodies":true,
+    "hasSettings": true,
+    "type":"sakai",
+    "enabled":true,
+    
+    "description":"Dropbox",
+    "id":"dropbox",
+    "img":"/devwidgets/dropbox/images/dropbox.png",
+    "name":"Dropbox",
+    "showinmedia":true,
+    
+    "url":"/devwidgets/dropbox/dropbox.html",
+    "i18n": {
+        "default": "/devwidgets/dropbox/bundles/default.properties"
+    }
+}

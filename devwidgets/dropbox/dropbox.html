@@ -1,0 +1,35 @@
+<!-- CSS -->
+<link rel="stylesheet" type="text/css" href="/devwidgets/dropbox/css/dropbox.css" />
+
+<div class="dropbox_widget">
+
+    <!-- CONTENT -->
+    <div class="fl-widget-content s3d-widget-content">
+
+        <!-- MAIN VIEW -->
+        <div id="dropbox_display" style="display:none">
+            <div class="dropbox_title">Title goes here</div>
+            <form id="dropbox_upload_form" class="newaddcontent_form" method="POST" enctype="multipart/form-data">
+                 <input name="fileData" id="multifile_upload" type="file" class="multi" size="42"/>
+                 <input id="dropbox_upload_form_btnSubmit" type="button" value="Upload"/>
+            </form>
+        </div>
+
+        <!-- SETTINGS VIEW -->
+        <div id="dropbox_settings" style="display:none">
+            <form id="dropbox_form" method="post" action="#">                                                
+                <div class="dialog_buttons">                    
+                    <button type="submit" class="s3d-button s3d-button-primary" id="dropbox_btnInsertWidget"><span class="s3d-button-inner">Save</span></button>                    
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="s3d-widget-no-options">
+        <div class="s3d-widget-no-options-inner"></div>
+    </div>
+</div>
+
+<!-- JAVASCRIPT -->
+<script type="text/javascript" src="/devwidgets/dropbox/javascript/dropbox.js"></script>
