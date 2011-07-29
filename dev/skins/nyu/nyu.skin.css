@@ -247,7 +247,8 @@ button.searchcontent_result_plus  {color: #E4E4E4 !important}
 .allcategories_widget .allcategories_item:hover {background-color: #eae7f4 !important;}
 
 /* Carousel overrides */
-.s3d-actions-addtolibrary:hover { background-image: url("images/add_to_library_icon.png") !important;}
-.s3d-actions-message:hover { background-image: url("images/message_icon.png") !important;}
+.s3d-actions-addtolibrary:hover { background-image: url("images/add_to_library_icon.png") !important; }
+.s3d-actions-message:hover { background-image: url("images/message_icon.png") !important; }
+.s3d-actions-share:hover { background-image: url("images/share_icon.png") !important; }
 /* need new icon for the author icon
 /* .s3d-actions-author:hover { background-image: url("images/author_icon.png") !important;} */
