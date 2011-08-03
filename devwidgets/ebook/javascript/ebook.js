@@ -43,9 +43,8 @@ require(
         // Configuration variables //
         /////////////////////////////   
 
-        sakai.config.URL.AWDL_SEARCH = "http://dev-dl-pa.home.nyu.edu/solr_discovery_dev/select/";
-        sakai.config.URL.AWDL_DOMAIN = "http://dev-dl-pa.home.nyu.edu/awdl/";
-        sakai.config.URL.AWDL_OEMBED = "http://alpha-user:dlts2010@dev-dl-pa.home.nyu.edu/awdl/services/oembed";
+        sakai.config.URL.AWDL_SEARCH = " http://dl-pa.home.nyu.edu/solr_discovery_prod/select/";        
+        sakai.config.URL.AWDL_OEMBED = "http://dlib.nyu.edu/awdl/services/oembed";
         sakai.config.URL.AWDL_SEARCH_DEFAULT_PARAMS = {
            version: '2.2',
            start: 0,
@@ -53,7 +52,9 @@ require(
            indent: 'on',
            wt: "json",
            fq: "hash:d7jr6q",
-           fl: "id,path_alias,site,nid,title,url,tm_field_awdl_creator,is_field_awdl_image_count,ts_field_awdl_thumbnail,sm_field_awdl_publisher,sm_field_awdl_subject,sm_field_awdl_language_code,type_name"
+           fl: "id,path_alias,site,nid,title,url,tm_field_awdl_creator,is_field_awdl_image_count,ts_field_awdl_thumbnail,sm_field_awdl_publisher,sm_field_awdl_subject,sm_field_awdl_language_code,type_name",
+           qt: "byCollection", // default to byCollection (as used by Search); also use "bookInCollection" for specific nid lookups
+           collection: "awdl"
         };    
         sakai.config.URL.AWDL_OEMBED_DEFAULT_PARAMS = {
            format: 'json',
@@ -213,7 +214,7 @@ require(
                $(ebookRemoveConfirmationDialog).jqm({
                     modal: true,
                     overlay: 20,
-                    zIndex: 4000,
+                    zIndex: 4001,
                     topTop: true
                 });
                 $(ebookRemoveConfirmationDialog).jqmShow().show();
@@ -365,7 +366,7 @@ require(
                $(ebookReaderDialog).jqm({
                     modal: true,
                     overlay: 20,
-                    zIndex: 4000,
+                    zIndex: 4001,
                     toTop: true
                 });
 
@@ -701,8 +702,7 @@ require(
                 if (settings.order == null || settings.order.length == 0) {
                     $(ebookSettingsSelectedBooks, rootel).append($(ebookNoBooksSetMsg, rootel).html());
                 } else {
-                    // show selected books
-                    settings.domain = sakai.config.URL.AWDL_DOMAIN;
+                    // show selected books                    
                     $(ebookSettingsSelectedBooks, rootel).html(sakai.api.Util.TemplateRenderer(ebookListTemplate, settings));
                 }
 
@@ -768,7 +768,7 @@ require(
                         if (callback) callback();
                     }
                 },
-                false
+                true
             );
         }
 
@@ -839,8 +839,6 @@ require(
         var displayBooks = function() {
             var settings = getSettingsObject();
 
-            settings.domain = sakai.config.URL.AWDL_DOMAIN;
-
             if (settings.display_style == "listing") {
                 $(ebookDisplay, rootel).html(sakai.api.Util.TemplateRenderer(ebookListTemplate, settings));
                 //$(ebookListItem+":first",ebookDisplay, rootel).addClass("expanded").find(ebookListItemContent).show();
@@ -901,10 +899,11 @@ require(
             //get the default query data object
             var data = $.extend({}, sakai.config.URL.AWDL_SEARCH_DEFAULT_PARAMS);
 
-            // construct query for books already selected i.e. fq=id:{id}
+            // construct query for books already selected i.e. q=${id_x} OR ${id_y}
             if (settings.order.length > 0) {
-                data.fq += " AND nid:(" + settings.order.join(" OR ") + ")";
+                data.q = settings.order.join(" OR ");
             }
+            data.qt = "bookInCollection";
 
 
             // perform the jsonp call to the AWDL service
@@ -1012,8 +1011,7 @@ require(
                     // always refresh the ebook data with the AWDL data
                     dummyWidgetData.books[resultsJSON.response.docs[i].nid].data = resultsJSON.response.docs[i];
                     dummyWidgetData.order.push(resultsJSON.response.docs[i].nid);
-                }
-                dummyWidgetData.domain = sakai.config.URL.AWDL_DOMAIN;
+                }                
                 $(ebookSettingsSearchPagination, rootel).html(sakai.api.Util.TemplateRenderer(ebookSettingsSearchPaginationTemplate, paginationData)).show();
                 $(ebookSettingsSearchResults, rootel).html(sakai.api.Util.TemplateRenderer(ebookListTemplate, dummyWidgetData));
             } else {            
