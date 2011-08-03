@@ -1,0 +1,18 @@
+{
+    "userpages": true,
+    "userdashboard": true,
+    "grouppages": true,
+    "groupdashboard": true,
+    "description":"Digital Library eBooks",
+    "hasSettings": true,
+    "id":"ebook",
+    "name":"Digital Library eBooks",
+    "type":"sakai",
+    "enabled" :true,
+    "url":"/devwidgets/ebook/ebook.html",
+    "img":"/devwidgets/ebook/images/ebook.png",    
+    "showinsakaigoodies": true,    
+    "i18n": {
+        "default": "/devwidgets/ebook/bundles/default.properties"                
+    }
+}
