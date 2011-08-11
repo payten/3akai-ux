@@ -939,6 +939,26 @@ define(function(){
             "label": "SIGN_UP"
         }],
 
+        Footer: {
+            leftLinks: [{
+                "title": "__MSG__COPYRIGHT__",
+                "href": "http://sakaiproject.org"
+            }, {
+                "title": "__MSG__HELP__",
+                "href": "http://sakaiproject.org"
+            }, {
+                "title": "__MSG__ACKNOWLEDGEMENTS__",
+                "href": "/acknowledgements"
+            }],
+            rightLinks: [{
+                "title": "__MSG__BROWSE__",
+                "href": "/categories"
+            }, {
+                "title": "__MSG__EXPLORE__",
+                "href": "/"
+            }]
+        },
+
         /*
          * Are anonymous users allowed to browse/search
          */
