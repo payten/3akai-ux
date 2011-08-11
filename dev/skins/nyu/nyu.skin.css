@@ -1,6 +1,7 @@
 /* Page Background */
-html, .requireUser {
-  background: #57068C url("images/body_nyu_bg.png") left top repeat-x !important;
+html, .requireUser, .requireAnon {
+  background: #57068C url("images/body_nyu_home_bg.png") left top repeat-x !important;
+
 }
 
 /* Links */
@@ -21,7 +22,15 @@ a:visited {
 
 
 /* Header */
+.s3d-header {
+    height:80px;
+}
+.s3d-main-container {
+    margin-top: 40px;
+}
 .s3d-navigation-container {
+    box-shadow:none;
+    -webkit-box-shadow:none;
     -moz-box-shadow: none;
 }
 
@@ -33,10 +42,6 @@ a:visited {
 
 .s3d-container-shadow-left, .s3d-container-shadow-right {
     display: none;
-}
-
-.s3d-page-header {    
-    margin-top: 120px;
 }
 
 #top_banner {
@@ -68,13 +73,17 @@ a:visited {
 }
 
 .s3d-dropdown-menu .s3d-dropdown-container {
-    background-image: url("images/topnav_nav_hover_list_bg.png") !important;
-    background-color: #3c1354;
+    background: #3c1354 url("images/topnav_nav_hover_list_bg.png") !important;
 }
 
-.s3d-dropdown-menu:hover {
-    background-image: url("images/topnav_nav_hover.png") !important;
-    background-color: #57068c;
+.s3d-dropdown-menu:hover, .s3d-dropdown-menu:active {
+    background: #57068c url("images/topnav_nav_hover.png") !important;
+}
+
+.topnavigation_explore .s3d-dropdown-menu a:focus,
+#topnavigation_user_options_login:focus {
+    background: #57068c url("images/topnav_nav_hover.png") repeat-x scroll left top !important;
+    color:#ffffff !important;
 }
 
 .s3d-dropdown-menu ul li:hover {
@@ -103,9 +112,6 @@ a:visited {
 }
 
 /* Recent activity overrides */
-.recentchangedcontent_add_container div,
-.recentmemberships_add_container div,
-.recentcontactsnew_add_container div,
 .s3d-no-results-container {
     background-color: #DDDDDD;    
 }
