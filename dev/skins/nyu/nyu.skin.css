@@ -28,6 +28,9 @@ a:visited {
 .s3d-main-container {
     margin-top: 40px;
 }
+.show .s3d-header .fixed-container {
+    margin-top: 80px;
+}
 .s3d-navigation-container {
     box-shadow:none;
     -webkit-box-shadow:none;
