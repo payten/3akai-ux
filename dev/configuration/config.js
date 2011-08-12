@@ -1533,6 +1533,7 @@ define(function(){
         defaultGroupTemplate: "defaultgroup",
 
         enableChat: false,
+        enableCategories: true,
 
         /*
          * _canEdit: can change the area permissions on this page
