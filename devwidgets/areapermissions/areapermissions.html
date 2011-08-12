@@ -18,11 +18,11 @@
         <span>__MSG__CAN_BE_SEEN_BY__:</span>
         <select id="areapermissions_area_general_visibility" data-original-selection="${visibility}">
             {if groupPermissions !== "public"}
-                <option value="everyone" {if visibility === "everyone"} selected="true" {/if} disabled="true">__MSG__EVERYONE__ (__MSG__GROUP_MUST_BE_PUBLIC__)</option>
+                <option value="everyone" {if visibility === "everyone"} selected="true" {/if} disabled="true">__MSG__PUBLIC__ (__MSG__GROUP_MUST_BE_PUBLIC__)</option>
             {elseif !manager}
-                <option value="everyone" {if visibility === "everyone"} selected="true" {/if} disabled="true">__MSG__EVERYONE__ (__MSG__YOU_HAVE_TO_MANAGE_THIS_DOCUMENT__)</option>
+                <option value="everyone" {if visibility === "everyone"} selected="true" {/if} disabled="true">__MSG__PUBLIC__ (__MSG__YOU_HAVE_TO_MANAGE_THIS_DOCUMENT__)</option>
             {else}
-                <option value="everyone" {if visibility === "everyone"} selected="true" {/if}>__MSG__EVERYONE__</option>
+                <option value="everyone" {if visibility === "everyone"} selected="true" {/if}>__MSG__PUBLIC__</option>
             {/if}
             {if groupPermissions !== "logged-in-only" && groupPermissions !== "public"}
                 <option value="loggedin" {if visibility === "loggedin"} selected="true" {/if} disabled="true">__MSG__LOGGED_IN_ONLY__ (__MSG__GROUP_MUST_BE_OPEN__)</option>
