@@ -96,10 +96,13 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                             extractedData.push(obj);
                         }
                     }
-                    console.log(extractedData);
-                    if (widgetData.submissions)
+                    console.log(extractedData);                    
+                    if (widgetData.submissions) {
+                       widgetData.submissions[sakai.data.me.user.userid] = extractedData.poolId;
+                    }
+                    displayExistingSubmittions();
                 },
-                error: function(){
+                error: function() {
                     alert("ERROR UPLOADING FILE");
                 }
             });
@@ -112,6 +115,12 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
 
         var setupUploadNewContent = function(){            
           
+        };
+
+        var displayExistingSubmittions = function() {
+           if (widgetData.submissions.hasOwnProperty(sakai.data.me.user.userid)) {
+               $("#dropbox_submissions ul", rootel).html("<li>"+widgetData.submissions[sakai.data.me.user.userid]+"</li>");
+           }
         };
 
         ////////////////////////
@@ -157,17 +166,19 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
         sakai.api.Widgets.loadWidgetData(tuid, function (success, data) {
             if (success) {    
                 widgetData = data;
+                if (widgetData.submissions == null) widgetData.submissions = {};
                 if (showSettings) {
                     showSettingsScreen(data, true);
                 } else {
-                    if ($.trim(data.title) !== "") {
-                        sakai.api.Widgets.changeWidgetTitle(tuid, data.title);
-                    } else {
-                        sakai.api.Widgets.changeWidgetTitle(tuid, sakai.widgets['dropbox'].name);
-                    }
+//                    if ($.trim(data.title) !== "") {
+//                        sakai.api.Widgets.changeWidgetTitle(tuid, data.title);
+//                    } else {
+//                        sakai.api.Widgets.changeWidgetTitle(tuid, sakai.widgets['dropbox'].name);
+//                    }
                     $(dropboxSettings, rootel).hide();
                     $(dropboxDisplay, rootel).show();
                     setupUploadNewContent();
+                    displayExistingSubmittions();
                 }
             } else {
                 // no dropbox set
