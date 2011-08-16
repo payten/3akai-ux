@@ -229,8 +229,7 @@ define(["config/config"], function(config) {
     config.Authentication.allowInternalAccountCreation = false;
     config.Authentication.external = [{
         label: "Proceed to NYU Sign In",
-        url: "https://login.home.nyu.edu/sso/saml2/jsp/idpSSOInit.jsp?metaAlias=/idp1&spEntityID=https://atlas.nyu.edu/system/sling/samlauth/login",
-        description: "<p>Please <strong>Proceed to Sign In</strong> and enter your NetID and password.</p><p>You will be redirected back to Atlas upon successful login.</p>"
+        url: "https://login.home.nyu.edu/sso/saml2/jsp/idpSSOInit.jsp?metaAlias=/idp1&spEntityID=https://atlas.nyu.edu/system/sling/samlauth/login"        
     }];
     // TEMP: auto-redirect when cookie exists...
     config.Authentication.redirect = {
