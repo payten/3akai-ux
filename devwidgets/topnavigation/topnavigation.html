@@ -121,7 +121,7 @@
                                 <div class="topnav_content_icon_container fl-force-left">
                                     <span class="topnav_content_icon ${i.css_class}"></span>
                                 </div>
-                                <a href="${i.url}{if i.appendCurrentLocation}${document.location.pathname}{/if}" title="${i.label}" class="s3d-bold">${i.label}</a>
+                                <a href="${i.url}{if i.appendCurrentLocation}${escape(document.location.pathname + (document.location.href.match(/\?.+$/)!=null?document.location.href.match(/\?.+$/):""))}{/if}" title="${i.label}" class="s3d-bold">${i.label}</a>
                             </li>
                         {/for}
                     </ul>
