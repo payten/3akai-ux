@@ -351,7 +351,10 @@ define(
                 sakai_conf.Authentication.SSO.enabled && 
                 $.cookie(sakai_conf.Authentication.SSO.cookieName)) {
                 
-                document.location = sakai_conf.Authentication.SSO.redirectUrl;
+                var url = sakai_conf.Authentication.SSO.redirectUrl;
+                if (sakai_conf.Authentication.SSO.appendCurrentLocation) url += document.location.href
+                
+                document.location = url;
                 return;
             }
             // Get the service url from the config file

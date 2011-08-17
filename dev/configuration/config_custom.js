@@ -231,21 +231,21 @@ define(["config/config"], function(config) {
     var ssoEnabledHosts = [
         "devatlas.home.nyu.edu",
         "stageatlas.home.nyu.edu",
-        "atlas.nyu.edu",
-        "atlas.home.nyu.edu"
+        "atlas.nyu.edu"
     ];
     // setup SSO if current host is SSO enabled
     if ($.inArray(location.hostname, ssoEnabledHosts) >= 0) {
         config.Authentication.internal = false;        
         config.Authentication.external = [{
-            label: "Proceed to NYU Sign In",
+            label: "Proceed to Sign In",
             url: "/system/sling/samlauth/login?resource=",
             appendCurrentLocation: true
         }];    
         config.Authentication.SSO = {
             enabled: true,
             cookieName: "iPlanetDirectoryPro",
-            redirectUrl: "https://login.home.nyu.edu/sso/saml2/jsp/idpSSOInit.jsp?metaAlias=/idp1&spEntityID=https://atlas.nyu.edu/system/sling/samlauth/login"
+            redirectUrl: "https://login.nyu.edu/sso/saml2/jsp/idpSSOInit.jsp?metaAlias=/idp1&spEntityID=https://"+location.hostname+":443/system/sling/samlauth/login&RelayState=",
+            appendCurrentLocation: true
         };
     };
 
