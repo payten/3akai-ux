@@ -141,16 +141,6 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
             }
         };
 
-
-        /**
-         * Check if a authentication redirect is required
-         */
-        var checkAuthRedirect = function() {
-            if (sakai.config.Authentication.redirect && $.cookie(sakai.config.Authentication.redirect.cookie)) {
-                document.location = sakai.config.Authentication.redirect.url;
-            }
-        };
-
         var renderUser = function(){
             var externalAuth = false;
             if (!sakai.config.Authentication.internal && !sakai.config.Authentication.allowInternalAccountCreation) {
@@ -698,8 +688,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
         /**
          * Initialise the topnavigation widget
          */
-        var doInit = function(){
-            checkAuthRedirect();
+        var doInit = function(){            
             renderMenu();
             renderUser();
             setCountUnreadMessages();

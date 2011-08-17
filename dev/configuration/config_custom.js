@@ -229,13 +229,14 @@ define(["config/config"], function(config) {
     config.Authentication.allowInternalAccountCreation = false;
     config.Authentication.external = [{
         label: "Proceed to NYU Sign In",
-        url: "https://login.home.nyu.edu/sso/saml2/jsp/idpSSOInit.jsp?metaAlias=/idp1&spEntityID=https://atlas.nyu.edu/system/sling/samlauth/login"        
-    }];
-    // TEMP: auto-redirect when cookie exists...
-    config.Authentication.redirect = {
-        cookie: "iPlanetDirectoryPro",
-        url: "https://login.home.nyu.edu/sso/saml2/jsp/idpSSOInit.jsp?metaAlias=/idp1&spEntityID=https://atlas.nyu.edu/system/sling/samlauth/login"
-    }
+        url: "https://atlas.nyu.edu/system/sling/samlauth/login?resource=",
+        appendCurrentLocation: true
+    }];    
+    config.Authentication.SSO = {
+        enabled: true,
+        cookieName: "iPlanetDirectoryPro",
+        redirectUrl: "https://login.home.nyu.edu/sso/saml2/jsp/idpSSOInit.jsp?metaAlias=/idp1&spEntityID=https://atlas.nyu.edu/system/sling/samlauth/login"
+    };
     
 
     return config;

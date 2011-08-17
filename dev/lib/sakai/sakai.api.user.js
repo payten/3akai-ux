@@ -346,6 +346,14 @@ define(
          * @return {Void}
          */
         loadMeData : function(callback) {
+            // check for SSO auth and redirect if neccessary
+            if (sakai_conf.Authentication.SSO && 
+                sakai_conf.Authentication.SSO.enabled && 
+                $.cookie(sakai_conf.Authentication.SSO.cookieName)) {
+                
+                document.location = sakai_conf.Authentication.SSO.redirectUrl;
+                return;
+            }
             // Get the service url from the config file
             var data_url = sakai_conf.URL.ME_SERVICE;
             // Start a request to the service
