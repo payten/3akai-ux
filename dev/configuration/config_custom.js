@@ -224,7 +224,10 @@ define(["config/config"], function(config) {
 
     /**
      * Authentication
-     */    
+     */ 
+    config.Authentication.internal = true;
+    config.Authentication.allowInternalAccountCreation = false;
+    
     var ssoEnabledHosts = [
         "devatlas.home.nyu.edu",
         "stageatlas.home.nyu.edu",
@@ -233,8 +236,7 @@ define(["config/config"], function(config) {
     ];
     // setup SSO if current host is SSO enabled
     if ($.inArray(location.hostname, ssoEnabledHosts) >= 0) {
-        config.Authentication.internal = false;
-        config.Authentication.allowInternalAccountCreation = false;
+        config.Authentication.internal = false;        
         config.Authentication.external = [{
             label: "Proceed to NYU Sign In",
             url: "/system/sling/samlauth/login?resource=",

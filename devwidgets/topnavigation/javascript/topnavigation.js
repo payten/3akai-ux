@@ -141,6 +141,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
             }
         };
 
+
         var renderUser = function(){
             var externalAuth = false;
             if (!sakai.config.Authentication.internal && !sakai.config.Authentication.allowInternalAccountCreation) {
@@ -688,7 +689,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
         /**
          * Initialise the topnavigation widget
          */
-        var doInit = function(){            
+        var doInit = function(){
             renderMenu();
             renderUser();
             setCountUnreadMessages();
