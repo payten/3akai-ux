@@ -56,7 +56,9 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
         var dropboxName = "dropbox";
 
         // Paths
-        var uploadPath = "/system/pool/createfile";
+        var dropboxSubmissionPath = "/dropbox/submissions"
+        var dropboxWidgetPath = "/dropbox/widget";
+        
         
         // Containers
         var dropboxSettings = dropboxID + "_settings";
@@ -164,22 +166,35 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
          * @param {Boolean} showSettings Show the settings of the widget or not
          */
         sakai.api.Widgets.loadWidgetData(tuid, function (success, data) {
-            if (success) {    
-                widgetData = data;
-                if (widgetData.submissions == null) widgetData.submissions = {};
-                if (showSettings) {
-                    showSettingsScreen(data, true);
-                } else {
-//                    if ($.trim(data.title) !== "") {
-//                        sakai.api.Widgets.changeWidgetTitle(tuid, data.title);
-//                    } else {
-//                        sakai.api.Widgets.changeWidgetTitle(tuid, sakai.widgets['dropbox'].name);
-//                    }
-                    $(dropboxSettings, rootel).hide();
-                    $(dropboxDisplay, rootel).show();
-                    setupUploadNewContent();
-                    displayExistingSubmittions();
-                }
+            if (success) {
+                $.ajax({
+                   url: dropboxWidgetPath, 
+                   data: {
+                     "widgetId": tuid  
+                   },
+                   type: "GET",
+                   dataType: "json",                   
+                   success: function(data, textStatus, jqXHR) {
+                       widgetData = data;
+                        if (widgetData.submissions == null) widgetData.submissions = {};
+                        if (showSettings) {
+                            showSettingsScreen(data, true);
+                        } else {
+        //                    if ($.trim(data.title) !== "") {
+        //                        sakai.api.Widgets.changeWidgetTitle(tuid, data.title);
+        //                    } else {
+        //                        sakai.api.Widgets.changeWidgetTitle(tuid, sakai.widgets['dropbox'].name);
+        //                    }
+                            $(dropboxSettings, rootel).hide();
+                            $(dropboxDisplay, rootel).show();
+                            setupUploadNewContent();
+                            displayExistingSubmittions();
+                        }                       
+                   },
+                   error: function(jqXHR, textStatus, errorThrown) {
+                       alert("OH BOY - ERROR");
+                   }
+                });                                
             } else {
                 // no dropbox set
                 if (showSettings) {
