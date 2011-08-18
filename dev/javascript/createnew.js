@@ -24,16 +24,20 @@ require(["jquery","sakai/sakai.api.core"], function($, sakai) {
             "structure0": {}
         };
 
+        var order = 0;
         for (var i = 0; i < sakai.config.worldTemplates.length; i++){
             var category = sakai.config.worldTemplates[i];
-            pubdata.structure0[category.id] = {
-                "_order": i,
-                "_title": sakai.api.i18n.General.getValueForKey(category.title),
-                "_ref": category.id
-            };
-            pubdata[category.id] = {
-                "page": "<div id='widget_selecttemplate_" + category.id + "' class='widget_inline'></div>"
-            };
+            if (sakai.api.Groups.canCreateTemplate(category)) {
+                pubdata.structure0[category.id] = {
+                    "_order": order,
+                    "_title": sakai.api.i18n.General.getValueForKey(category.title),
+                    "_ref": category.id
+                };
+                pubdata[category.id] = {
+                    "page": "<div id='widget_selecttemplate_" + category.id + "' class='widget_inline'></div>"
+                };
+                order++;
+            }
         }
 
         var generateNav = function(){

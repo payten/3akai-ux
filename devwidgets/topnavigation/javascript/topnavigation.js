@@ -345,11 +345,13 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
             if (sakai.config.Navigation[i].id === "navigation_create_and_add_link"){
                 for (var c = 0; c < sakai.config.worldTemplates.length; c++){
                     var category = sakai.config.worldTemplates[c];
-                    sakai.config.Navigation[i].subnav.push({
-                        "id": "subnavigation_" + category.id + "_link",
-                        "label": category.title,
-                        "url": "/create#l=" + category.id
-                    });
+                    if (sakai.api.Groups.canCreateTemplate(category)) {
+                        sakai.config.Navigation[i].subnav.push({
+                            "id": "subnavigation_" + category.id + "_link",
+                            "label": category.title,
+                            "url": "/create#l=" + category.id
+                        });
+                    }
                 }
             } else if (sakai.config.Navigation[i].id === "navigation_explore_link" || sakai.config.Navigation[i].id === "navigation_anon_explore_link"){
                 for (var x = 0; x < sakai.config.worldTemplates.length; x++){

@@ -1175,8 +1175,11 @@ define(
                 }
             }
             return template;
-        }
+        },
 
+        canCreateTemplate: function(category) {
+            return (category.adminOnly && sakai_user.data.me.user.userid === "admin") || !category.adminOnly;
+        }
     };
     return sakaiGroupsAPI;
 });
