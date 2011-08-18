@@ -173,6 +173,17 @@ define(["config/config"], function(config) {
     config.Profile.configuration.defaultConfig.publications.elements.publisher.label = "__MSG__PUBLISHER_JOURNAL_TITLE__*";
     config.Profile.configuration.defaultConfig.publications.elements.year.label += "*";
 
+    // Content
+    config.Permissions.Content.defaultaccess = "private";
+    config.Permissions.Documents.defaultaccess = "private";
+
+    config.Permissions.Copyright.creativecommons["default"] = false;
+    config.Permissions.Copyright.unspecified = {
+        "title": "COPYRIGHT_NOT_SPECIFIED",
+        "default": true
+    };
+
+
     /**
      * Contact relationships
      */
