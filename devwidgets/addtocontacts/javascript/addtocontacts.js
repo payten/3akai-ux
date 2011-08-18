@@ -65,6 +65,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
         // Profile info
         var addToContactsInfoProfilePicture = addToContacts + "_profilepicture";
         var addToContactsInfoTypes = addToContacts + "_types";
+        var addToContactsInfoTypesContainer = "#addcontacts_types_container";
         var addToContactsInfoDisplayName = addToContactsClass + "_displayname";
 
         // Error messages
@@ -84,7 +85,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
          * It renders the contacts types and the personal note
          */
         var renderTemplates = function(){
-            sakai.api.Util.TemplateRenderer(addToContactsFormTypeTemplate.replace(/#/gi, ""), sakai.config.Relationships, $(addToContactsInfoTypes));
+            sakai.api.Util.TemplateRenderer(addToContactsFormTypeTemplate.replace(/#/gi, ""), sakai.config.Relationships, $(addToContactsInfoTypesContainer));
             var json = {
                 sakai: sakai,
                 me: sakai.data.me
@@ -200,6 +201,27 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
             }
         };
 
+        var setupValidation = function() {
+            $("#addtocontacts_form").validate({
+                rules: {
+                    addtocontacts_form_type: {
+                        required: true,
+                        minlength: 1
+                    }
+                },
+                messages: {
+                    addtocontacts_form_type: {
+                        required: sakai.api.i18n.Widgets.getValueForKey("addtocontacts", null, "PLEASE_SELECT_HOW_YOU_ARE_CONNECTED_TO_THIS_USER")
+                    }
+                },
+                errorContainer: "#addtocontacts_errors",
+                errorLabelContainer: "#addtocontacts_errors ul",
+                submitHandler: function(form) {
+                    doInvite(contactToAdd.userid);
+                }
+            });
+        };
+
         ///////////////////////
         // jqModal functions //
         ///////////////////////
@@ -231,6 +253,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
             // Render the templates
             renderTemplates();
 
+            setupValidation();
             // Show the layover
             $(addToContactsDialog).jqmShow();
 
@@ -243,13 +266,6 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
         /////////////////////
         // Event listeners //
         /////////////////////
-
-        // Bind the invite button
-        $(addToContactsFormButtonInvite).bind("click", function(){
-            // Invite this person.
-            doInvite(contactToAdd.userid);
-            return false;
-        });
 
         // Bind the cancel button
         $(addToContactsFormButtonCancel).click(function(){
