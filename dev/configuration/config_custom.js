@@ -18,11 +18,12 @@ define(["config/config"], function(config) {
     config.worldTemplates[0].titleSing = "BASIC_GROUP";
     config.worldTemplates[0].templates[0].title = "Basic Group";
 
+    // Only admin can add courses
+    config.worldTemplates[1].adminOnly = true;
+
     config.worldTemplates[2].title = "RESEARCH_GROUPS";
     config.worldTemplates[2].titleSing = "RESEARCH_GROUP";
 
-    // Remove the ability to add courses
-    config.worldTemplates.splice(1,1);
 
     /**
      * Footer Links
