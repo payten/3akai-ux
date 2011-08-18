@@ -153,6 +153,12 @@ define(["config/config"], function(config) {
             "required": false,
             "display": true
         },
+        "academicinterests": {
+            "label": "__MSG__PROFILE_ABOUTME_ACADEMICINTERESTS_LABEL__",
+            "required": false,
+            "display": true,
+            "type": "textarea"
+        },
         "tags": {
             "label": "__MSG__TAGS__",
             "required": false,
@@ -163,6 +169,7 @@ define(["config/config"], function(config) {
     };
 
     // About Me
+    delete config.Profile.configuration.defaultConfig.aboutme.elements.academicinterests;
     config.Profile.configuration.defaultConfig.aboutme.permission = "everyone";
 
     // publications
