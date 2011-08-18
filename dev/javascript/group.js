@@ -43,9 +43,11 @@ require(["jquery","sakai/sakai.api.core"], function($, sakai) {
                     }
                     sakai_global.group.groupId = groupId;
                     sakai.api.Security.showPage(function() {
-                        if (groupData.authprofile["sakai:customStyle"]) {
-                            sakai.api.Util.include.css(groupData.authprofile["sakai:customStyle"]);
-                        }
+                        sakai.api.Groups.getGroupData(groupId, function(success, data) {
+                            if (data.authprofile && data.authprofile["sakai:customStyle"]) {
+                                sakai.api.Util.include.css(data.authprofile["sakai:customStyle"]);
+                            }
+                        });
                     });
                     document.title = document.title + " " + groupData.authprofile["sakai:group-title"];
                     loadGroupEntityWidget();
