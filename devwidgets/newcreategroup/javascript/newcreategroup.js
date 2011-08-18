@@ -360,12 +360,26 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
         currentTemplate = sakai.api.Groups.getTemplate(widgetData.category, widgetData.id);
         $(".newcreategroup_template_name", $rootel).text(currentTemplate.title);
         $newcreategroupSuggestedURLBase.text(window.location.protocol + "//" + window.location.host + "/~");
-        if (sakai.config.Permissions.Groups.defaultaccess){
-            $("#newcreategroup_can_be_found_in option[value='" + sakai.config.Permissions.Groups.defaultaccess + "']", $rootel).attr("selected", "selected");
+
+        var defaultaccess = "",
+            defaultjoin = "";
+
+        // First check for a category-specific defaultaccess
+        if (sakai.config.Permissions.Groups[widgetData.category] && sakai.config.Permissions.Groups[widgetData.category].defaultaccess) {
+            defaultaccess = sakai.config.Permissions.Groups[widgetData.category].defaultaccess;
+        } else if (sakai.config.Permissions.Groups.defaultaccess){
+            defaultaccess = sakai.config.Permissions.Groups.defaultaccess;
         }
-        if (sakai.config.Permissions.Groups.defaultjoin) {
-            $("#newcreategroup_membership option[value='" + sakai.config.Permissions.Groups.defaultjoin + "']", $rootel).attr("selected", "selected");
+
+        if (sakai.config.Permissions.Groups[widgetData.category] && sakai.config.Permissions.Groups[widgetData.category].defaultjoin) {
+            defaultjoin = sakai.config.Permissions.Groups[widgetData.category].defaultjoin;
+        } else if (sakai.config.Permissions.Groups.defaultjoin) {
+            defaultjoin = sakai.config.Permissions.Groups.defaultjoin;
         }
+
+        $("#newcreategroup_can_be_found_in option[value='" + defaultaccess + "']", $rootel).attr("selected", "selected");
+        $("#newcreategroup_membership option[value='" + defaultjoin + "']", $rootel).attr("selected", "selected");
+
         $newcreategroupContainer.show();
         addBinding();
     };
