@@ -242,6 +242,10 @@ define(["config/config"], function(config) {
 
     config.Permissions.Groups.defaultaccess = "logged-in-only";
     config.Permissions.Groups.defaultjoin = "no";
+    config.Permissions.Groups.courses = {
+        defaultaccess: "members-only",
+        defaultjoin: "no"
+    };
 
     return config;
 });
