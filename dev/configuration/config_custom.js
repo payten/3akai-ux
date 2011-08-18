@@ -18,12 +18,179 @@ define(["config/config"], function(config) {
     config.worldTemplates[0].titleSing = "BASIC_GROUP";
     config.worldTemplates[0].templates[0].title = "Basic Group";
 
+    // Add in the About this Group page
+    config.worldTemplates[0].templates[0].docs["${pid}2"] = {
+        structure0: {
+            "about":{
+                "_ref":"${refid}4",
+                "_order":0,
+                "_nonEditable": true,
+                "_title": "About this Group",
+                "main":{
+                    "_ref":"${refid}4",
+                    "_order":0,
+                    "_nonEditable": true,
+                    "_title":"About this Group"
+                }
+            }
+        },
+        "${refid}4": {
+            page: "<img id='widget_groupbasicinfo' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='/nyuwidgets/groupbasicinfo/images/icon.png' data-mce-src='/nyuwidgets/groupbasicinfo/images/icon.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'><br></p>"
+        }
+    };
+    config.worldTemplates[0].templates[0].structure.library._order = 1;
+    config.worldTemplates[0].templates[0].structure.participants._order = 2;
+    config.worldTemplates[0].templates[0].structure.about = {
+        "_title": "About this Group",
+        "_order": 0,
+        "_docref": "${pid}2",
+        "_nonEditable": true,
+        "_view": ["everyone", "anonymous", "-member"],
+        "_edit": ["-manager"]
+    };
+
     // Only admin can add courses
     config.worldTemplates[1].adminOnly = true;
+
+    // Math Course
+    config.worldTemplates[1].templates[0].docs["${pid}6"] = {
+        structure0: {
+            "about":{
+                "_ref":"${refid}16",
+                "_order":0,
+                "_nonEditable": true,
+                "_title": "About this Group",
+                "main":{
+                    "_ref":"${refid}16",
+                    "_order":0,
+                    "_nonEditable": true,
+                    "_title":"About this Group"
+                }
+            }
+        },
+        "${refid}16": {
+            page: "<img id='widget_groupbasicinfo' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='/nyuwidgets/groupbasicinfo/images/icon.png' data-mce-src='/nyuwidgets/groupbasicinfo/images/icon.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'><br></p>"
+        }
+    };
+    config.worldTemplates[1].templates[0].structure.syllabus._order = 1;
+    config.worldTemplates[1].templates[0].structure.lectures._order = 2;
+    config.worldTemplates[1].templates[0].structure.problemsets._order = 3;
+    config.worldTemplates[1].templates[0].structure.coursewebsite._order = 4;
+    config.worldTemplates[1].templates[0].structure.organizationnotes._order = 5;
+    config.worldTemplates[1].templates[0].structure.lecturetemplate._order = 6;
+    config.worldTemplates[1].templates[0].structure.about = {
+        "_title": "About this Group",
+        "_order": 0,
+        "_docref": "${pid}6",
+        "_nonEditable": true,
+        "_view": ["everyone", "-student", "-ta"],
+        "_edit": ["-lecturer"]
+    };
+
+    // Basic course
+    config.worldTemplates[1].templates[1].docs["${pid}2"] = {
+        structure0: {
+            "about":{
+                "_ref":"${refid}4",
+                "_order":0,
+                "_nonEditable": true,
+                "_title": "About this Group",
+                "main":{
+                    "_ref":"${refid}4",
+                    "_order":0,
+                    "_nonEditable": true,
+                    "_title":"About this Group"
+                }
+            }
+        },
+        "${refid}4": {
+            page: "<img id='widget_groupbasicinfo' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='/nyuwidgets/groupbasicinfo/images/icon.png' data-mce-src='/nyuwidgets/groupbasicinfo/images/icon.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'><br></p>"
+        }
+    };
+    config.worldTemplates[1].templates[1].structure.library._order = 1;
+    config.worldTemplates[1].templates[1].structure.participants._order = 2;
+    config.worldTemplates[1].templates[1].structure.about = {
+        "_title": "About this Group",
+        "_order": 0,
+        "_docref": "${pid}2",
+        "_nonEditable": true,
+        "_view": ["everyone", "anonymous", "-student"],
+        "_edit": ["-ta", "-lecturer"]
+    };
+
 
     config.worldTemplates[2].title = "RESEARCH_GROUPS";
     config.worldTemplates[2].titleSing = "RESEARCH_GROUP";
 
+    // Add in the About this Group page to the Research Project templates
+    config.worldTemplates[2].templates[0].docs["${pid}0"].structure0.introduction._order = 1;
+    config.worldTemplates[2].templates[0].docs["${pid}1"].structure0.library._order = 2;
+    config.worldTemplates[2].templates[0].docs["${pid}2"].structure0.participants._order = 3;
+    config.worldTemplates[2].templates[0].docs["${pid}3"].structure0.references._order = 4;
+    config.worldTemplates[2].templates[0].docs["${pid}4"] = {
+        structure0: {
+            "about":{
+                "_ref":"${refid}6",
+                "_order":0,
+                "_nonEditable": true,
+                "_title": "About this Group",
+                "main":{
+                    "_ref":"${refid}6",
+                    "_order":0,
+                    "_nonEditable": true,
+                    "_title":"About this Group"
+                }
+            }
+        },
+        "${refid}6": {
+            page: "<img id='widget_groupbasicinfo' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='/nyuwidgets/groupbasicinfo/images/icon.png' data-mce-src='/nyuwidgets/groupbasicinfo/images/icon.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'><br></p>"
+        }
+    };
+    config.worldTemplates[2].templates[0].structure.introduction._order = 1;
+    config.worldTemplates[2].templates[0].structure.library._order = 2;
+    config.worldTemplates[2].templates[0].structure.participants._order = 3;
+    config.worldTemplates[2].templates[0].structure.references._order = 4;
+    config.worldTemplates[2].templates[0].structure.about = {
+        "_title": "About this Group",
+        "_order": 0,
+        "_docref": "${pid}4",
+        "_nonEditable": true,
+        "_view": ["everyone", "anonymous", "-contributor", "-evaluator"],
+        "_edit": ["-leadresearcher", "-researcher", "-researchassistant"]
+    };
+
+    // Add in the About this Group page to the Research Support template
+    config.worldTemplates[2].templates[1].docs["${pid}0"].structure0.library._order = 1;
+    config.worldTemplates[2].templates[1].docs["${pid}1"].structure0.participants._order = 2;
+    config.worldTemplates[2].templates[1].docs["${pid}2"] = {
+        structure0: {
+            "about":{
+                "_ref":"${refid}4",
+                "_order":0,
+                "_nonEditable": true,
+                "_title": "About this Group",
+                "main":{
+                    "_ref":"${refid}4",
+                    "_order":0,
+                    "_nonEditable": true,
+                    "_title":"About this Group"
+                }
+            }
+        },
+        "${refid}4": {
+            page: "<img id='widget_groupbasicinfo' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='/nyuwidgets/groupbasicinfo/images/icon.png' data-mce-src='/nyuwidgets/groupbasicinfo/images/icon.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'><br></p>"
+        }
+    };
+    config.worldTemplates[2].templates[1].structure.library._order = 1;
+    config.worldTemplates[2].templates[1].structure.participants._order = 2;
+    config.worldTemplates[2].templates[1].structure.about = {
+        "_title": "About this Group",
+        "_order": 0,
+        "_docref": "${pid}2",
+        "_nonEditable": true,
+        "_view": ["everyone", "anonymous", "-lurker"],
+        "_edit": ["-participant"]
+    };
 
     /**
      * Footer Links
