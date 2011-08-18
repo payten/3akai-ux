@@ -162,7 +162,11 @@ define(["config/config"], function(config) {
         }
     };
 
+    // About Me
+    config.Profile.configuration.defaultConfig.aboutme.permission = "everyone";
+
     // publications
+    config.Profile.configuration.defaultConfig.publications.permission = "everyone";
     config.Profile.configuration.defaultConfig.publications.elements.placeofpublication.required = false;
     config.Profile.configuration.defaultConfig.publications.elements.maintitle.label += "*";
     config.Profile.configuration.defaultConfig.publications.elements.mainauthor.label += "*";
