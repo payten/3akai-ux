@@ -418,26 +418,26 @@ define(["config/config"], function(config) {
 
     /**
      * Authentication
-     */ 
+     */
     config.Authentication.internal = true;
     config.Authentication.allowInternalAccountCreation = false;
-    
     config.allowPasswordChange = false;
+
     // map of SSO enabled hosts to their
     // respective SSO service URL
-    var ssoEnabledHosts = {        
+    var ssoEnabledHosts = {
         "devatlas.home.nyu.edu": "https://devsso.home.nyu.edu/sso/saml2/jsp/idpSSOInit.jsp?metaAlias=/idp&spEntityID=http://devatlasapp1.home.nyu.edu:8080/system/sling/samlauth/login",
         "stageatlas.home.nyu.edu": "https://aqa.home.nyu.edu/sso/saml2/jsp/idpSSOInit.jsp?metaAlias=/idp2&spEntityID=https://stageatlas.home.nyu.edu:443/system/sling/samlauth/login",
         "atlas.nyu.edu": "https://login.nyu.edu/sso/saml2/jsp/idpSSOInit.jsp?metaAlias=/idp1&spEntityID=https://atlas.nyu.edu:443/system/sling/samlauth/login"
     };
     // setup SSO if current host is SSO enabled
-    if (ssoEnabledHosts.hasOwnProperty(document.location.hostname)) {        
-        config.Authentication.internal = false;        
+    if (ssoEnabledHosts.hasOwnProperty(document.location.hostname)) {
+        config.Authentication.internal = false;
         config.Authentication.external = [{
             label: "NYU Single Sign On",
             url: "/system/sling/samlauth/login?resource=",
             appendCurrentLocation: true
-        }];    
+        }];
         config.Authentication.SSO = {
             enabled: true,
             cookieName: "iPlanetDirectoryPro",
