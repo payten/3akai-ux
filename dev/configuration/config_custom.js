@@ -422,6 +422,7 @@ define(["config/config"], function(config) {
     config.Authentication.internal = true;
     config.Authentication.allowInternalAccountCreation = false;
     
+    config.allowPasswordChange = false;
     // map of SSO enabled hosts to their
     // respective SSO service URL
     var ssoEnabledHosts = {        
