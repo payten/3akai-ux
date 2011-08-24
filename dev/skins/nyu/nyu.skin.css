@@ -191,32 +191,33 @@ a.categories_item_header_link {
 }
 
 .header-byline {   
-	color: #222;
-	padding:0; 
-	font-size: 1em;
-	font-weight:normal;  
+  color: #222;
+  padding:0; 
+  font-size: 1em;
+  font-weight:normal;  
 }
 .header-byline h2 {
-	color: #572d88;
-	font-size: 30px;
-	margin:0; 
-        line-height: 1.2em;
-} 
+  color: #572d88;
+  font-size: 30px;
+  margin:0; 
+  line-height: 1.2em;
+}
+
 .header-byline p {
-	font-weight:normal;
-	font-size: 18px; 
-        line-height: 1.2em;
-        color: #222222;
+  font-weight:normal;
+  font-size: 18px; 
+  line-height: 1.2em;
+  color: #222222;
 }
 .header-smallline {
-	font-size: 21px;
+  font-size: 21px;
         line-height: 1.2em;
 }
 .homepage-header {
-	width:222px; 
-	padding:0 10px;
-        float:left;
-        display:inline;
+  width:222px; 
+  padding:0 10px;
+  float:left;
+  display:inline;
 }
 .homepage-header.first {
     padding-left: 0;
@@ -229,6 +230,18 @@ a.categories_item_header_link {
     margin: 10px 0;
     text-align: center;
 }
+.welcome_widget h2 {
+  color: #572D88 !important;
+  font-size: 30px !important;
+  margin: 0 !important;
+  line-height: 1.2em !important;
+} 
+
+.welcome_widget img {
+  float: none !important;
+  margin: 10px 0 !important;
+}
+
 
 /* sharecontent overrides */
 .mylibrary_item:hover .mylibrary_item_share_icon {background-image: url("images/share_icon.png") !important;}
