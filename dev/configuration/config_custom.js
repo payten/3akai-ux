@@ -7,6 +7,13 @@ define(["config/config"], function(config) {
     config.displayDebugInfo = false;
 
     /**
+     * Disable anonymous access
+     */
+    config.anonAllowed = false;
+    config.anonAllowable = ["/", "/dev", "/index", "/acknowledgements"];
+    config.anonAllowedToSearch = false;
+        
+    /**
      * Navigation
      */
     config.Navigation[0].label = "ME";
