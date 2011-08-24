@@ -25,6 +25,9 @@
         <property name="SRC_DIR_W" value="devwidgets" description="Source folder for widgets" />
         <property name="TARGET_DIR_W" value="${TARGET_RESOURCES}/devwidgets" description="Target folder for widgets" />
 
+        <property name="SRC_DIR_W_NYU" value="nyuwidgets" description="Source folder for widgets" />
+        <property name="TARGET_DIR_W_NYU" value="${TARGET_RESOURCES}/nyuwidgets" description="Target folder for NYU-specific widgets" />
+
         <property name="SRC_DIR_VAR" value="var" description="Source folder for content under /var that needs to be stored in JCR" />
         <property name="TARGET_DIR_VAR" value="${TARGET_RESOURCES}/var" description="Target folder for content under /var that needs to be stored in JCR" />
 
@@ -65,6 +68,7 @@
 
         <mkdir dir="${TARGET_DIR}"/>
         <mkdir dir="${TARGET_DIR_W}"/>
+        <mkdir dir="${TARGET_DIR_W_NYU}"/>
         <mkdir dir="${TARGET_DIR_VAR}"/>
         <mkdir dir="${TARGET_DIR_APPS}"/>
         <mkdir dir="${TARGET_DIR_ROOT}"/>
@@ -88,6 +92,11 @@
         <echo message="Making a copy of widget source files..." />
         <copy todir="${TARGET_DIR_W}">
             <fileset dir="${SRC_DIR_W}" />
+        </copy>
+
+        <echo message="Making a copy of NYU widget source files..." />
+        <copy todir="${TARGET_DIR_W_NYU}">
+            <fileset dir="${SRC_DIR_W_NYU}" />
         </copy>
 
         <echo message="Making a copy of var content files..." />
@@ -125,6 +134,7 @@
         <antcall target="copy_prod">
             <param name="SRC_DIR" value="${OPTIMIZED_DIR}/${SRC_DIR}" />
             <param name="SRC_DIR_W" value="${OPTIMIZED_DIR}/${SRC_DIR_W}" />
+            <param name="SRC_DIR_W_NYU" value="${OPTIMIZED_DIR}/${SRC_DIR_W_NYU}" />
             <param name="SRC_DIR_VAR" value="${OPTIMIZED_DIR}/${SRC_DIR_VAR}" />
             <param name="SRC_DIR_APPS" value="${OPTIMIZED_DIR}/${SRC_DIR_APPS}" />
         </antcall>

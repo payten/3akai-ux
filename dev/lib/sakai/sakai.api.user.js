@@ -355,6 +355,20 @@ define(
                 success: function(data) {
                     sakaiUserAPI.data.me = sakai_serv.convertObjectToArray(data, null, null);
 
+                    // check if logged in and for SSO auth and redirect if neccessary
+                    if (sakaiUserAPI.isAnonymous(sakaiUserAPI.data.me) &&
+                        sakai_conf.Authentication.SSO && 
+                        sakai_conf.Authentication.SSO.enabled && 
+                        $.cookie(sakai_conf.Authentication.SSO.cookieName)) {
+
+                        var sso_url = sakai_conf.Authentication.SSO.redirectUrl;
+                        if (sakai_conf.Authentication.SSO.appendCurrentLocation) {
+                            sso_url += document.location.href;
+                        }                                
+                        document.location = sso_url;
+                        return;
+                    }
+
                     // Check for firstName and lastName property - if not present use "rep:userId" for both (admin for example)
                     if (sakaiUserAPI.getProfileBasicElementValue(sakaiUserAPI.data.me.profile, "firstName") === "") {
                         sakaiUserAPI.setProfileBasicElementValue(sakaiUserAPI.data.me.profile, "firstName", sakaiUserAPI.data.me.profile["rep:userId"]);
