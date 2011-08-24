@@ -64,6 +64,8 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
         var topnavUserOptionsLoginButtonCancel = "#topnavigation_user_options_login_button_cancel";
 
         // Containers
+        var topnavContainer = "#topnavigation_container";
+        var topnavSearchContainer = ".topnavigation_search";
         var topnavSearchResultsContainer = "#topnavigation_search_results_container";
         var topnavSearchResultsBottomContainer = "#topnavigation_search_results_bottom_container";
         var topnavUserInboxMessages = "#topnavigation_user_inbox_messages";
@@ -246,6 +248,20 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
         ////////////////////////
         //////// SEARCH ////////
         ////////////////////////
+        /**
+         * Disable the Search feature if /search is disabled for
+         * anonymous users
+         */
+        var disableSearchIfAnon = function() {           
+            if (!sakai.config.anonAllowed &&
+                $.inArray(sakai.config.requireUserAnonNotAllowed, "/search") &&
+                sakai.api.User.isAnonymous(sakai.data.me)) {
+                
+                $(topnavSearchContainer, topnavContainer).remove();
+                $(".topnavigation_usersection_splitter", topnavContainer).remove();
+            }
+        };
+
 
         /**
          * Execute the live search and render the results
@@ -692,6 +708,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
          * Initialise the topnavigation widget
          */
         var doInit = function(){
+            disableSearchIfAnon();
             renderMenu();
             renderUser();
             setCountUnreadMessages();

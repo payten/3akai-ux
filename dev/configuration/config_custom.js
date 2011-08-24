@@ -7,6 +7,12 @@ define(["config/config"], function(config) {
     config.displayDebugInfo = false;
 
     /**
+     * Disable anonymous access
+     */
+    config.anonAllowed = false;
+    config.requireUserAnonNotAllowed = ["/me", "/dev/me.html", "/dev/search_sakai2.html", "/search"];
+        
+    /**
      * Navigation
      */
     config.Navigation[0].label = "ME";
