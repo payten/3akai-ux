@@ -359,12 +359,12 @@ define(["config/config"], function(config) {
     config.Permissions.Content.defaultaccess = "private";
     config.Permissions.Documents.defaultaccess = "private";
 
-    config.Permissions.Copyright.creativecommons["default"] = false;
-    config.Permissions.Copyright.unspecified = {
-        "title": "COPYRIGHT_NOT_SPECIFIED",
-        "default": true
+    config.Permissions.Copyright.types.unspecified = {
+        "title": "COPYRIGHT_NOT_SPECIFIED"
     };
-
+    config.Permissions.Copyright.defaults["content"] = "unspecified";
+    config.Permissions.Copyright.defaults["sakaidocs"] = "unspecified";
+    config.Permissions.Copyright.defaults["links"] = "unspecified";
 
     /**
      * Contact relationships
