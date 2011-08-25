@@ -249,16 +249,18 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
         //////// SEARCH ////////
         ////////////////////////
         /**
-         * Disable the Search feature if /search is disabled for
-         * anonymous users
+         * Enable (show) the Search feature but disable (remove) if /search
+         * is restricted and the user is anonymous
          */
-        var disableSearchIfAnon = function() {           
+        var initSearch = function() {  
             if (!sakai.config.anonAllowed &&
-                $.inArray(sakai.config.requireUserAnonNotAllowed, "/search") &&
+                $.inArray("/search",sakai.config.requireUserAnonNotAllowed) >= 0 &&
                 sakai.api.User.isAnonymous(sakai.data.me)) {
                 
                 $(topnavSearchContainer, topnavContainer).remove();
                 $(".topnavigation_usersection_splitter", topnavContainer).remove();
+            } else {
+                $(topnavSearchContainer, topnavContainer).show();
             }
         };
 
@@ -708,7 +710,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
          * Initialise the topnavigation widget
          */
         var doInit = function(){
-            disableSearchIfAnon();
+            initSearch();
             renderMenu();
             renderUser();
             setCountUnreadMessages();
