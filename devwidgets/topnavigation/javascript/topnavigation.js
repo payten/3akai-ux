@@ -254,7 +254,6 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
          */
         var initSearch = function() {  
             if (sakai.api.User.isAnonymous(sakai.data.me) &&
-                !sakai.config.anonAllowed &&
                 !sakai.config.anonAllowedToSearch) {
                 
                 $(topnavSearchContainer, topnavContainer).remove();
