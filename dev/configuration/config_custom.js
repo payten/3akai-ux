@@ -10,7 +10,7 @@ define(["config/config"], function(config) {
      * Disable anonymous access
      */
     config.anonAllowed = false;
-    config.requireUserAnonNotAllowed = ["/me", "/dev/me.html", "/dev/search_sakai2.html", "/search"];
+    config.anonAllowable = ["/", "/dev", "/index", "/acknowledgements"];
         
     /**
      * Navigation

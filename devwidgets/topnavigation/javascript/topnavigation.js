@@ -253,9 +253,10 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
          * is restricted and the user is anonymous
          */
         var initSearch = function() {  
-            if (!sakai.config.anonAllowed &&
-                $.inArray("/search",sakai.config.requireUserAnonNotAllowed) >= 0 &&
-                sakai.api.User.isAnonymous(sakai.data.me)) {
+            if (sakai.api.User.isAnonymous(sakai.data.me) &&
+                !sakai.config.anonAllowed &&
+                sakai.config.anonAllowable &&
+                $.inArray("/search", sakai.config.anonAllowable) == -1) {
                 
                 $(topnavSearchContainer, topnavContainer).remove();
                 $(".topnavigation_usersection_splitter", topnavContainer).remove();
