@@ -1181,7 +1181,17 @@ define(
         },
 
         canCreateTemplate: function(category) {
-            return (category.adminOnly && sakai_user.data.me.user.userid === "admin") || !category.adminOnly;
+            if ($.isPlainObject(category)) {
+                return (category.adminOnly && sakai_user.data.me.user.userid === "admin") || (!category.adminOnly && sakai_user.data.me.user.userid);
+            } else {
+                for (var i = 0; i < sakai_conf.worldTemplates.length; i++){
+                    var cat = sakai_conf.worldTemplates[i];
+                    if (cat.id === category){
+                        return sakaiGroupsAPI.canCreateTemplate(cat);
+                    }
+                }
+                return false;
+            }
         }
     };
     return sakaiGroupsAPI;

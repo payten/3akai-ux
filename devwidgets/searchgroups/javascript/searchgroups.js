@@ -185,6 +185,7 @@ require(["jquery", "sakai/sakai.api.core", "/dev/javascript/search_util.js"], fu
             // Render the results.
             finaljson.category = selectedCategory.toLowerCase();
             finaljson.categoryid = selectedCategoryId;
+            finaljson.canCreate = sakai.api.Groups.canCreateTemplate(finaljson.category);
             $(searchConfig.results.container, rootel).html(sakai.api.Util.TemplateRenderer(searchConfig.results.template, finaljson));
             $(".searchgroups_results_container", rootel).show();
 
