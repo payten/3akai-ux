@@ -99,6 +99,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
             $("#dropbox_upload_form").ajaxForm({
                 dataType: "json",
                 success: function(data){
+                    debugger;
                     var extractedData = [];
                     for (var i in data) {
                         if (data.hasOwnProperty(i)) {                            
@@ -130,9 +131,26 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
         };
 
         var displayExistingSubmittions = function() {
-           if (widgetData.submissions.hasOwnProperty(sakai.data.me.user.userid)) {
-               $("#dropbox_submissions ul", rootel).html("<li>"+widgetData.submissions[sakai.data.me.user.userid]+"</li>");
-           }
+           $.ajax({
+                   url: dropboxSubmissionPath, 
+                   data: {
+                     "widgetid": tuid  
+                   },
+                   type: "GET",
+                   dataType: "json",                   
+                   success: function(data, textStatus, jqXHR) {                       
+                       if ($.isEmptyObject(data)) {
+                           $("#dropbox_submissions ul", rootel).html("<li><i>You are yet to upload to this dropbox</i></li>");                          
+                       } else {
+                           widgetData.submissions = data;
+                           $("#dropbox_submissions ul", rootel).html("<li>"+widgetData.submissions.fileName+"</li>");
+                       }                                              
+                   },
+                   error: function(jqXHR, textStatus, errorThrown) {
+                       debugger;
+                       alert("OH BOY - ERROR: " + jqXHR.responseText);
+                   }               
+           });
         };
         
         /**
@@ -220,11 +238,13 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
         //                    }
                             $(dropboxSettings, rootel).hide();
                             $(dropboxDisplay, rootel).show();
+                            $(".dropbox_title", rootel).html(widgetData.title);
                             setupUploadNewContent();
                             displayExistingSubmittions();
                         }                       
                    },
                    error: function(jqXHR, textStatus, errorThrown) {
+                       debugger;
                        alert("OH BOY - ERROR: " + jqXHR.responseText);
                    }
                 });                                
