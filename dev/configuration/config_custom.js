@@ -11,6 +11,7 @@ define(["config/config"], function(config) {
      */
     config.anonAllowed = false;
     config.anonAllowable = ["/", "/dev", "/index", "/acknowledgements"];
+    config.anonAllowedToSearch = false;
         
     /**
      * Navigation

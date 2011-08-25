@@ -52,7 +52,7 @@ define(
          */
         changeToJSON : function(input){
             var json = {};
-            var inputLine = input.split(/\n/); 
+            var inputLine = input.split(/\n/);
             var i;
             for (i in inputLine) {
                 // IE 8 i has indexof as well which breaks the page.
@@ -150,7 +150,7 @@ define(
                     if ($.inArray(currentPage, sakai_config.requireUser) > -1
                         || (!sakai_config.anonAllowed &&
                             sakai_config.anonAllowable && 
-                            $.inArray(currentPage,sakai_config.anonAllowable) == -1)) {
+                            $.inArray(currentPage, sakai_config.anonAllowable) === -1)) {
                         
                         sakai_util.Security.sendToLogin();
                         return false;
