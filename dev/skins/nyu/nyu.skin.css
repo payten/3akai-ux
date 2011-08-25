@@ -12,7 +12,9 @@ button.s3d-regular-links,
 .s3d-regular-links button, 
 button.s3d-link-button,
 .s3d-button.s3d-overlay-button,
-.addarea_contents_list_item {
+.addarea_contents_list_item,
+#selecttemplate_container h2, 
+#selecttemplate_preview_dialog_container h2 {
     color:#57068c !important; 
 }
 
