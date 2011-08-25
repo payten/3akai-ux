@@ -12,10 +12,10 @@
             <form id="dropbox_upload_form" class="newaddcontent_form" method="POST" enctype="multipart/form-data">
                  <input name="fileData" id="multifile_upload" type="file" class="multi" size="42"/>
                  <input id="dropbox_upload_form_btnSubmit" type="button" value="Upload"/>
-            </form>
-            <div id="dropbox_submissions">
-                <ul></ul>
-            </div>
+            </form> 
+            <div id="dropbox_submissions"></div>
+            <div id="dropbox_review"></div>
+                        
         </div>
 
         <!-- SETTINGS VIEW -->
@@ -38,6 +38,50 @@
     <div class="s3d-widget-no-options">
         <div class="s3d-widget-no-options-inner"></div>
     </div>
+    
+    <!-- TEMPLATES -->
+    <div id="dropbox_submission_template"><!--
+        <table>
+            <tr>
+                <th>Filename</th>
+                <th>Created</th>
+                <th>Last Modified</th>
+            </tr>
+            <tbody>              
+                  <tr>                                         
+                   <td>${filename}</td>
+                   <td>${_created}</td>
+                   <td>${_lastModified}</td>
+                    <td><a href="/p/${poolId}/${filename}" target="_blank">Download</a></td>                                          
+                  </tr>                               
+            </tbody>
+        </table>                                              
+    --></div>
+    
+    <div id="dropbox_review_template"><!--
+        <table>
+            <tr>
+                <th>Userid</th>
+                <th>Filename</th>
+                <th>Created</th>
+                <th>Last Modified</th>
+            </tr>
+            <tbody>             
+                {for s in submissions}                                      
+                  {if s_index[0] != "_"}                    
+                      <tr>                                         
+                       <td>${s_index}</td>                   
+                       <td>${s.filename}</td>
+                       <td>${s._created}</td>
+                       <td>${s._lastModified}</td>
+                       <td><a href="/p/${s.poolId}/${s.filename}" target="_blank">Download</a></td>                                                       
+                      </tr>          
+                  {/if}
+                {/for}                     
+            </tbody>
+        </table>                                              
+    --></div>    
+    
 </div>
 
 <!-- JAVASCRIPT -->

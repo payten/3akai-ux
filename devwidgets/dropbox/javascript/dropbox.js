@@ -98,24 +98,11 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
             $("#dropbox_upload_form").attr("action", dropboxSubmissionPath  + "?widgetid=" + tuid);
             $("#dropbox_upload_form").ajaxForm({
                 dataType: "json",
-                success: function(data){
-                    debugger;
-                    var extractedData = [];
-                    for (var i in data) {
-                        if (data.hasOwnProperty(i)) {                            
-                            var obj = {};
-                            obj.filename = i;
-                            obj.hashpath = data[i];
-                            extractedData.push(obj);
-                        }
-                    }
-                    console.log(extractedData);                    
-                    if (widgetData.submissions) {
-                       widgetData.submissions[sakai.data.me.user.userid] = extractedData.poolId;
-                    }
+                success: function(data){                                        
                     displayExistingSubmittions();
                 },
-                error: function() {
+                error: function(jqXHR, textStatus, errorThrown) {
+                    debugger;
                     alert("ERROR UPLOADING FILE");
                 }
             });
@@ -140,10 +127,9 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                    dataType: "json",                   
                    success: function(data, textStatus, jqXHR) {                       
                        if ($.isEmptyObject(data)) {
-                           $("#dropbox_submissions ul", rootel).html("<li><i>You are yet to upload to this dropbox</i></li>");                          
+                           $("#dropbox_submissions", rootel).html("<i>You are yet to upload to this dropbox</i>");                          
                        } else {
-                           widgetData.submissions = data;
-                           $("#dropbox_submissions ul", rootel).html("<li>"+widgetData.submissions.fileName+"</li>");
+                           $("#dropbox_submissions", rootel).html(sakai.api.Util.TemplateRenderer("dropbox_submission_template", data));
                        }                                              
                    },
                    error: function(jqXHR, textStatus, errorThrown) {
@@ -226,8 +212,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                    type: "GET",
                    dataType: "json",                   
                    success: function(data, textStatus, jqXHR) {
-                       widgetData = data;
-                        if (widgetData.submissions == null) widgetData.submissions = {};
+                       widgetData = data;                        
                         if (showSettings) {
                             showSettingsScreen(data, true);
                         } else {
@@ -241,6 +226,9 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                             $(".dropbox_title", rootel).html(widgetData.title);
                             setupUploadNewContent();
                             displayExistingSubmittions();
+                            if (widgetData.submissions) {
+                                $("#dropbox_review", rootel).html(sakai.api.Util.TemplateRenderer("dropbox_review_template", widgetData));
+                            }
                         }                       
                    },
                    error: function(jqXHR, textStatus, errorThrown) {
