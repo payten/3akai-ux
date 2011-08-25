@@ -415,7 +415,7 @@ define(["config/config"], function(config) {
       * Permissions
       */
 
-    config.Permissions.Groups.defaultaccess = "logged-in-only";
+    config.Permissions.Groups.defaultaccess = "members-only";
     config.Permissions.Groups.defaultjoin = "no";
     config.Permissions.Groups.courses = {
         defaultaccess: "members-only",
