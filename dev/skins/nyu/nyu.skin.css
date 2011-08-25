@@ -48,21 +48,18 @@ a:visited {
 }
 
 #top_banner {
-    background-color: #F4F4F5;    
+    background:#ffffff;
     height: 80px;
     left: 0;
     position: absolute;
     top: 40px;
     width: 100%;
-    border-bottom: 1px solid #F4F4F5;
 }
 
 #top_banner_logo {    
-    background-color: white !important;
     margin: 0 auto;
     width: 960px;
-    border: 1px solid #DCDCDC;
-    border-top: none;
+    border-bottom: 1px solid #DCDCDC;
 }
 
 #navigation_you_link, 
@@ -172,7 +169,18 @@ a:visited {
 #footer_logo {
     background-image: url("images/footer_logo.png") !important;
 } 
-
+.footer_main .fixed-container a, .footer_main .fixed-container button.s3d-link-button {
+    color:#dddddd !important;
+} 
+.footer_main .fixed-container  a:visited {
+    color:#cccccc !important;
+}
+.footer_main .fixed-container a:hover {
+    color:#eeeeee !important;
+}
+.footer_main .fixed-container  a:active {
+    color:#ffffff !important;
+}
 /* homepage styles - explore.html */
 /*body.explore #top_banner_logo {
     background:#fff url("images/nyu_logo.png") top left no-repeat !important;    
