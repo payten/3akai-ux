@@ -21,9 +21,14 @@ define(["config/config"], function(config) {
     /**
      * World Templates
      */
+    config.widgets.defaults.parcitipants = {"widgetid": "nyuparticipants", "path": "/nyuwidgets/nyuparticipants"};
     config.worldTemplates[0].title = "BASIC_GROUPS";
     config.worldTemplates[0].titleSing = "BASIC_GROUP";
     config.worldTemplates[0].templates[0].title = "Basic Group";
+
+    // Use our custom participants widget
+    config.worldTemplates[0].templates[0].docs["${pid}1"]["${refid}2"].page = "<img id='widget_nyuparticipants_${refid}3' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='/dev/images/person_icon.png' data-mce-src='/dev/images/person_icon.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'/>";
+    config.worldTemplates[0].templates[0].docs["${pid}1"]["${refid}3"].participants.showExtraInfo = true;
 
     // Add in the About this Group page
     config.worldTemplates[0].templates[0].docs["${pid}2"] = {
@@ -59,7 +64,7 @@ define(["config/config"], function(config) {
     // Only admin can add courses
     config.worldTemplates[1].adminOnly = true;
 
-    // Math Course
+    // Math Course - add About this Group page
     config.worldTemplates[1].templates[0].docs["${pid}6"] = {
         structure0: {
             "about":{
@@ -94,7 +99,10 @@ define(["config/config"], function(config) {
         "_edit": ["-lecturer"]
     };
 
-    // Basic course
+    // Basic course - Use the nyu participants widget
+    config.worldTemplates[1].templates[1].docs["${pid}1"]["${refid}2"].page = "<img id='widget_nyuparticipants_${refid}3' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='/dev/images/person_icon.png' data-mce-src='/dev/images/person_icon.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'/>";
+
+    // Basic course - add About this Group page
     config.worldTemplates[1].templates[1].docs["${pid}2"] = {
         structure0: {
             "about":{
@@ -129,11 +137,10 @@ define(["config/config"], function(config) {
     config.worldTemplates[2].title = "RESEARCH_GROUPS";
     config.worldTemplates[2].titleSing = "RESEARCH_GROUP";
 
+    // Research Project - Use the nyu participants widget
+    config.worldTemplates[2].templates[0].docs["${pid}2"]["${refid}3"].page = "<img id='widget_nyuparticipants_${refid}4' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='/dev/images/person_icon.png' data-mce-src='/dev/images/person_icon.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'/>";
+
     // Add in the About this Group page to the Research Project templates
-    config.worldTemplates[2].templates[0].docs["${pid}0"].structure0.introduction._order = 1;
-    config.worldTemplates[2].templates[0].docs["${pid}1"].structure0.library._order = 2;
-    config.worldTemplates[2].templates[0].docs["${pid}2"].structure0.participants._order = 3;
-    config.worldTemplates[2].templates[0].docs["${pid}3"].structure0.references._order = 4;
     config.worldTemplates[2].templates[0].docs["${pid}4"] = {
         structure0: {
             "about":{
@@ -166,9 +173,10 @@ define(["config/config"], function(config) {
         "_edit": ["-leadresearcher", "-researcher", "-researchassistant"]
     };
 
+    // Research Support - Use the nyu participants widget
+    config.worldTemplates[2].templates[1].docs["${pid}1"]["${refid}2"].page = "<img id='widget_nyuparticipants_${refid}3' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='/dev/images/person_icon.png' data-mce-src='/dev/images/person_icon.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'/>";
+
     // Add in the About this Group page to the Research Support template
-    config.worldTemplates[2].templates[1].docs["${pid}0"].structure0.library._order = 1;
-    config.worldTemplates[2].templates[1].docs["${pid}1"].structure0.participants._order = 2;
     config.worldTemplates[2].templates[1].docs["${pid}2"] = {
         structure0: {
             "about":{

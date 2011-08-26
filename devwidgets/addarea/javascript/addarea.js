@@ -296,7 +296,13 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai){
             var docTitle = $("#addarea_participantlist_page_name").val();
             var docPermission = $("#addarea_participantlist_permissions").val();
             var widgetID = sakai.api.Util.generateWidgetId();
-            var pageContents = ["<img id='widget_participants_" + widgetID + "' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='/devwidgets/participants/images/participants.png' data-mce-src='/devwidgets/participants/images/participants.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'></p>"];
+            var participantsWidget = "participants";
+            var path = "/devwidgets/participants";
+            if (sakai.config.widgets.defaults.parcitipants) {
+                participantsWidget = sakai.config.widgets.defaults.parcitipants.widgetid;
+                path = sakai.config.widgets.defaults.parcitipants.path;
+            }
+            var pageContents = ["<img id='widget_" + participantsWidget + "_" + widgetID + "' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='" + path + "/images/participants.png' data-mce-src='" + path + "/images/participants.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'></p>"];
             var nonEditable = true;
             var widgetContents = {};
             widgetContents[widgetID] = {
