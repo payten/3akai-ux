@@ -22,9 +22,7 @@ define(["config/config"], function(config) {
      * World Templates
      */
     config.widgets.defaults.parcitipants = {"widgetid": "nyuparticipants", "path": "/nyuwidgets/nyuparticipants"};
-    config.worldTemplates[0].title = "BASIC_GROUPS";
-    config.worldTemplates[0].titleSing = "BASIC_GROUP";
-    config.worldTemplates[0].templates[0].title = "Basic Group";
+    config.worldTemplates[0].templates[0].title = "Group";
 
     // Use our custom participants widget
     config.worldTemplates[0].templates[0].docs["${pid}1"]["${refid}2"].page = "<img id='widget_nyuparticipants_${refid}3' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='/dev/images/person_icon.png' data-mce-src='/dev/images/person_icon.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'/>";
@@ -133,79 +131,8 @@ define(["config/config"], function(config) {
         "_edit": ["-ta", "-lecturer"]
     };
 
-
-    config.worldTemplates[2].title = "RESEARCH_GROUPS";
-    config.worldTemplates[2].titleSing = "RESEARCH_GROUP";
-
-    // Research Project - Use the nyu participants widget
-    config.worldTemplates[2].templates[0].docs["${pid}2"]["${refid}3"].page = "<img id='widget_nyuparticipants_${refid}4' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='/dev/images/person_icon.png' data-mce-src='/dev/images/person_icon.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'/>";
-
-    // Add in the About this Group page to the Research Project templates
-    config.worldTemplates[2].templates[0].docs["${pid}4"] = {
-        structure0: {
-            "about":{
-                "_ref":"${refid}6",
-                "_order":0,
-                "_nonEditable": true,
-                "_title": "About this Group",
-                "main":{
-                    "_ref":"${refid}6",
-                    "_order":0,
-                    "_nonEditable": true,
-                    "_title":"About this Group"
-                }
-            }
-        },
-        "${refid}6": {
-            page: "<img id='widget_groupbasicinfo' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='/nyuwidgets/groupbasicinfo/images/icon.png' data-mce-src='/nyuwidgets/groupbasicinfo/images/icon.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'><br></p>"
-        }
-    };
-    config.worldTemplates[2].templates[0].structure.introduction._order = 1;
-    config.worldTemplates[2].templates[0].structure.library._order = 2;
-    config.worldTemplates[2].templates[0].structure.participants._order = 3;
-    config.worldTemplates[2].templates[0].structure.references._order = 4;
-    config.worldTemplates[2].templates[0].structure.about = {
-        "_title": "About this Group",
-        "_order": 0,
-        "_docref": "${pid}4",
-        "_nonEditable": true,
-        "_view": ["everyone", "anonymous", "-contributor", "-evaluator"],
-        "_edit": ["-leadresearcher", "-researcher", "-researchassistant"]
-    };
-
-    // Research Support - Use the nyu participants widget
-    config.worldTemplates[2].templates[1].docs["${pid}1"]["${refid}2"].page = "<img id='widget_nyuparticipants_${refid}3' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='/dev/images/person_icon.png' data-mce-src='/dev/images/person_icon.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'/>";
-
-    // Add in the About this Group page to the Research Support template
-    config.worldTemplates[2].templates[1].docs["${pid}2"] = {
-        structure0: {
-            "about":{
-                "_ref":"${refid}4",
-                "_order":0,
-                "_nonEditable": true,
-                "_title": "About this Group",
-                "main":{
-                    "_ref":"${refid}4",
-                    "_order":0,
-                    "_nonEditable": true,
-                    "_title":"About this Group"
-                }
-            }
-        },
-        "${refid}4": {
-            page: "<img id='widget_groupbasicinfo' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='/nyuwidgets/groupbasicinfo/images/icon.png' data-mce-src='/nyuwidgets/groupbasicinfo/images/icon.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'><br></p>"
-        }
-    };
-    config.worldTemplates[2].templates[1].structure.library._order = 1;
-    config.worldTemplates[2].templates[1].structure.participants._order = 2;
-    config.worldTemplates[2].templates[1].structure.about = {
-        "_title": "About this Group",
-        "_order": 0,
-        "_docref": "${pid}2",
-        "_nonEditable": true,
-        "_view": ["everyone", "anonymous", "-lurker"],
-        "_edit": ["-participant"]
-    };
+    // Remove research groups
+    config.worldTemplates = config.worldTemplates.splice(0,2);
 
     /**
      * Footer Links
