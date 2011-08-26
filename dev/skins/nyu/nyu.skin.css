@@ -252,11 +252,11 @@ a.categories_item_header_link {
   margin: 10px 0 !important;
 }
 
-/* explore.html - full-width styles for welcome widget */
-#explore_content.full-width {padding-bottom: 0;}
-#explore_content.full-width #explore_content_first_column {width: 802px; float: none; margin: 0 auto;}
-#explore_content.full-width .homepage-header {width: 214px; padding: 0 40px;}
-#explore_content.full-width .header-smallline p {margin-bottom: 0;}
+/* explore.html - single-column styles for welcome widget */
+#explore_content.single-column {padding-bottom: 0;}
+#explore_content.single-column #explore_content_first_column {width: 802px; float: none; margin: 0 auto;}
+#explore_content.single-column .homepage-header {width: 214px; padding: 0 40px;}
+#explore_content.single-column .header-smallline p {margin-bottom: 0;}
 
 /* sharecontent overrides */
 .mylibrary_item:hover .mylibrary_item_share_icon {background-image: url("images/share_icon.png") !important;}

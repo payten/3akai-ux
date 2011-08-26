@@ -27,7 +27,7 @@ require(["jquery","sakai/sakai.api.core"], function($, sakai) {
                 $("#explore_content_second_column").remove();
                 $("#widget_featuredcontent").remove();
                 $("#explore_content_first_column > .s3d-split-line").remove();
-                $("#explore_content").addClass("full-width");
+                $("#explore_content").addClass("single-column");
             } else {
                 $("#explore_content_second_column").show();
                 $("#widget_featuredcontent").show();
