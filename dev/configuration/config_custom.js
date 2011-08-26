@@ -433,13 +433,14 @@ define(["config/config"], function(config) {
     // map of SSO enabled hosts to their
     // respective SSO service URL
     var ssoEnabledHosts = {
-        "devatlasapp1.home.nyu.edu": "https://devsso.home.nyu.edu/sso/saml2/jsp/idpSSOInit.jsp?metaAlias=/idp&spEntityID=http://devatlasapp1.home.nyu.edu:8080/system/sling/samlauth/login",
-        "devatlas.home.nyu.edu": "https://devsso.home.nyu.edu/sso/saml2/jsp/idpSSOInit.jsp?metaAlias=/idp&spEntityID=http://devatlasapp1.home.nyu.edu:8080/system/sling/samlauth/login",
-        "stageatlas.home.nyu.edu": "https://aqa.home.nyu.edu/sso/saml2/jsp/idpSSOInit.jsp?metaAlias=/idp2&spEntityID=https://stageatlas.home.nyu.edu:443/system/sling/samlauth/login",
-        "atlas.nyu.edu": "https://login.nyu.edu/sso/saml2/jsp/idpSSOInit.jsp?metaAlias=/idp1&spEntityID=https://atlas.nyu.edu:443/system/sling/samlauth/login"
+        "devatlasapp1.home.nyu.edu": {url: "https://devsso.home.nyu.edu/sso/saml2/jsp/idpSSOInit.jsp?metaAlias=/idp&spEntityID=http://devatlasapp1.home.nyu.edu:8080/system/sling/samlauth/login", followLogoutRedirects: true},
+        "devatlas.home.nyu.edu": {url: "https://devsso.home.nyu.edu/sso/saml2/jsp/idpSSOInit.jsp?metaAlias=/idp&spEntityID=http://devatlasapp1.home.nyu.edu:8080/system/sling/samlauth/login", followLogoutRedirects: true},
+        "stageatlas.home.nyu.edu": {url:"https://aqa.home.nyu.edu/sso/saml2/jsp/idpSSOInit.jsp?metaAlias=/idp2&spEntityID=https://stageatlas.home.nyu.edu:443/system/sling/samlauth/login", followLogoutRedirects: true},
+        "atlas.nyu.edu": {url: "https://login.nyu.edu/sso/saml2/jsp/idpSSOInit.jsp?metaAlias=/idp1&spEntityID=https://atlas.nyu.edu:443/system/sling/samlauth/login", followLogoutRedirects: true}
     };
     // setup SSO if current host is SSO enabled
     if (ssoEnabledHosts.hasOwnProperty(document.location.hostname)) {
+        config.followLogoutRedirects = ssoEnabledHosts[document.location.hostname]['followLogoutRedirects'] === true;
         config.Authentication.internal = false;
         config.Authentication.external = [{
             label: "NYU Single Sign On",
@@ -449,7 +450,7 @@ define(["config/config"], function(config) {
         config.Authentication.SSO = {
             enabled: true,
             cookieName: "iPlanetDirectoryPro",
-            redirectUrl: ssoEnabledHosts[document.location.hostname] +"&RelayState=",
+            redirectUrl: ssoEnabledHosts[document.location.hostname]['url'] +"&RelayState=",
             appendCurrentLocation: true
         };
     }
