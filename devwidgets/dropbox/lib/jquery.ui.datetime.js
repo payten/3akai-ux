@@ -345,7 +345,70 @@
 
     //yy|y|mm|m|MM|M|dd|d|DD|D|hh|h|gg|g|ii|i|a|A|O
     strtodate: function(value, format){
-        return Date.parse(value);
+      var date = new Date(),
+      codes = {
+        'MM'  : [ Date.monthNames, 'Month' ],
+        'M'   : [ Date.monthNamesShort, 'Month' ],
+        'DD'  : [ Date.dayNames, 'Day' ],
+        'D'   : [ Date.dayNamesShort, 'Day' ],
+        'yyyy': [ 4, 'FullYear' ],
+        'mm'  : [ 2, 'Month' ],
+        'dd'  : [ 2, 'Date' ],
+        'hh'  : [ 2, 'Hours' ],
+        'ii'  : [ 2, 'Minutes' ],
+        'm'   : [ 1, 'Month', 12 ],
+        'd'   : [ 1, 'Date', 31 ],
+        'h'   : [ 1, 'Hours', 59 ],
+        'i'   : [ 1, 'Minutes', 59 ]
+      };
+
+      var aggregate = new RegExp("([+-])[ ]{0,1}([0-9]+)[ ]{0,1}(min|hour|day|week|month|year)", "gi");
+      if((match = aggregate.exec(value))){
+        match[2] = parseInt(match[2]);
+        var diff = (match[1] == '+') ? match[2] : match[2]*-1;
+        switch(match[3]){
+          case 'min': date.setMinutes(date.getMinutes()+diff); break;
+          case 'hour': date.setHours(date.getHours()+diff); break;
+          case 'day': date.setDate(date.getDate()+diff); break;
+          case 'week': date.setDate(date.getDate()+(diff*7)); break;
+          case 'month': date.setMonth(date.getMonth()+diff); break;
+          case 'year': date.setFullYear(date.getFullYear()+diff); break;
+        }
+      }else{
+        format = format.replace(/yyyy/g, 'yy').replace(/yy/g, 'yyyy');
+        $.each(codes, function(code, args){
+          var pos = 0, c = 0, i = 0, literal = false, occurs = 0;
+          while((pos = format.indexOf(code, ((pos)?pos+1:0))) > -1){
+            literal = false, occurs = 0;
+            format = format.replace(new RegExp("('[^']*)?("+code+"|')", "g"), function(needle, match){
+              if(match && (hide = needle.replace(code, code.replace(/./g, '?'))) != needle) literal = true;
+              if(!literal){
+                c = pos - format.substrCount("'", 0, pos);
+                if(typeof args[0] === 'object'){
+                  $.each(args[0], function(i, v){
+                    if(value.indexOf(v) > -1 && (needle = v)){
+                      value = value.replace('/'+v+'/g', code);
+                      date['set'+args[1]](i);
+                    }
+                  });
+                }else if(typeof args[0] === 'number'){
+                  if(args[0] == 1){
+                    i = parseInt(value.substr(c, 2).replace(/[^0-9]/g, ''), 10);
+                    if(i > args[2]) i = parseInt(value.substr(c, 1).replace(/[^0-9]/g, ''), 10);
+                  }else i = parseInt(value.substr(c, args[0]).replace(/[^0-9]/g, ''), 10);
+                  value = value.splice(c, Math.max(i.toString().length, args[0]), code);
+                  if(!isNaN(i)) date['set'+args[1]]((args[1]=='Month') ? i-1 : i);
+                  else date['set'+args[1]](0);
+                }
+              }
+              return match ? hide : (!literal && (occurs+=1) == 1) ? needle.replace(/./g, '?') : needle;
+            });
+          }
+        });
+      }
+
+      date.setSeconds(0, 0);
+      return date;
     },
 
     strtotime: function(value, format){
