@@ -23,6 +23,15 @@ require(["jquery","sakai/sakai.api.core"], function($, sakai) {
             if (sakai.config.enableCategories) {
                 sakai.api.Util.TemplateRenderer($("#explore_categories_template"), {}, $("#explore_categories"));
             }
+            if (sakai.api.User.isAnonymous(sakai.data.me) && !sakai.config.anonAllowedToBrowse) {
+                $("#explore_content_second_column").remove();
+                $("#widget_featuredcontent").remove();
+                $("#explore_content_first_column > .s3d-split-line").remove();
+                $("#explore_content").addClass("full-width");
+            } else {
+                $("#explore_content_second_column").show();
+                $("#widget_featuredcontent").show();
+            }
         };
         doInit();
     };
