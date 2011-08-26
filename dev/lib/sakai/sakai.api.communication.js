@@ -126,21 +126,21 @@ define(
                     case "join_request":
                         toSend["sakai:templatePath"] = "/var/templates/email/join_request";
                         toSend["sakai:templateParams"] = "sender=" + meData.profile.basic.elements.firstName.value + " " + meData.profile.basic.elements.lastName.value +
-                        "|system=Sakai|name=" + groupTitle +
+                        "|system=" + sakai_i18n.General.getValueForKey("SAKAI") + "|name=" + groupTitle +
                         "|profilelink=" + sakai_conf.SakaiDomain + "/~" + sakai_util.urlSafe(meData.user.userid) +
                         "|acceptlink=" + sakai_conf.SakaiDomain + "/~" +  groupId;
                         break;
                     case "group_invitation":
                         toSend["sakai:templatePath"] = "/var/templates/email/group_invitation";
                         toSend["sakai:templateParams"] = "sender=" + meData.profile.basic.elements.firstName.value + " " + meData.profile.basic.elements.lastName.value +
-                        "|system=Sakai|name=" + groupTitle +
+                        "|system=" + sakai_i18n.General.getValueForKey("SAKAI") + "|name=" + groupTitle +
                         "|body=" + body +
                         "|link=" + sakai_conf.SakaiDomain + "/~" + groupId;
                         break;
                     case "shared_content":
                         toSend["sakai:templatePath"] = "/var/templates/email/shared_content";
                         toSend["sakai:templateParams"] = "sender=" + meData.profile.basic.elements.firstName.value + " " + meData.profile.basic.elements.lastName.value +
-                        "|system=Sakai|name=" + sakai_global.content_profile.content_data.data["sakai:pooled-content-file-name"] +
+                        "|system=" + sakai_i18n.General.getValueForKey("SAKAI") + "|name=" + sakai_global.content_profile.content_data.data["sakai:pooled-content-file-name"] +
                         "|description=" + (sakai_global.content_profile.content_data.data["sakai:description"] || "none")+
                         "|body=" + body +
                         "|link=" + sakai_global.content_profile.content_data.url;
@@ -148,7 +148,7 @@ define(
                     case "contact_invitation":
                         toSend["sakai:templatePath"] = "/var/templates/email/contact_invitation";
                         toSend["sakai:templateParams"] = "sender=" + meData.profile.basic.elements.firstName.value + " " + meData.profile.basic.elements.lastName.value +
-                        "|system=Sakai|body=" + body +
+                        "|system=" + sakai_i18n.General.getValueForKey("SAKAI") + "|body=" + body +
                         "|link=" + sakai_conf.SakaiDomain + sakai_conf.URL.INVITATIONS_URL;
                         break;
                 }
