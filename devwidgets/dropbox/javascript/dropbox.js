@@ -25,7 +25,7 @@
 /*global $, Config, Querystring, SWFID, swfobject */
 
 
-require(["jquery", "sakai/sakai.api.core", "/devwidgets/dropbox/lib/jquery.ui.datetime.js", "/devwidgets/dropbox/lib/date.js", "/devwidgets/dropbox/lib/jquery.strftime.js"], function($, sakai) {
+require(["jquery", "sakai/sakai.api.core", "/devwidgets/dropbox/lib/jquery.ui.datetime.js", "/devwidgets/dropbox/lib/foo.js","/devwidgets/dropbox/lib/jquery.strftime.js"], function($, sakai) {
 
     /**
      * @name sakai_global.dropbox
@@ -79,6 +79,11 @@ require(["jquery", "sakai/sakai.api.core", "/devwidgets/dropbox/lib/jquery.ui.da
         $("#dropbox_btnInsertWidget", rootel).live("click", function() {
             var data = serializeFormToObject($("#dropbox_form", rootel));
             data = $.extend(widgetData, data);            
+                        
+            data.utc_active_from = new Date(getDateFromFormat(data.active_from, "yyyy-MM-dd HH:mm")).toISOString();
+            data.utc_active_to = new Date(getDateFromFormat(data.active_to, "yyyy-MM-dd HH:mm")).toISOString();
+            data.utc_deadline = new Date(getDateFromFormat(data.deadline, "yyyy-MM-dd HH:mm")).toISOString();                                
+
             $.post(
                 dropboxWidgetPath + "?widgetid=" + tuid,
                 data,
@@ -87,7 +92,7 @@ require(["jquery", "sakai/sakai.api.core", "/devwidgets/dropbox/lib/jquery.ui.da
                 },
                 "json"
             );
-            sakai.api.Widgets.saveWidgetData(tuid, data, function() {
+            sakai.api.Widgets.saveWidgetData(tuid, {}, function() {
                 // not using at the moment...
             });
             return false;
@@ -181,24 +186,38 @@ require(["jquery", "sakai/sakai.api.core", "/devwidgets/dropbox/lib/jquery.ui.da
 //                $("#dropbox_form #deadline", rootel).val(Date.now());                
 //            }
             if (exists) {
+                widgetData.active_from = new Date(Date.parse(widgetData.utc_active_from)).strftime("%Y-%m-%d %H:%m");
+                widgetData.active_to = new Date(Date.parse(widgetData.utc_active_to)).strftime("%Y-%m-%d %H:%m");
+                widgetData.deadline = new Date(Date.parse(widgetData.utc_deadline)).strftime("%Y-%m-%d %H:%m"); 
+                widgetData.timezone = new Date().strftime("%Z");
+                //widgetData.timezoneOffset = new Date().getUTCOffset();                
+                widgetData.timezoneOffset = "";                
                 $("#dropbox_settings_form").html(sakai.api.Util.TemplateRenderer("dropbox_settings_form_template", widgetData));
-            } else {
-                debugger;
-                widgetData.title = "My Dropbox";
-                widgetData.active_from = Date.parse("t + 0 d 09:00:00").toISOString();
-                widgetData.active_to = Date.parse("t + 1 m 18:00:00").toISOString();
-                widgetData.deadline = Date.parse("t + 1 m 18:00:00").addDays(-7).toISOString();
-                widgetData.timezone = Date.today().strftime("%Z");
-                widgetData.timezoneOffset = Date.today().getUTCOffset();
+            } else {                
+                widgetData.title = "My Dropbox";                                
+
+                var today = new Date();
+                var active_from = new Date();
+                active_from.setHours(9);
+                active_from.setMinutes(0);
+                widgetData.active_from = active_from.strftime("%Y-%m-%d %H:%m");
+                var active_to = new Date();
+                active_to.setYear(active_from.getFullYear());
+                active_from.setHours(18);
+                active_to.setMinutes(0);                
+                widgetData.active_to = active_to.strftime("%Y-%m-%d %H:%m");                
+                widgetData.deadline = widgetData.active_to;
+                                                                               
+                widgetData.timezone = new Date().strftime("%Z");
+                //widgetData.timezoneOffset = new Date().getUTCOffset();
+                widgetData.timezoneOffset = "";
                 
                 $("#dropbox_settings_form").html(sakai.api.Util.TemplateRenderer("dropbox_settings_form_template", widgetData));                
             }
             // init data widgets
-            //$('#active_from', rootel).datetime({chainTo: '#active_to'});
-            //$('#deadline', rootel).datetime({minDate: Date.parse(widgetData.active_from).toString("yyyy-M-d"), maxDate: Date.parse(widgetData.active_to).toString("yyyy-M-d")});
+            $('#active_from', rootel).datetime({chainTo: '#active_to'});
+            $('#deadline', rootel).datetime({minDate: widgetData.active_from, maxDate: widgetData.active_to});
             
-
-             //$('#datetime_from').datetime({ chainTo: '#datetime_to', value: '-7 days', chainOptions: { value: '+7 days' } });
 
             $(dropboxDisplay, rootel).hide();
             $(dropboxSettings, rootel).show();
