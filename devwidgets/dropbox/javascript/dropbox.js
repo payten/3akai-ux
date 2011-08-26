@@ -25,7 +25,7 @@
 /*global $, Config, Querystring, SWFID, swfobject */
 
 
-require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
+require(["jquery", "sakai/sakai.api.core", "/devwidgets/dropbox/lib/jquery.ui.datetime.js", "/devwidgets/dropbox/lib/date.js", "/devwidgets/dropbox/lib/jquery.strftime.js"], function($, sakai) {
 
     /**
      * @name sakai_global.dropbox
@@ -78,7 +78,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
         $("#dropbox_btnInsertWidget", rootel).die("click");
         $("#dropbox_btnInsertWidget", rootel).live("click", function() {
             var data = serializeFormToObject($("#dropbox_form", rootel));
-            data = $.extend(widgetData, data);
+            data = $.extend(widgetData, data);            
             $.post(
                 dropboxWidgetPath + "?widgetid=" + tuid,
                 data,
@@ -170,15 +170,36 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
          * @param {Boolean} exists
          */
         var showSettingsScreen = function(response, exists) {
+            
+//            if (exists) {
+//                // Fill in dropbox info
+//                $("#dropbox_form #title", rootel).val(widgetData.title);
+//                $("#dropbox_form #deadline", rootel).val(widgetData.deadline);                
+//            } else {
+//                // Fill in dropbox defaults
+//                $("#dropbox_form #title", rootel).val("My Assignment Submission Box");
+//                $("#dropbox_form #deadline", rootel).val(Date.now());                
+//            }
             if (exists) {
-                // Fill in dropbox info
-                $("#dropbox_form #title", rootel).val(widgetData.title);
-                $("#dropbox_form #deadline", rootel).val(widgetData.deadline);                
+                $("#dropbox_settings_form").html(sakai.api.Util.TemplateRenderer("dropbox_settings_form_template", widgetData));
             } else {
-                // Fill in dropbox defaults
-                $("#dropbox_form #title", rootel).val("My Assignment Submission Box");
-                $("#dropbox_form #deadline", rootel).val(Date.now());                
-            }            
+                debugger;
+                widgetData.title = "My Dropbox";
+                widgetData.active_from = Date.parse("t + 0 d 09:00:00").toISOString();
+                widgetData.active_to = Date.parse("t + 1 m 18:00:00").toISOString();
+                widgetData.deadline = Date.parse("t + 1 m 18:00:00").addDays(-7).toISOString();
+                widgetData.timezone = Date.today().strftime("%Z");
+                widgetData.timezoneOffset = Date.today().getUTCOffset();
+                
+                $("#dropbox_settings_form").html(sakai.api.Util.TemplateRenderer("dropbox_settings_form_template", widgetData));                
+            }
+            // init data widgets
+            //$('#active_from', rootel).datetime({chainTo: '#active_to'});
+            //$('#deadline', rootel).datetime({minDate: Date.parse(widgetData.active_from).toString("yyyy-M-d"), maxDate: Date.parse(widgetData.active_to).toString("yyyy-M-d")});
+            
+
+             //$('#datetime_from').datetime({ chainTo: '#datetime_to', value: '-7 days', chainOptions: { value: '+7 days' } });
+
             $(dropboxDisplay, rootel).hide();
             $(dropboxSettings, rootel).show();
         };
@@ -203,11 +224,12 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
          * @param {Boolean} showSettings Show the settings of the widget or not
          */
         sakai.api.Widgets.loadWidgetData(tuid, function (success, data) {
-            if (success) {
+            if (success) {                
                 $.ajax({
                    url: dropboxWidgetPath, 
                    data: {
-                     "widgetid": tuid  
+                     "widgetid": tuid,
+                     "path": data._path
                    },
                    type: "GET",
                    dataType: "json",                   
@@ -228,6 +250,8 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                             displayExistingSubmittions();
                             if (widgetData.submissions) {
                                 $("#dropbox_review", rootel).html(sakai.api.Util.TemplateRenderer("dropbox_review_template", widgetData));
+                            } else if (sakai.data.me.user.userid == widgetData.widgetCreator) {
+                                $("#dropbox_review", rootel).html("<i>No submissions received</i>");
                             }
                         }                       
                    },

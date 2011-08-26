@@ -1,4 +1,7 @@
 <!-- CSS -->
+<link rel="stylesheet" type="text/css" media="screen" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.8/themes/flick/jquery-ui.css" />
+<link rel="stylesheet" type="text/css" href="/devwidgets/dropbox/lib/jquery.ui.datetime.css" />
+<link rel="stylesheet" type="text/css" href="/devwidgets/dropbox/lib/jquery.ui.datepicker.css" />
 <link rel="stylesheet" type="text/css" href="/devwidgets/dropbox/css/dropbox.css" />
 
 <div class="dropbox_widget">
@@ -20,16 +23,8 @@
 
         <!-- SETTINGS VIEW -->
         <div id="dropbox_settings" style="display:none">
-            <form id="dropbox_form" method="post" action="#">                                                
-                <p>
-                    Title: <input id="title" name="title" type="text"  />
-                </p>                
-                <p>
-                    Deadline: <input id="deadline" name="deadline" type="text" class="date" />
-                </p>                
-                <div class="dialog_buttons">                    
-                    <button type="submit" class="s3d-button s3d-button-primary" id="dropbox_btnInsertWidget"><span class="s3d-button-inner">Save</span></button>                    
-                </div>
+            <form id="dropbox_settings_form" method="post" action="#">                                                
+                                                
             </form>
         </div>
     </div>
@@ -81,6 +76,25 @@
             </tbody>
         </table>                                              
     --></div>    
+    
+    <div id="dropbox_settings_form_template"><!--
+        <p><b>Step 1 - set the dropbox title:</b><br/>
+            Title: <input id="title" name="title" type="text" value="${title}"  />
+        </p>                
+        <p><b>Step 2 - Define the window where the dropbox is active:</b><br/>            
+            From:&nbsp;<input id="active_from" name="active_from" value="${active_from}" readonly="readonly" />&nbsp;To:&nbsp;<input id="active_to" name="active_to" value="${active_to}" readonly="readonly" />
+        </p>                                         
+        <p><b>Step 3 - Set the submission deadline (for warnings etc):</b><br/>
+            Deadline: <input id="deadline" name="deadline" type="text" value="${deadline}" readonly="readonly" />
+        </p>
+        <p>
+            <span style="color: #888;">Timezone:</span> <span>${timezone} (${timezoneOffset})</span>            
+        </p>                                             
+                                             
+        <div class="dialog_buttons">                    
+            <button type="submit" class="s3d-button s3d-button-primary" id="dropbox_btnInsertWidget"><span class="s3d-button-inner">Save</span></button>                    
+        </div>                                         
+    --></div>       
     
 </div>
 
