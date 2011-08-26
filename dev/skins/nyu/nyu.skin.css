@@ -258,7 +258,6 @@ a.categories_item_header_link {
 #explore_content.full-width .homepage-header {width: 214px; padding: 0 40px;}
 #explore_content.full-width .header-smallline p {margin-bottom: 0;}
 
-
 /* sharecontent overrides */
 .mylibrary_item:hover .mylibrary_item_share_icon {background-image: url("images/share_icon.png") !important;}
 .mylibrary_item:hover .mylibrary_item_author_icon {background-image: url("images/author_icon.png") !important;}
