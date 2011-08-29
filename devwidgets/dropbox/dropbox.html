@@ -11,11 +11,8 @@
 
         <!-- MAIN VIEW -->
         <div id="dropbox_display" style="display:none">
-            <div class="dropbox_title">Title goes here</div>
-            <form id="dropbox_upload_form" class="newaddcontent_form" method="POST" enctype="multipart/form-data">
-                 <input name="fileData" id="multifile_upload" type="file" class="multi" size="42"/>
-                 <input id="dropbox_upload_form_btnSubmit" type="button" value="Upload"/>
-            </form> 
+
+            <div id="dropbox_submission_form"></div>
             <div id="dropbox_submissions"></div>
             <div id="dropbox_review"></div>
                         
@@ -23,7 +20,7 @@
 
         <!-- SETTINGS VIEW -->
         <div id="dropbox_settings" style="display:none">
-            <form id="dropbox_settings_form" method="post" action="#">                                                
+            <form id="dropbox_settings_form" method="post">                                                
                                                 
             </form>
         </div>
@@ -35,6 +32,16 @@
     </div>
     
     <!-- TEMPLATES -->
+    <div id="dropbox_submission_form_template"><!--
+        <div class="dropbox_title">${title}</div>
+        <div class="dropbox_deadline"><b>Deadline</b>: ${deadline}</div>
+        <div class="dropbox_countdown"><b>Countdown</b>: ${diff}</div>                                       
+        <div class="dropbox_window"><b>Open</b>: ${active_from}<br/><b>Closes</b>: ${active_to}</div>                                  
+        <form id="dropbox_upload_form" class="newaddcontent_form" method="POST" enctype="multipart/form-data">
+             <input name="fileData" id="multifile_upload" type="file" class="multi" size="42"/>
+             <input id="dropbox_upload_form_btnSubmit" type="button" value="Upload"/>
+        </form>         
+    --></div>
     <div id="dropbox_submission_template"><!--
         <table>
             <tr>
@@ -82,17 +89,17 @@
             Title: <input id="title" name="title" type="text" value="${title}"  />
         </p>                
         <p><b>Step 2 - Define the window where the dropbox is active:</b><br/>            
-            From:&nbsp;<input id="active_from" name="active_from" value="${active_from}" readonly="readonly" />&nbsp;To:&nbsp;<input id="active_to" name="active_to" value="${active_to}" readonly="readonly" />
+            From:&nbsp;<input id="active_from" name="active_from" value="${active_from.strftime("%Y-%m-%d %H:%M")}" readonly="readonly" />&nbsp;To:&nbsp;<input id="active_to" name="active_to" value="${active_to.strftime("%Y-%m-%d %H:%M")}" readonly="readonly" />
         </p>                                         
-        <p><b>Step 3 - Set the submission deadline (for warnings etc):</b><br/>
-            Deadline: <input id="deadline" name="deadline" type="text" value="${deadline}" readonly="readonly" />
+        <p><b>Step 3 - Set the submission deadline:</b><br/>
+            Deadline: <input id="deadline" name="deadline" type="text" value="${deadline.strftime("%Y-%m-%d %H:%M")}" readonly="readonly" />
         </p>
         <p>
             <span style="color: #888;">Timezone:</span> <span>${timezone} (${timezoneOffset})</span>            
         </p>                                             
                                              
         <div class="dialog_buttons">                    
-            <button type="submit" class="s3d-button s3d-button-primary" id="dropbox_btnInsertWidget"><span class="s3d-button-inner">Save</span></button>                    
+            <button class="s3d-button s3d-button-primary" id="dropbox_btnInsertWidget"><span class="s3d-button-inner">Save</span></button>                    
         </div>                                         
     --></div>       
     
