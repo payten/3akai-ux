@@ -196,7 +196,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                             "participants": participantsArr,
                             "sakai": sakai
                         }));
-                    });
+                    }, 1000);
                 } else {
                     $participantsListContainer.html(sakai.api.Util.TemplateRenderer(participantsListTemplate, {
                         "participants": [],
@@ -214,7 +214,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
         ////////////////////
 
         var loadParticipants = function(){
-            sakai.api.Groups.searchMembers(widgetData.participants.groupid, $.trim($participantsSearchField.val()), renderParticipants);
+            sakai.api.Groups.searchMembers(widgetData.participants.groupid, $.trim($participantsSearchField.val()), renderParticipants, 1000);
         };
 
         var addBinding = function(){

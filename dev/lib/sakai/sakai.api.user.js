@@ -529,15 +529,21 @@ define(
             return $.trim(shortDesc);
         },
 
-        getContacts : function(callback) {
+        getContacts : function(callback, num) {
             if (this.data.me.mycontacts) {
                 if ($.isFunction(callback)) {
                     callback();
                 }
             } else {
                 // has to be synchronous
+                var url = sakai_conf.URL.CONTACTS_FIND_ALL + "?page=0&items=";
+                if (num) {
+                    url += num;
+                } else {
+                    url += "100";
+                }
                 $.ajax({
-                    url: sakai_conf.URL.CONTACTS_FIND_ALL + "?page=0&items=100",
+                    url: url,
                     async: false,
                     success: function(data) {
                         $.each(data.results, function(index, contact){
