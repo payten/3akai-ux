@@ -27,7 +27,7 @@ define(["config/config"], function(config) {
 
     // Use our custom participants widget
     config.worldTemplates[0].templates[0].docs["${pid}1"]["${refid}2"].page = "<img id='widget_nyuparticipants_${refid}3' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='/dev/images/person_icon.png' data-mce-src='/dev/images/person_icon.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'/>";
-    config.worldTemplates[0].templates[0].docs["${pid}1"]["${refid}3"].participants.showExtraInfo = true;
+    config.worldTemplates[0].templates[0].docs["${pid}1"]["${refid}3"].participants.showExtraInfo = false;
 
     // Add in the About this Group page
     config.worldTemplates[0].templates[0].docs["${pid}2"] = {
@@ -100,6 +100,7 @@ define(["config/config"], function(config) {
 
     // Basic course - Use the nyu participants widget
     config.worldTemplates[1].templates[1].docs["${pid}1"]["${refid}2"].page = "<img id='widget_nyuparticipants_${refid}3' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='/dev/images/person_icon.png' data-mce-src='/dev/images/person_icon.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'/>";
+    config.worldTemplates[1].templates[1].docs["${pid}1"]["${refid}3"].participants.showExtraInfo = false;
 
     // Basic course - add About this Group page
     config.worldTemplates[1].templates[1].docs["${pid}2"] = {
