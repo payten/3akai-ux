@@ -7,4 +7,6 @@ html, .requireUser {
 #top_banner_logo {
 	background:transparent url("images/nyu_steinhardt_logos.png") top center no-repeat !important;
 }
-
+#lhnavigation_container ul li.lhnavigation_selected_item.lhnavigation_outer, #lhnavigation_container ul li ul li.lhnavigation_selected_item div.lhnavigation_subnav_item_content {
+  background-image: url("images/lhnav_selected_item_steinhardt_bg.png") !important;
+}
