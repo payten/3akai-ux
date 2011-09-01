@@ -300,7 +300,13 @@ require(["jquery", "sakai/sakai.api.core", "/devwidgets/dropbox/lib/jquery.ui.da
                             widgetData.deadline = new Date(parseInt(widgetData.utc_deadline));
                             widgetData.timezone = new Date().strftime("%Z");
                             widgetData.timezoneOffset = new Date().strftime("%z");
-                            widgetData.diff = dateDiff(new Date(), widgetData.deadline);
+                            if (new Date() > widgetData.deadline) {
+                                widgetData.diff = "Deadline has passed";
+                                widgetData.deadlinePassed = true;
+                            } else {
+                                widgetData.diff = dateDiff(new Date(), widgetData.deadline);                                
+                                widgetData.deadlinePassed = false;
+                            }
                         }
                         if (showSettings) {
                             showSettingsScreen(data, true);
@@ -313,7 +319,7 @@ require(["jquery", "sakai/sakai.api.core", "/devwidgets/dropbox/lib/jquery.ui.da
                             $(dropboxSettings, rootel).hide();
                             $(dropboxDisplay, rootel).show();
                             $(".dropbox_title", rootel).html(widgetData.title);
-                            setupUploadNewContent();
+                            setupUploadNewContent();                            
                             displayExistingSubmittions();
                             if (widgetData.submissions) {
                                 $("#dropbox_review", rootel).html(sakai.api.Util.TemplateRenderer("dropbox_review_template", widgetData));
