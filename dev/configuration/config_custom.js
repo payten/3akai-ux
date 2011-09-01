@@ -395,6 +395,37 @@ define(["config/config"], function(config) {
         };
     }
 
+    /**
+     * Error page links
+     */
+    config.ErrorPage = {
+     /*
+      * These links are displayed in the 403 and 404 error pages.
+      */
+        Links: {
+            whatToDo: [{
+                "title": "EXPLORE_THE_INSTITUTION",
+                "url": "/index"
+            }, {
+                "title": "BROWSE_INSTITUTION_CATEGORIES",
+                "url": "/categories"
+            }, {
+                "title": "VIEW_THE_INSTITUTION_WEBSITE",
+                "url": "http://www.nyu.edu/"
+            }, {
+                "title": "VISIT_THE_SUPPORT_FORUM",
+                "url": "http://www.nyu.edu/its/pilot/atlas/"
+            }],
+            getInTouch: [{
+                "title": "SEND_US_YOUR_FEEDBACK",
+                "url": "http://www.nyu.edu/its/pilot/atlas/"
+            }, {
+                "title": "CONTACT_SUPPORT",
+                "url": "http://www.nyu.edu/its/pilot/atlas/"
+            }]
+        }
+    };
+
 
     return config;
 });
