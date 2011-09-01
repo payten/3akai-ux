@@ -793,7 +793,7 @@ define(
          * @param {String} query Query put in by the user, if empty a search for all participants is executed
          * @param {Function} callback Function executed on success or error
          */
-        searchMembers: function(groupId, query, callback, num){
+        searchMembers: function(groupId, query, callback, num, page, sort, sortOrder){
             if (groupId) {
                 var url = "";
                 if(query && query !== "*"){
@@ -801,8 +801,17 @@ define(
                 }else {
                     url = sakai_conf.URL.SEARCH_GROUP_MEMBERS_ALL + "?group=" + groupId;
                 }
-                if (num) {
+                if (num !== undefined) {
                     url += "&items=" + num;
+                }
+                if (page !== undefined) {
+                    url += "&page=" + page;
+                }
+                if (sort) {
+                    url += "&sortOn=" + sort;
+                }
+                if (sortOrder) {
+                    url += "&sortOrder=" + sortOrder;
                 }
                 $.ajax({
                     url: url,
