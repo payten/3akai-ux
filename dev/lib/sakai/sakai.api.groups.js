@@ -160,6 +160,9 @@ define(
                     data["sakai:pseudoGroup"] = true;
                     data["sakai:pseudogroupparent"] = group.parentgroup;
                 }
+                if (group.hasOwnProperty("editSettings")) {
+                    data["sakai:editSettings"] = group.editSettings;
+                }
                 $.ajax({
                     url: sakai_conf.URL.GROUP_CREATE_SERVICE,
                     data: data,
@@ -279,6 +282,9 @@ define(
                     template: template,
                     isSubgroup: false
                 };
+                if (template.hasOwnProperty("editSettings")) {
+                    gr2.editSettings = template.editSettings;
+                }
                 toProcess.push(gr2);
                 for (var b = 0; b < template.roles.length; b++) {
                     membershipsToProcess.push({

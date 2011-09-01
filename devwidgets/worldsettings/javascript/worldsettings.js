@@ -126,6 +126,12 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
             if (profile['sakai:tags']){
                 $worldsettingsTags.val(sakai.api.Util.formatTagsExcludeLocation(profile['sakai:tags']).join(", "));
             }
+
+            if ((profile["sakai:editSettings"] === false || profile["sakai:editSettings"] === "false") && sakai.api.User.data.me.user.userid !== "admin") {
+                $worldsettingsCanBeFoundIn.attr("disabled", "disabled");
+                $worldsettingsMembership.attr("disabled", "disabled");
+            }
+
             $worldsettingsCanBeFoundIn.val(profile['sakai:group-visible']);
             $worldsettingsMembership.val(profile['sakai:group-joinable']);
             $worldsettingsDialog.jqm({
