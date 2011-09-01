@@ -3,7 +3,7 @@
         "extraFields": [
             {"title": "PROFILE_BASIC_ROLE_LABEL", "key": "role", "searchable": false},
             {"title": "PROFILE_BASIC_SCHOOL_COLLEGE_LABEL", "key": "college", "searchable": false}, 
-            {"title": "PROFILE_BASIC_DEPARTMENT_LABEL", "key": "department", "searchable": true},
+            {"title": "PROFILE_BASIC_DEPARTMENT_LABEL", "key": "department", "searchable": false},
             {"title": "PROFILE_ABOUTME_ACADEMICINTERESTS_LABEL", "key": "academicinterests", "searchable": false},
             {"title": "TAGS", "key": "sakai:tags", "searchable": false}
         ]
