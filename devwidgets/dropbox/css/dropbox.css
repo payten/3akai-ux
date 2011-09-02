@@ -1,5 +1,5 @@
 #dropbox_display .dropbox_title {font-size: 14px; margin-bottom: 10px;}
-#dropbox_display {border-left: 2px solid #CCC; padding-left: 10px;}
+#dropbox_display {border-left: 4px solid #DDD; padding-left: 10px;}
 
 #dropbox_display .dropbox_table {
     border: 1px solid #CCCCCC;
@@ -12,3 +12,46 @@
 #dropbox_display .dropbox_table tr.even td {background-color: #F3F3F3;}
 
 #dropbox_submission_form {margin: 10px 0; border: 1px solid #CCC; padding: 10px;}
+#dropbox_search_results {
+    border: 1px solid #999999;
+    border-radius: 0 0 5px 5px;
+    box-shadow: 0 8px 15px -2px #555555;
+    margin: -2px 0 0 0;
+    position: absolute;
+    width: 241px;
+    z-index: 10000;
+    background-color: #EEE;
+    padding: 10px;
+}
+
+#dropbox_display #searchText { 
+    background: url("/devwidgets/topnavigation/images/topnav_search_icon.png") no-repeat scroll 99% 4px transparent;
+    border: 1px solid #DDDDDD;
+    color: #6D6D6D;        
+    font-size: 1.2em;
+    height: 22px;
+    width: 350px;}
+
+#dropbox_search_results .dropbox_content_icon {width:16px; height:16px; display:block;}
+#dropbox_search_results ul {margin:0;}
+#dropbox_search_results ul li {padding:2px;font-size:11px; list-style: none;}
+#dropbox_search_results ul li.selected {background-color:#D3EDF5;}
+#dropbox_search_results ul li a{text-decoration:none;color:#2683BC;}
+
+#dropbox_search_results .result {
+    display: block;
+}
+
+#dropbox_my_content_form {
+    background-color: #FAFAFA;
+    border: 1px solid #DDDDDD;
+    margin: 10px 0;
+    padding: 10px;
+    width: 330px;
+}
+
+#dropbox_my_content_form .dropbox_title {
+    float: left;
+    font-weight: bold;
+    margin-right: 20px;
+}

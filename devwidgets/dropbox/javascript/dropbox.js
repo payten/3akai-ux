@@ -50,6 +50,7 @@ require(["jquery", "sakai/sakai.api.core", "/devwidgets/dropbox/lib/jquery.ui.da
         var rootel = $("#" + tuid);  // Get the main div used by the widget
         var widgetData = {};
 
+        var searchTimeout;
 
         // Main-ids
         var dropboxID = "#dropbox";
@@ -128,8 +129,53 @@ require(["jquery", "sakai/sakai.api.core", "/devwidgets/dropbox/lib/jquery.ui.da
                 }
             });
             $("#dropbox_upload_form").submit();        
-        })
+        });
+        
+        $("#searchText", rootel).die("keyup");
+        $("#searchText", rootel).live("keyup", function(event) {
+             var $this = $(this);
+             var val = $.trim($(this).val());
+             
+             if (val.length === 0) {
+                 $("#dropbox_search_results", rootel).remove();
+                 return;
+             }
+             if (event.keyCode === 40 || event.keyCode === 38) {
+                //handleArrowKeyInSearch(event.keyCode === 38);
+                 event.preventDefault();
+             } else if (event.keyCode === 13) {
+                 event.preventDefault();
+             } else {         
+                searchTimeout = setTimeout(function() {performContentSearch(val)}, 500);    
+             }
+        });
 
+        $("#searchText", rootel).die("keydown");
+        $("#searchText", rootel).live("keydown", function(event) {
+            var val = $.trim($(this).val());
+            clearTimeout(searchTimeout);
+            // 40 is down, 38 is up, 13 is enter
+            if (event.keyCode === 40 || event.keyCode === 38) {
+                handleArrowKeyInSearch(event.keyCode === 38);
+                event.preventDefault();
+            } else if (event.keyCode === 13) {
+                handleSelectInSearch();
+                event.preventDefault();
+            } else {
+                $("#dropbox_search_results", rootel).remove();  
+            }            
+        });
+        
+        $(".dropbox_search_result_link", rootel).die("click");
+        $(".dropbox_search_result_link", rootel).live("click", function() {
+            handleSelectInSearch($(this));
+        });
+        
+        $("#dropbox_upload_from_library_btnSubmit",rootel).die("click");
+        $("#dropbox_upload_from_library_btnSubmit",rootel).live("click", function() {
+           alert("TODO.  UI done... just need to sort out the bundle... ergh...") 
+        });
+        
         ///////////////////////
         // Utility functions //
         ///////////////////////
@@ -159,6 +205,38 @@ require(["jquery", "sakai/sakai.api.core", "/devwidgets/dropbox/lib/jquery.ui.da
         };
 
 
+        var handleArrowKeyInSearch = function(up) {
+            if ($("#dropbox_search_results").find("li").length) {
+                var currentIndex = 0,
+                    next = 0;
+                if ($("#dropbox_search_results").find("li.selected").length) {
+                    currentIndex = $("#dropbox_search_results").find("li").index($("#dropbox_search_results").find("li.selected")[0]);
+                    next = up ? (currentIndex - 1 >= 0 ? currentIndex-1 : -1) : (currentIndex + 1 >= $("#dropbox_search_results").find("li").length ? $("#dropbox_search_results").find("li").length-1 : currentIndex +1);
+                    $("#dropbox_search_results").find("li.selected").removeClass("selected");
+                }
+                if (next !== -1) {
+                    $("#dropbox_search_results").find("li:eq(" + next + ")").addClass("selected");
+                }
+                return false;
+            }
+        };
+        
+        var handleSelectInSearch = function(selectedResultEl) {
+            if (selectedResultEl || $("#dropbox_search_results", rootel).find("li.selected").length) {
+                var selected = selectedResultEl || $("#dropbox_search_results", rootel).find("li.selected a");
+                $("#dropbox_my_content_form", rootel).slideUp(function() {
+                    $(this).remove();
+                });
+                var file = {
+                  id: selected.attr("rel"),
+                  name: selected.attr("title")
+                };
+                $("#dropbox_search_form", rootel).append(sakai.api.Util.TemplateRenderer("dropbox_search_selected_item_template",file));
+                $("#dropbox_my_content_form", rootel).slideDown();
+            }
+            $("#dropbox_search_results", rootel).remove();
+        };        
+
         var setupUploadNewContent = function(){ 
           $("#dropbox_submission_details", rootel).html(sakai.api.Util.TemplateRenderer("dropbox_submission_details_template", widgetData));
           
@@ -168,6 +246,58 @@ require(["jquery", "sakai/sakai.api.core", "/devwidgets/dropbox/lib/jquery.ui.da
             $("#dropbox_submission_form", rootel).html("Dropbox is CLOSED");
           }
         };
+        
+        var performContentSearch = function(searchText) {            
+            //POOLED_CONTENT_MANAGER_ALL
+            var filesUrl = sakai.config.URL.SEARCH_ALL_FILES.replace(".json", ".infinity.json");
+            if (searchText === "*" || searchText === "**") {
+                filesUrl = sakai.config.URL.SEARCH_ALL_FILES_ALL;            
+            }
+            
+            searchText = sakai.api.Server.createSearchString(searchText);
+            var requests = [{
+                "url": filesUrl,
+                "method": "GET",
+                "parameters": {
+                    "page": 0,
+                    "items": 100,
+                    "q": searchText
+                }
+            }];            
+
+            sakai.api.Server.batch(requests, function(success, data) {
+                var resultData = $.parseJSON(data.results[0].body);
+                var files = [];
+                if (resultData) {                    
+                    for (var i in resultData.results) {
+                        if (resultData.results.hasOwnProperty(i)) {
+                            var mimeType = sakai.api.Content.getMimeTypeData(resultData.results[i]).cssClass;
+                            var tempFile = {
+                                "dottedname": sakai.api.Util.applyThreeDots(resultData.results[i]["sakai:pooled-content-file-name"], 100),
+                                "name": resultData.results[i]["sakai:pooled-content-file-name"],
+                                "url": "/content#p=" + sakai.api.Util.urlSafe(resultData.results[i]["_path"]) + "/" + sakai.api.Util.urlSafe(resultData.results[i]["sakai:pooled-content-file-name"]),
+                                "id": sakai.api.Util.urlSafe(resultData.results[i]["_path"]),
+                                "css_class": mimeType
+                            };
+                            files.push(tempFile);
+                        }
+                    }                                                            
+                    var renderObj = {
+                      files: files,
+                      count: files.length
+                    };
+                    
+                    if ($("#dropbox_search_results", rootel).length > 0) {
+                        //$("#dropbox_search_results", rootel).replace(sakai.api.Util.TemplateRenderer("dropbox_search_results_template", renderObj));
+                    } else {
+                        $("#searchText", rootel).after(sakai.api.Util.TemplateRenderer("dropbox_search_results_template", renderObj));
+                    }                                        
+                    $("#dropbox_search_results", rootel).show();
+                    sakai.api.Util.hideOnClickOut("#dropbox_search_results");
+                }                
+                
+            });
+        }
 
         var displayExistingSubmittions = function() {
            $.ajax({

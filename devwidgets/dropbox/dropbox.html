@@ -43,8 +43,41 @@
         <form id="dropbox_upload_form" class="newaddcontent_form" method="POST" enctype="multipart/form-data">
              <input name="fileData" id="multifile_upload" type="file" class="multi" size="42"/>
              <input id="dropbox_upload_form_btnSubmit" type="button" value="Upload"/>
-        </form>         
+        </form><br/>         
+        <p>OR</p>                                             
+        <div class="dropbox_title">Select from your Library:</div>  
+        <div id="dropbox_search_form" class="newaddcontent_form">
+             <input name="searchText" id="searchText" type="text"  size="42" autocomplete="off" />                          
+        </div>                                                   
     --></div>
+    <div id="dropbox_search_selected_item_template"><!--         
+        <form id="dropbox_my_content_form" class="newaddcontent_form" method="POST" style="display:none;">
+            <div class="dropbox_title">                                                                                            
+                ${name}
+            </div>
+             <input name="path" id="path" type="hidden" value="${id}"/>
+             <input name="filename" id="filename" type="hidden" value="${name}"/>                                                    
+             <input id="dropbox_upload_from_library_btnSubmit" type="button" value="Upload"/>
+        </form>                                                   
+    --></div>    
+    <div id="dropbox_search_results_template"><!--
+        <div id="dropbox_search_results">
+            {if count === 0}
+                No matches in your Library
+            {else}
+                <ul>                              
+                {for f in files}
+                    <li class="dropbox_search_result">
+                        <div class="dropbox_content_icon_container fl-force-left">
+                            <span class="dropbox_content_icon ${f.css_class}"></span>
+                        </div>                        
+                        <a class="dropbox_search_result_link" rel="${f.id}" title="${f.name}">${f.dottedname}</a>                                              
+                    </li>                                                                
+                {/for}
+                </ul>                                              
+            {/if}                                              
+        </div>        
+    --></div>    
     <div id="dropbox_submission_template"><!--
         <div class="dropbox_title">Your Submissions</div>
         <table class="dropbox_table">
