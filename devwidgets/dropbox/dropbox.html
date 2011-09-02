@@ -82,7 +82,7 @@
                 {for s in submissions}                                      
                   {if s_index[0] != "_"}                    
                       <tr class="{if i%2}even{else}odd{/if}">                                         
-                       <td>${s_index}</td>                   
+                       <td><a href="/~${s_index}">${s_index}</a></td>                   
                        <td>${s.filename}</td>
                        <td>${s._created}</td>
                        <td>${s._lastModified}</td>
