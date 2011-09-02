@@ -52,6 +52,7 @@ require(["jquery", "sakai/sakai.api.core", "/devwidgets/dropbox/lib/jquery.ui.da
 
         var searchTimeout;
 
+
         // Main-ids
         var dropboxID = "#dropbox";
         var dropboxName = "dropbox";
@@ -175,7 +176,8 @@ require(["jquery", "sakai/sakai.api.core", "/devwidgets/dropbox/lib/jquery.ui.da
         $("#dropbox_upload_from_library_btnSubmit",rootel).live("click", function() {
            alert("TODO.  UI done... just need to sort out the bundle... ergh...") 
         });
-        
+
+
         ///////////////////////
         // Utility functions //
         ///////////////////////
