@@ -159,8 +159,14 @@ require(["jquery", "sakai/sakai.api.core", "/devwidgets/dropbox/lib/jquery.ui.da
         };
 
 
-        var setupUploadNewContent = function(){            
-          $("#dropbox_submission_form", rootel).html(sakai.api.Util.TemplateRenderer("dropbox_submission_form_template", widgetData));
+        var setupUploadNewContent = function(){ 
+          $("#dropbox_submission_details", rootel).html(sakai.api.Util.TemplateRenderer("dropbox_submission_details_template", widgetData));
+          
+          if (new Date() >= widgetData.active_from && new Date() <= widgetData.active_to) {
+            $("#dropbox_submission_form", rootel).html(sakai.api.Util.TemplateRenderer("dropbox_submission_form_template", widgetData));
+          } else {
+            $("#dropbox_submission_form", rootel).html("Dropbox is CLOSED");
+          }
         };
 
         var displayExistingSubmittions = function() {
@@ -226,29 +232,28 @@ require(["jquery", "sakai/sakai.api.core", "/devwidgets/dropbox/lib/jquery.ui.da
 //                $("#dropbox_form #title", rootel).val("My Assignment Submission Box");
 //                $("#dropbox_form #deadline", rootel).val(Date.now());                
 //            }
-            if (exists) {                             
-                $("#dropbox_settings_form").html(sakai.api.Util.TemplateRenderer("dropbox_settings_form_template", widgetData));
-            } else {                
+            if (!exists) {
+                //setup default dropbox settings
                 widgetData.title = "My Dropbox";                                
 
                 var today = new Date();
                 var active_from = new Date();
                 active_from.setHours(9);
                 active_from.setMinutes(0);
-                widgetData.active_from = active_from.strftime("%Y-%m-%d %H:%M");
+                widgetData.active_from = active_from; //.strftime("%Y-%m-%d %H:%M");
                 var active_to = new Date();
-                active_to.setYear(active_from.getFullYear());
-                active_from.setHours(18);
+                active_to.setYear(active_from.getFullYear() + 1);
+                active_to.setHours(18);
                 active_to.setMinutes(0);                
-                widgetData.active_to = active_to.strftime("%Y-%m-%d %H:%M");                
+                widgetData.active_to = active_to; //.strftime("%Y-%m-%d %H:%M");                
                 widgetData.deadline = widgetData.active_to;
                                                                                
                 
                 widgetData.timezone = new Date().strftime("%Z");
-                widgetData.timezoneOffset = new Date().strftime("%z");
-            
-                $("#dropbox_settings_form").html(sakai.api.Util.TemplateRenderer("dropbox_settings_form_template", widgetData));                
+                widgetData.timezoneOffset = new Date().strftime("%z");                                            
             }
+                        
+            $("#dropbox_settings_form", rootel).html(sakai.api.Util.TemplateRenderer("dropbox_settings_form_template", widgetData));
             
             // init data widgets
             $('#active_from', rootel).datetime({chainTo: '#active_to'});

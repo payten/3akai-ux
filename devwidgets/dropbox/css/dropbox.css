@@ -1,2 +1,14 @@
-#dropbox_display .dropbox_title {font-size: 14px;}
+#dropbox_display .dropbox_title {font-size: 14px; margin-bottom: 10px;}
 #dropbox_display {border-left: 2px solid #CCC; padding-left: 10px;}
+
+#dropbox_display .dropbox_table {
+    border: 1px solid #CCCCCC;
+    border-spacing: 0;
+    width: 100%;
+    border-collapse: collapse;
+}
+#dropbox_display .dropbox_table th {background-color: #E7E7E7;border: 1px solid #DDD;padding: 0.3em 20px 0.3em 0.3em;text-align: left;white-space: nowrap;}
+#dropbox_display .dropbox_table td {border: 1px dotted #DDDDDD;border-top: 1px solid #DDDDDD;line-height: 1.4em;padding-left: 0.3em;padding-right: 5px;vertical-align: top;}
+#dropbox_display .dropbox_table tr.even td {background-color: #F3F3F3;}
+
+#dropbox_submission_form {margin: 10px 0; border: 1px solid #CCC; padding: 10px;}
