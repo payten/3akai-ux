@@ -384,7 +384,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
         var initializeJQM = function(){
             $addpeopleContainer.jqm({
                 modal: true,
-                overlay: 20,
+                overlay: 5,
                 toTop: true,
                 onHide: resetAutosuggest
             });
