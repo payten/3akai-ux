@@ -27,7 +27,6 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
             $tagcloud_main_template = $("#tagcloud_main_template", $rootel);
 
         var generateTagCloud = function(success, tagData){
-            debug.log(tagData);
             var newtags = [];
             // Filter out directory tagcloud
             if (tagData.results.length && tagData.results[0].tags) {

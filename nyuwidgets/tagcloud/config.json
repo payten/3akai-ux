@@ -14,5 +14,6 @@
     "url":"/nyuwidgets/tagcloud/tagcloud.html",
     "i18n": {
         "default": "/nyuwidgets/tagcloud/bundles/default.properties"
-    }
+    },
+    "img":"/nyuwidgets/tagcloud/images/tagcloud.png"
 }
