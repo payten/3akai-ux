@@ -21,8 +21,8 @@
 require(
     [
         "jquery", "sakai/sakai.api.core", 
-        "/devwidgets/ebook/lib/jquery-ui.sortable.js",         
-        "/devwidgets/ebook/lib/jquery.jsonp.js",         
+        "/nyuwidgets/ebook/lib/jquery-ui.sortable.js",         
+        "/nyuwidgets/ebook/lib/jquery.jsonp.js",         
     ], 
     function($, sakai) {    
     /**

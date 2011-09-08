@@ -154,7 +154,7 @@
 #ebook_reader_blockout img, #ebook_reader_iframe_blockout img {position: absolute; left: 50%; top: 50%; margin-left: -40px; margin-top: -5px;}
 
 /* Widget icon */
-.ebook.fl-widget .fl-widget-titlebar .widget_title_icon {background: url(/devwidgets/ebook/images/ebook_icon.png) 0 0 no-repeat;}
+.ebook.fl-widget .fl-widget-titlebar .widget_title_icon {background: url(../images/ebook_icon.png) 0 0 no-repeat;}
 
 
 
