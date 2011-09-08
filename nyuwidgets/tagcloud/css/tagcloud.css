@@ -1,0 +1,18 @@
+#tagcloud_main ul li{list-style-type:none;}
+#tagcloud_main ul {margin:0 0 10px;}
+#tagcloud_title{padding-left:15px!important;}
+
+.tagcloud_font1 { font-size:1em;}
+.tagcloud_font2 { font-size:1.5em;}
+.tagcloud_font3 { font-size:2em;}
+.tagcloud_font4 { font-size:2.5em;}
+.tagcloud_font5 { font-size:3em;}
+
+/* New Styles */
+#tagcloud_container {border: 1px solid #ddd;border-radius:5px;-moz-border-radius:5px;-webkit-border-radius:5px;}
+#tagcloud_main {padding:10px;}
+#tagcloud_main h1 {border-bottom:1px solid #ddd;margin-bottom:10px;padding-bottom:10px;}
+
+
+/* Widget icon */
+.tagcloud.fl-widget .fl-widget-titlebar .widget_title_icon{background:url(/dev/images/icons_sprite.png) no-repeat scroll -699px -21px transparent;height:22px;width:20px;}
