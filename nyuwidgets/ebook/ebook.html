@@ -44,7 +44,7 @@
         </div>
 
         <div class="dialog_buttons">
-            <button type="button" class="s3d-button s3d-overlay-button" id="ebook_settings_btnSave"><span class="s3d-button-inner">__MSG__SAVE_SETTINGS__</span></button>        
+            <button type="button" class="s3d-button s3d-overlay-button" id="ebook_settings_btnSave"><span class="s3d-button-inner">__MSG__SAVE_SETTINGS__</span></button>
         </div>
         <div class="fl-push"></div>
     </div>
@@ -59,6 +59,9 @@
         <div class="s3d-widget-no-options-inner"></div>
     </div>
 
+
+    <div id="ebook_reader_dialog" class="s3d-dialog s3d-dialog-container" style="display:none"></div>
+    <div id="ebook_remove_confirmation_dialog" class="s3d-dialog s3d-dialog-container" style="display:none"></div>
 
     <!-- TEMPLATES -->
     <div id="ebook_display_template" style="display: none;"><!--
@@ -104,8 +107,8 @@
           <div class="ebook_settings_book_list_item_header">
               <div class="ebook_settings_book_list_item_sort_handles">
                  <a class="ebook_settings_book_order_up_action" title="__MSG__ORDER_MOVE_UP_LINK_TEXT__" rel="-1" href="javascript:void(0);"></a>
-                 <a class="ebook_settings_book_order_down_action" title="__MSG__ORDER_MOVE_DOWN_LINK_TEXT__" rel="1" href="javascript:void(0);"></a>                                                                  
-              </div>                                                                  
+                 <a class="ebook_settings_book_order_down_action" title="__MSG__ORDER_MOVE_DOWN_LINK_TEXT__" rel="1" href="javascript:void(0);"></a>
+              </div>
               <div class="ebook_title" id="book-${books[id].data.nid}"><a href="javascript:void(0);">${unescape(books[id].data.title)}</a></div>
               {if (books[id].data.tm_field_awdl_creator)}<div class="ebook_author">__MSG__AUTHOR_PREFIX__ ${unescape(books[id].data.tm_field_awdl_creator.join("; "))}</div>{/if}
               <div class="ebook_settings_book_list_item_toggle_handle"></div>
@@ -113,10 +116,10 @@
           <div class="ebook_settings_book_list_item_content">
             <form class="ebook_settings_book_form" onsubmit="return false;">
               <input type="hidden" name="nid" value="${books[id].data.nid}"/>
-              <input type="hidden" name="url" value="${books[id].data.url}"/>                                                         
-              {if (books[id].data.ts_field_awdl_thumbnail && books[id].data.ts_field_awdl_thumbnail != "/")}                                                     
+              <input type="hidden" name="url" value="${books[id].data.url}"/>
+              {if (books[id].data.ts_field_awdl_thumbnail && books[id].data.ts_field_awdl_thumbnail != "/")}
                 <a title="__MSG__INVOKE_READER_LINK_TEXT__" href="javascript:void(0);" class="ebook_btnShowReader ebook_thumbnail_link"><img src="${books[id].data.ts_field_awdl_thumbnail}" alt="" /></a>
-              {/if}                                                     
+              {/if}
               <div class="ebook_settings_book_info">
                   <div class="ebook_widget_actions">
                      <a href="javascript:void(0);" class="ebook_btnShowReader">__MSG__INVOKE_READER_LINK_TEXT__</a>
@@ -140,7 +143,7 @@
                     <p>
                         <textarea name="caption" id="ebook_caption_${books[id].data.nid}" col="60" rows="2">${books[id].caption}</textarea>
                     </p>
-                  </div>              
+                  </div>
               </div>
               {if books[id].caption != null && books[id].caption.length > 0}<div class="ebook_settings_caption_display_container"><div class="ebook_arrowUp"></div><div class="ebook_settings_caption_display">${books[id].caption.replace( /\n/g, '<br />\n' )}</div></div>{/if}
               <div class="dialog_buttons ebook_selected_actions" style="display:none;">
@@ -156,7 +159,7 @@
          <div class="fl-push"></div>
         </li>
       {/for}
-      </ul>  
+      </ul>
     --></div>
     <div id="ebook_search_error_template" style="display: none;"><!--
       <div>__MSG__SEARCH_NO_RESULTS__ for: ${argument}</div>
@@ -164,27 +167,20 @@
       <p>Error code: ${code}</p>
     --></div>
     <div id="ebook_reader_dialog_template" style="display: none;"><!--
-        <div id="ebook_reader_dialog" class="dialog" style="display:none">
-            <div class="dialog_header">
-                <h1 class="dialog_header_inner ebook_reader_dialog_title">__MSG__READER_DIALOG_TITLE__</h1>
-                <a href="javascript:void(0);" class="dialog_close_image ebook_reader_close_dialog" title="__MSG__CLOSE_DIALOG__">__MSG__CLOSE_DIALOG__</a>
-            </div>
-            <div class="ebook_reader_dialog_content">
-                <div id="ebook_reader_blockout"><img src="/dev/images/ajax_load.gif"/></div>
-            </div>
-            <div class="dialog_footer">
-                <div class="dialog_footer_inner"></div>
-            </div>
+        <div class="s3d-dialog-close jqmClose"></div>
+        <h1 class="s3d-dialog-header ebook_reader_dialog_title">__MSG__READER_DIALOG_TITLE__</h1>
+        <div class="ebook_reader_dialog_content">
+            <div id="ebook_reader_blockout"><img src="/dev/images/ajax_load.gif"/></div>
         </div>
     --></div>
     <div id="ebook_reader_oembed_template" style="display: none;"><!--
         <div class="ebook_reader_summary">
-           <div class="ebook_reader_summary_thumbnail"><img src="${thumbnail_url}"/></div>                                                                  
+           <div class="ebook_reader_summary_thumbnail"><img src="${thumbnail_url}"/></div>
            <div class="ebook_reader_summary_title">${title}</div>
-           <div class="ebook_reader_summary_author">by ${author_name}</div>                                                               
-        </div>                                                                 
+           <div class="ebook_reader_summary_author">by ${author_name}</div>
+        </div>
         <div class="ebook_reader_frame"></div>
-        <div id="ebook_reader_iframe_blockout"><img src="/dev/images/ajax_load.gif"/></div>                                                                  
+        <div id="ebook_reader_iframe_blockout"><img src="/dev/images/ajax_load.gif"/></div>
     --></div>
     <div id="ebook_settings_search_pagination_template" style="display: none;"><!--
         <span class="ebook_search_pagination_index">Results ${start} to ${end} (${total} total)</span>
@@ -197,7 +193,7 @@
     <div id="ebook_settings_customize_form_template" style="display: none;"><!--
       <form id="ebook_settings_customize_form">
           <div>
-            <label for="ebook_title">__MSG__TITLE_LABEL__:</label>        
+            <label for="ebook_title">__MSG__TITLE_LABEL__:</label>
             <input type="text" name="title" {if defined('title')}value="${title}"{/if} />
           </div>
           <div>
@@ -233,24 +229,17 @@
       </form>
     --></div>
     <div id="ebook_remove_confirmation_dialog_template" style="display: none;"><!--
-        <div id="ebook_remove_confirmation_dialog" class="dialog" style="display:none">                                                                                          
-            <div class="dialog_header">
-                <h1 class="dialog_header_inner ebook_remove_confirmation_dialog_title">__MSG__REMOVE_CONFIRMATION_DIALOG_TITLE__</h1>
-                <a href="javascript:void(0);" class="dialog_close_image ebook_remove_confirmation_close_dialog" title="__MSG__CLOSE_DIALOG__">__MSG__CLOSE_DIALOG__</a>
-            </div>
-            <div class="dialog_content">                                               
-                <input type="hidden" id="ebook_id_to_remove" name="bookId" value="${bookId}"/>                                                                               
-                <div class="ebook_remove_confirmation_dialog_content">__MSG__REMOVE_CONFIRMATION_MESSAGE__</div>
+        <div class="s3d-dialog-close jqmClose"></div>
+        <h1 class="ebook_remove_confirmation_dialog_title">__MSG__REMOVE_CONFIRMATION_DIALOG_TITLE__</h1>
+        <div>
+            <input type="hidden" id="ebook_id_to_remove" name="bookId" value="${bookId}"/>
+            <div class="ebook_remove_confirmation_dialog_content">__MSG__REMOVE_CONFIRMATION_MESSAGE__</div>
 
-                <div class="dialog_buttons delete_page_buttons">
-                    <button type="button" class="s3d-button s3d-header-button ebook_remove_confirmation_close_dialog"><span class="s3d-button-inner">__MSG__NO__</span></button>
-                    <button type="button" class="s3d-button s3d-header-button" id="ebook_remove_book_confirm"><span class="s3d-button-inner">__MSG__YES__</span></button>
-                </div>
-                <div class="fl-push"></div>                                                               
-            </div>                                                                               
-            <div class="dialog_footer">
-                <div class="dialog_footer_inner"></div>
-            </div>                                                                               
+            <div class="dialog_buttons delete_page_buttons">
+                <button type="button" class="s3d-button s3d-header-button ebook_remove_confirmation_close_dialog"><span class="s3d-button-inner">__MSG__NO__</span></button>
+                <button type="button" class="s3d-button s3d-header-button" id="ebook_remove_book_confirm"><span class="s3d-button-inner">__MSG__YES__</span></button>
+            </div>
+            <div class="fl-push"></div>
         </div>
     --></div>
 
