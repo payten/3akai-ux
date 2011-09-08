@@ -298,6 +298,7 @@ define(["config/config"], function(config) {
     // Content
     config.Permissions.Content.defaultaccess = "private";
     config.Permissions.Documents.defaultaccess = "private";
+    config.Permissions.Links.defaultaccess = "private";
 
     config.Permissions.Copyright.types.unspecified = {
         "title": "COPYRIGHT_NOT_SPECIFIED"
