@@ -407,9 +407,6 @@ define(["config/config"], function(config) {
                 "title": "EXPLORE_THE_INSTITUTION",
                 "url": "/index"
             }, {
-                "title": "BROWSE_INSTITUTION_CATEGORIES",
-                "url": "/categories"
-            }, {
                 "title": "VIEW_THE_INSTITUTION_WEBSITE",
                 "url": "http://www.nyu.edu/"
             }, {
