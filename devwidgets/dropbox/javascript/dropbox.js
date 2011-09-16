@@ -101,6 +101,10 @@ require(["jquery", "sakai/sakai.api.core", "/devwidgets/dropbox/lib/jquery.ui.da
             delete data.active_to;
             delete data.deadline;
 
+            if (sakai_global.group && sakai_global.group.groupId) {
+                data.group_id = sakai_global.group.groupId;
+            }
+
 
             $.post(
                 dropboxWidgetPath + "?widgetid=" + tuid,
