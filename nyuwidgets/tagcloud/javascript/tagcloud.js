@@ -24,7 +24,8 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
 
         var $rootel = $("#"+tuid),
             $tagcloud_main = $("#tagcloud_main", $rootel),
-            $tagcloud_main_template = $("#tagcloud_main_template", $rootel);
+            $tagcloud_main_template = $("#tagcloud_main_template", $rootel),
+            groupId = "";
 
         var generateTagCloud = function(success, tagData){
             var newtags = [];
@@ -49,13 +50,14 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                     return 0;
                 });
             }
-            $tagcloud_main.html(sakai.api.Util.TemplateRenderer($tagcloud_main_template, {data: tagData})).show();
+            $tagcloud_main.html(sakai.api.Util.TemplateRenderer($tagcloud_main_template, {data: tagData, groupId: groupId})).show();
         };
 
         var loadData = function(callback){
             if (sakai_global.group && sakai_global.group.groupData && sakai_global.group.groupData["sakai:group-id"]) {
+                groupId = sakai_global.group.groupData["sakai:group-id"];
                 $.ajax({
-                    url: "/var/search/public/tagcloud.json?group=" + sakai_global.group.groupData["sakai:group-id"],
+                    url: "/var/search/public/tagcloud.json?group=" + groupId,
                     cache: false,
                     success: function(data){
                         callback(true, data);
