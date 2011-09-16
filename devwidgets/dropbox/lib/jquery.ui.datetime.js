@@ -234,10 +234,13 @@
       if(!this.options.value) return true;
       var date = new Date(this.current);
       if(this.options.altField) $(this.options.altField).val(date.format(this.options.altFormat));
-      if(this.tag == 'input'){ this.element.val(date.format(this.options.format)); }
+      if(this.tag == 'input'){ 
+          this.element.val(date.format(this.options.format));           
+          this.element.triggerHandler("change");
+      }
       if(this.chainedTo) this.chainedTo.datetime('option', { minDate: this.options.value });
-      if(this.chainedFrom) this.chainedFrom.datetime('option', { maxDate: this.options.value });
-      this._trigger('change', null, { value: this.options.value });
+      if(this.chainedFrom) this.chainedFrom.datetime('option', { maxDate: this.options.value });      
+      this._trigger('change', null, { value: this.options.value });     
       return this;
     },
 

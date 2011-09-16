@@ -95,7 +95,7 @@
                    <td>TODO</td>                       
                    <td>${_created}</td>
                    <td>${_lastModified}</td>
-                    <td><a href="/content#p=${poolId}/${filename}" target="_blank">View</a> <a href="/p/${poolId}/${filename}" target="_blank">Download</a></td>                                          
+                    <td><a href="/content#p=${poolId}/${contentName}" target="_blank">View</a> <a href="/p/${poolId}/${contentName}" target="_blank">Download</a></td>                                          
                   </tr>                               
             </tbody>
         </table>                                              
@@ -120,7 +120,7 @@
                        <td>${s.filename}</td>
                        <td>${s._created}</td>
                        <td>${s._lastModified}</td>
-                       <td><a href="/content#p=${s.poolId}/${s.filename}" target="_blank">View</a> <a href="/p/${s.poolId}/${s.filename}" target="_blank">Download</a></td>                                                       
+                       <td><a href="/content#p=${s.poolId}/${s.contentName}" target="_blank">View</a> <a href="/p/${s.poolId}/${s.contentName}" target="_blank">Download</a></td>                                                       
                       </tr>          
                       {var i = i+1}                 
                   {/if}                  

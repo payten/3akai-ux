@@ -36,7 +36,7 @@
 #dropbox_search_results ul {margin:0;}
 #dropbox_search_results ul li {padding:2px;font-size:11px; list-style: none;}
 #dropbox_search_results ul li.selected {background-color:#D3EDF5;}
-#dropbox_search_results ul li a{text-decoration:none;color:#2683BC;}
+#dropbox_search_results ul li a{text-decoration:none;color:#2683BC;cursor:pointer;}
 
 #dropbox_search_results .result {
     display: block;
