@@ -6,6 +6,7 @@
 #profilewow_heading a,#profilewow_userinfo a,#profilewow_generalinfo a{color:#39C;font-weight:bold;}
 #groupbasicinfo_generalinfo h2{border-bottom:1px solid #EBEBEB;color:#5A6A7C;font-size:16px;font-weight:normal;margin:20px 0;padding:0 0 5px 5px;}
 #groupbasicinfo_generalinfo .groupbasicinfo_generalinfo_content{font-weight:bold;margin-bottom:5px;}
+#groupbasicinfo_generalinfo .description {font-weight:normal;}
 #groupbasicinfo_generalinfo div.groupbasicinfo_generalinfo_content{float:left;padding:3px 0;width:400px;}
 #groupbasicinfo_generalinfo .groupbasicinfo_generalinfo_subcontainer{clear:both;margin:4px 0;overflow:auto;padding:1px 0;}
 #groupbasicinfo_generalinfo .groupbasicinfo_generalinfo_label,.groupbasicinfo_generalinfo label{color:#666;display:block;float:left;margin-right:5px;padding:3px 0;text-align:right;width:240px;}

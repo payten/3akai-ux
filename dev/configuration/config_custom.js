@@ -298,6 +298,7 @@ define(["config/config"], function(config) {
     // Content
     config.Permissions.Content.defaultaccess = "private";
     config.Permissions.Documents.defaultaccess = "private";
+    config.Permissions.Links.defaultaccess = "private";
 
     config.Permissions.Copyright.types.unspecified = {
         "title": "COPYRIGHT_NOT_SPECIFIED"
@@ -406,9 +407,6 @@ define(["config/config"], function(config) {
             whatToDo: [{
                 "title": "EXPLORE_THE_INSTITUTION",
                 "url": "/index"
-            }, {
-                "title": "BROWSE_INSTITUTION_CATEGORIES",
-                "url": "/categories"
             }, {
                 "title": "VIEW_THE_INSTITUTION_WEBSITE",
                 "url": "http://www.nyu.edu/"
