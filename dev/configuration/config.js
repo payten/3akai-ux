@@ -807,7 +807,7 @@ define(function(){
                 cssClass: "icon-unknown-sprite",
                 URL: "/dev/images/mimetypes/unknown.png",
                 description: "OTHER_DOCUMENT"
-            }           
+            }
         },
 
         Authentication: {
