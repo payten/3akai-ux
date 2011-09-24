@@ -628,8 +628,8 @@ define(
             return supported;
         },
 
-        isKalturaPlayerSupportedVideo : function(mimeType) {            
-            return mimeType === "kaltura/video";
+        isKalturaPlayerSupported : function(mimeType) {            
+            return mimeType === "kaltura/video" || mimeType === "kaltura/audio";
         },
 
         getCreatorProfile : function(content, callback) {
@@ -657,7 +657,7 @@ define(
                     mimeType.substring(0,6) === "image/" ||
                     mimeType.substring(0,5) === "text/" ||
                     mimeType === "application/x-shockwave-flash" ||
-                    sakai_content.isKalturaPlayerSupportedVideo(mimeType) ||
+                    sakai_content.isKalturaPlayerSupported(mimeType) ||
                     sakai_content.isJwPlayerSupportedVideo(mimeType)) {
                 result = true;
             }

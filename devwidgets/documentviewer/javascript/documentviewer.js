@@ -260,7 +260,7 @@ require(["jquery", "sakai/sakai.api.core", "/devwidgets/documentviewer/lib/docum
             var data = widgetData.data;
             var mimeType = sakai.api.Content.getMimeType(widgetData.data);
             
-            if (sakai.api.Content.isKalturaPlayerSupportedVideo(mimeType)) {
+            if (sakai.api.Content.isKalturaPlayerSupported(mimeType)) {
                 renderKalturaPlayer(data);            
             } else if (sakai.api.Content.isJwPlayerSupportedVideo(mimeType)){
                 renderVideoPlayer(getPath(data));
