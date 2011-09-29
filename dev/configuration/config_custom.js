@@ -443,7 +443,7 @@ define(["config/config"], function(config) {
     };
     config.MimeTypes['kaltura/audio'] = {
         cssClass: "icon-audio-sprite",
-        URL: "/dev/images/mimetypes/audio.png",
+        URL: "/dev/images/mimetypes/sound.png",
         description: "KALTURA_AUDIO_FILE"
     };
     
