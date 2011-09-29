@@ -442,7 +442,7 @@ define(["config/config"], function(config) {
         description: "KALTURA_VIDEO_FILE"
     };
     config.MimeTypes['kaltura/audio'] = {
-        cssClass: "icon-audio-sprite",
+        cssClass: "icon-sound-sprite",
         URL: "/dev/images/mimetypes/sound.png",
         description: "KALTURA_AUDIO_FILE"
     };
