@@ -430,7 +430,7 @@ define(["config/config"], function(config) {
     config.kaltura = {        
         serverURL:  "http://www.kaltura.com", // Kaltura Server URL
         partnerId:  656132, // INSERT YOUR PARTNER ID HERE
-        playerId: 5111822 // INSERT YOUR PLAYER ID (UICONF_ID - from Kaltura Studio tab)
+        playerId: 5825862 // INSERT YOUR PLAYER ID (UICONF_ID - from Kaltura Studio tab)
     };
     
     /**
@@ -441,6 +441,11 @@ define(["config/config"], function(config) {
         URL: "/dev/images/mimetypes/video.png",
         description: "KALTURA_VIDEO_FILE"
     };
-
+    config.MimeTypes['kaltura/audio'] = {
+        cssClass: "icon-audio-sprite",
+        URL: "/dev/images/mimetypes/audio.png",
+        description: "KALTURA_AUDIO_FILE"
+    };
+    
     return config;
 });

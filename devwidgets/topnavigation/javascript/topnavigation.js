@@ -230,7 +230,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
             if (data) {
                 for (var i in data.results) {
                     if (data.results.hasOwnProperty(i)) {
-                        var mimeType = sakai.api.Content.getMimeTypeData(data.results[i]).cssClass;
+                        var mimeType = sakai.api.Content.getMimeTypeData(data.results[i]["_mimeType"]).cssClass;
                         var tempFile = {
                             "dottedname": sakai.api.Util.applyThreeDots(data.results[i]["sakai:pooled-content-file-name"], 100),
                             "name": data.results[i]["sakai:pooled-content-file-name"],
