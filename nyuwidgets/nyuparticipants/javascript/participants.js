@@ -230,13 +230,32 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
         ////////////////////
 
         var loadParticipants = function(){
-            sakai.api.Groups.searchMembers(widgetData.participants.groupid, $.trim($participantsSearchField.val()), NUM_PER_PAGE, currentPage-1, "firstName", $participants_sort_by.val(), renderParticipants);
+            // current search term
+            var searchTerm = $.trim($participantsSearchField.val());            
+            // add busy spinner
+            $participantsSearchField.addClass("participants_searching");         
+            // ensure current search is the one to render
+            // otherwise ignore and presume other search is running
+            var preRenderParticipants = function(success, data) {
+                if (searchTerm === $.trim($participantsSearchField.val())) {
+                    renderParticipants(success, data);
+                    $participantsSearchField.removeClass("participants_searching");
+                }
+            };
+            sakai.api.Groups.searchMembers(widgetData.participants.groupid, searchTerm, NUM_PER_PAGE, currentPage-1, "firstName", $participants_sort_by.val(), preRenderParticipants);
         };
 
+        var searchTimeout = null;
+
         var addBinding = function(){
-            $participantsSearchField.unbind("keyup").bind("keyup", function() {
-                currentPage = 1;
-                loadParticipants();
+            $participantsSearchField.unbind("keyup").bind("keyup", function() {                
+                if (searchTimeout) {
+                    clearTimeout(searchTimeout);
+                }
+                searchTimeout = setTimeout(function() {
+                    currentPage = 1;
+                    loadParticipants();  
+                }, 400);                
             });
             $participants_sort_by.unbind("change").bind("change", loadParticipants);
             $participantsSelectAll.unbind("click").bind("click", checkAll);

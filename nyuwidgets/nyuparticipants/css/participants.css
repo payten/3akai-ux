@@ -43,6 +43,7 @@
 .participants_selectall{float:left;width:20px;height:20px;margin-left:10px;}
 .participants_selectall input{margin-top:4px;}
 .participants_widget #participants_sort{float:right;}
+.participants_searching {background:url("/dev/images/ajax-loader-gray.gif") no-repeat scroll right transparent;}
 
 /* Extra Fields */
 .participants_widget .participants_list_extra_fields{margin-top:20px;}
