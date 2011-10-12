@@ -124,7 +124,7 @@ require(["jquery", "sakai/sakai.api.core", "/devwidgets/documentviewer/lib/docum
             var html5FlashCompatibilityURL = sakai.config.kaltura.serverURL +"/p/"+sakai.config.kaltura.partnerId+"/sp/"+sakai.config.kaltura.partnerId+"00/embedIframeJs/uiconf_id/"+sakai.config.kaltura.playerId+"/partner_id/"+sakai.config.kaltura.partnerId;
             $.getScript(html5FlashCompatibilityURL, function() {                                        
                 var kaltura_id = data["kaltura-id"];            
-                var url = sakai.config.kaltura.serverURL + "/kwidget/wid/_"+sakai.config.kaltura.partnerId;                                 
+                var url = sakai.config.kaltura.serverURL + "/kwidget/wid/_"+sakai.config.kaltura.partnerId+"?ui_conf_id="+sakai.config.kaltura.playerId;
                 var so = createSWFObject(url, {}, {});            
                 so.addVariable('stretching','uniform');
                 so.addVariable('image', data["kaltura-thumbnail"]);
