@@ -121,7 +121,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                                 participantsArr.push({
                                     "name": data.results[i]["sakai:group-title"],
                                     "id": data.results[i]["sakai:group-id"],
-                                    "title": data.results[i].role,
+                                    "title": data.results[i].role.title,
                                     "type": "group",
                                     "connected": false,
                                     "content": contentCount,
@@ -153,7 +153,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                                 var userToPush = {
                                     "name": sakai.api.User.getDisplayName(user),
                                     "id": user["rep:userId"],
-                                    "title": user.role,
+                                    "title": user.role.title,
                                     "type": "user",
                                     "content": contentCount,
                                     "contacts": contactsCount,
@@ -230,7 +230,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
         ////////////////////
 
         var loadParticipants = function(){
-            sakai.api.Groups.searchMembers(widgetData.participants.groupid, $.trim($participantsSearchField.val()), renderParticipants, NUM_PER_PAGE, currentPage-1, "firstName", $participants_sort_by.val());
+            sakai.api.Groups.searchMembers(widgetData.participants.groupid, $.trim($participantsSearchField.val()), NUM_PER_PAGE, currentPage-1, "firstName", $participants_sort_by.val(), renderParticipants);
         };
 
         var addBinding = function(){
