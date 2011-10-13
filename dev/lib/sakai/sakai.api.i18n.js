@@ -1,5 +1,4 @@
-/**
- *
+/*
  * Licensed to the Sakai Foundation (SF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -15,9 +14,7 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
- *
  */
-
 /**
  * @class i18n
  *
@@ -213,6 +210,9 @@ define(
                     langCode = sakai_config.defaultLanguage;
                 }
                 i10nCode = langCode.replace("_", "-");
+
+                // set the language attribute for the html tag
+                $("html").attr("lang", langCode.substr(0, 2));
 
                 if (Globalize.cultures && Globalize.cultures[i10nCode]) {
                     Globalize.culture(i10nCode);

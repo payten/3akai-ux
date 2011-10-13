@@ -1,5 +1,4 @@
-/**
- *
+/*
  * Licensed to the Sakai Foundation (SF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -15,9 +14,7 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
- *
  */
-
 /**
  * @class Groups
  *
@@ -797,14 +794,19 @@ define(
          * Searches through managers and members of a group and returns the results
          * @param {String} groupId Id of the group to search in
          * @param {String} query Query put in by the user, if empty a search for all participants is executed
+         * @param {Number} num The number of items to search for (page size)
+         * @param {Number} page The current page (0-indexed)
+         * @param {String} sort The parameter to sort on (firstName or lastName)
+         * @param {String} sortOrder The direction of the sort (desc or asc)
          * @param {Function} callback Function executed on success or error
+
          */
-        searchMembers: function(groupId, query, callback, num, page, sort, sortOrder){
+        searchMembers: function(groupId, query, num, page, sort, sortOrder, callback) {
             if (groupId) {
                 var url = "";
-                if(query && query !== "*"){
+                if (query && query !== "*") {
                     url = sakai_conf.URL.SEARCH_GROUP_MEMBERS + "?group=" + groupId + "&q=" + query;
-                }else {
+                } else {
                     url = sakai_conf.URL.SEARCH_GROUP_MEMBERS_ALL + "?group=" + groupId;
                 }
                 if (num !== undefined) {
@@ -825,6 +827,7 @@ define(
                     success: function(data){
                         var participantCount = 0;
                         if (data.results.length) {
+                            // Do a couple requests first so the group data is cached
                             sakaiGroupsAPI.getGroupAuthorizableData(groupId, function() {
                                 sakaiGroupsAPI.getRole(data.results[0].userid, groupId, function(success, role) {
                                     $.each(data.results, function(index, user){
@@ -859,7 +862,6 @@ define(
                 }
             }
         },
-
         /**
          * Returns all the users who are member of a certain group
          *
@@ -870,7 +872,7 @@ define(
          */
         getMembers : function(groupID, query, callback, everyone) {
             var searchquery = query || "*";
-            var groupInfo = sakaiGroupsAPI.getGroupAuthorizableData(groupID, function(success, data){
+            sakaiGroupsAPI.getGroupAuthorizableData(groupID, function(success, data){
                 if (success){
                     var roles = $.parseJSON(data.properties["sakai:roles"]);
                     var batchRequests = [];
@@ -924,7 +926,10 @@ define(
                         var url = "/system/userManager/group/" + groupID + "-" + roles[i].id + ".everyone.json";
                         batchRequests.push({
                             "url": url,
-                            "method": "GET"
+                            "method": "GET",
+                            "parameters": {
+                                items: 10000
+                            }
                         });
                     }
 
