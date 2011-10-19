@@ -117,6 +117,7 @@
             <form class="ebook_settings_book_form" onsubmit="return false;">
               <input type="hidden" name="nid" value="${books[id].data.nid}"/>
               <input type="hidden" name="url" value="${books[id].data.url}"/>
+              <input type="hidden" name="pages" value="${books[id].data.is_field_awdl_image_count}"/>                                          
               {if (books[id].data.ts_field_awdl_thumbnail && books[id].data.ts_field_awdl_thumbnail != "/")}
                 <a title="__MSG__INVOKE_READER_LINK_TEXT__" href="javascript:void(0);" class="ebook_btnShowReader ebook_thumbnail_link"><img src="${books[id].data.ts_field_awdl_thumbnail}" alt="" /></a>
               {/if}
@@ -179,7 +180,12 @@
            <div class="ebook_reader_summary_title">${title}</div>
            <div class="ebook_reader_summary_author">by ${author_name}</div>
         </div>
-        <div class="ebook_reader_frame"></div>
+        <div class="ebook_reader_frame">
+           <div class="ebook_page_navigation">
+                Go to page <select id="ebook_reader_navigation_page">
+                   {for i in pages}<option value="${i}">${i}</option>{/for}
+                </select> of ${pages.length}</div>
+        </div>
         <div id="ebook_reader_iframe_blockout"><img src="/dev/images/ajax_load.gif"/></div>
     --></div>
     <div id="ebook_settings_search_pagination_template" style="display: none;"><!--

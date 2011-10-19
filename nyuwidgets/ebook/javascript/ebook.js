@@ -58,7 +58,7 @@ require(
         };
         sakai.config.URL.AWDL_OEMBED_DEFAULT_PARAMS = {
            format: 'json',
-           mode: 'double_page'
+           mode: 'single_page'
         };
 
         var rootel = "#" + tuid;
@@ -355,16 +355,17 @@ require(
             // Action for invoking the eBook Reader
             $(ebookShowReader, rootel).die("click");
             $(ebookShowReader, rootel).live("click", function(e,ui){
-               var settings = getSettingsObject();
-               var nid, url;
+               var settings = getSettingsObject();               
+               var nid, url, pages;
                if ($(this).parents(ebookPreview).length > 0) { //handle a selected book
                    nid = $(this).parents(ebookPreview).find("input[name='nid']").val();
                    url = settings.books[nid].data.url;
+                   pages = settings.books[nid].data.is_field_awdl_image_count;
                } else { // handle a search result
                    nid = $(this).parents(ebookSettingsForm).find("input[name='nid']").val();
                    url = $(this).parents(ebookSettingsForm).find("input[name='url']").val();
-               }
-
+                   pages = $(this).parents(ebookSettingsForm).find("input[name='pages']").val();
+               }               
                sakai.api.Util.TemplateRenderer(ebookReaderDialogTemplate, {}, $("#ebook_reader_dialog"));
                $(ebookReaderDialog).jqm({
                     modal: true,
@@ -389,7 +390,7 @@ require(
                 $(ebookReaderDialog).jqmShow();
 
                 var oembedParams = $.extend({}, sakai.config.URL.AWDL_OEMBED_DEFAULT_PARAMS);
-                oembedParams.height = $(ebookReaderDialog).find(".ebook_reader_dialog_content").height();
+                oembedParams.height = $(ebookReaderDialog).find(".ebook_reader_dialog_content").height() - 24;
                 oembedParams.width = $(ebookReaderDialog).find(".ebook_reader_dialog_content").width() - 210;
                 oembedParams.url = url + "/1";
 
@@ -399,15 +400,23 @@ require(
                     data: oembedParams,
                     timeout: 20000,
                     success: function(data) {
+                        data.currentPage = 1;
+                        data.pages = [];
+                        for (var i=0; i<pages;i++) {
+                            data.pages.push(i+1);
+                        }
+                        console.log(pages);
+                        console.log(data.pages);
                         $(".ebook_reader_dialog_content",ebookReaderDialog).html(sakai.api.Util.TemplateRenderer(ebookReaderOembedTemplate, data));
                         $(ebookReaderDialog).find(".ebook_reader_summary").width(200);
                         $(ebookReaderDialog).find(".ebook_reader_frame").width($(ebookReaderDialog).find(".ebook_reader_dialog_content").width() - 210);
-                        $(data.html).load(function() {$(ebookReaderDialog).find("#ebook_reader_iframe_blockout").hide();}).appendTo($(".ebook_reader_frame",ebookReaderDialog));
-                        //$(ebookReaderDialog).find(".ebook_reader_frame iframe").attr("height", $(ebookReaderDialog).find(".ebook_reader_dialog_content").height());
-                        //$(ebookReaderDialog).find(".ebook_reader_frame iframe").attr("width", $(ebookReaderDialog).find(".ebook_reader_frame").width());
+                        $(data.html).load(function() {$(ebookReaderDialog).find("#ebook_reader_iframe_blockout").hide();}).prependTo($(".ebook_reader_frame",ebookReaderDialog));
                         $(ebookReaderDialog).find("#ebook_reader_iframe_blockout").css({
                             height: $(ebookReaderDialog).find(".ebook_reader_frame iframe").height(),
                             width: $(ebookReaderDialog).find(".ebook_reader_frame iframe").width()
+                        });
+                        $(ebookReaderDialog).find("#ebook_reader_navigation_page").change(function() {                                                        
+                            $(ebookReaderDialog).find("#book-viewer").attr("src", url + "/"+ $(this).val() + "?oembed=true");
                         });
                     },
                     error: function (xOptions, textStatus) {

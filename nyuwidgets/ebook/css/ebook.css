@@ -131,6 +131,7 @@
 #ebook_reader_blockout{width:100%;height:100%;background-color:white;}
 #ebook_reader_iframe_blockout{position:absolute;left:220px;background-color:white;opacity:0.5;filter:alpha(opacity=50);}
 #ebook_reader_blockout img,#ebook_reader_iframe_blockout img{position:absolute;left:50%;top:50%;margin-left:-40px;margin-top:-5px;}
+.ebook_reader_frame .ebook_page_navigation {text-align: right;}
 /* Widget icon */
 .ebook.fl-widget .fl-widget-titlebar .widget_title_icon{background:url(../images/ebook_icon.png) 0 0 no-repeat;}
 /* Styles for different page/dashboard configurations */
