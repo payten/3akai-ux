@@ -1,4 +1,5 @@
 <!-- CSS -->
+<link rel="stylesheet" type="text/css" href="/nyuwidgets/ebook/lib/jquery.ui.slider.css" />
 <link rel="stylesheet" type="text/css" href="/nyuwidgets/ebook/css/ebook.css" />
 
 <div>
@@ -182,9 +183,13 @@
         </div>
         <div class="ebook_reader_frame">
            <div class="ebook_page_navigation">
-                Go to page <select id="ebook_reader_navigation_page">
-                   {for i in pages}<option value="${i}">${i}</option>{/for}
-                </select> of ${pages.length}</div>
+                <div id="ebook_page_navigation_slider"></div>
+                <span class="ebook_reader_navigation_select_container">  
+                    Go to page <select id="ebook_reader_navigation_select">
+                       {for i in pages}<option value="${i}">${i}</option>{/for}
+                    </select> of ${pages.length}
+                </span>
+           </div>
         </div>
         <div id="ebook_reader_iframe_blockout"><img src="/dev/images/ajax_load.gif"/></div>
     --></div>

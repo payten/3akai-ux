@@ -22,6 +22,7 @@ require(
     [
         "jquery", "sakai/sakai.api.core",
         "/nyuwidgets/ebook/lib/jquery-ui.sortable.js",
+        "/nyuwidgets/ebook/lib/jquery.ui.slider.js",
         "/nyuwidgets/ebook/lib/jquery.jsonp.js"
     ],
     function($, sakai) {
@@ -405,8 +406,6 @@ require(
                         for (var i=0; i<pages;i++) {
                             data.pages.push(i+1);
                         }
-                        console.log(pages);
-                        console.log(data.pages);
                         $(".ebook_reader_dialog_content",ebookReaderDialog).html(sakai.api.Util.TemplateRenderer(ebookReaderOembedTemplate, data));
                         $(ebookReaderDialog).find(".ebook_reader_summary").width(200);
                         $(ebookReaderDialog).find(".ebook_reader_frame").width($(ebookReaderDialog).find(".ebook_reader_dialog_content").width() - 210);
@@ -415,7 +414,10 @@ require(
                             height: $(ebookReaderDialog).find(".ebook_reader_frame iframe").height(),
                             width: $(ebookReaderDialog).find(".ebook_reader_frame iframe").width()
                         });
-                        $(ebookReaderDialog).find("#ebook_reader_navigation_page").change(function() {                                                        
+                        $(ebookReaderDialog).find("#ebook_page_navigation_slider").slider({min: 1, max: pages, step: 1});                        
+                        $(ebookReaderDialog).find("#ebook_page_navigation_slider").width(
+                            $(ebookReaderDialog).find(".ebook_reader_frame iframe").width() - $(ebookReaderDialog).find(".ebook_reader_navigation_select_container").width() - 15);
+                        $(ebookReaderDialog).find("#ebook_page_navigation_select").change(function() {                                                        
                             $(ebookReaderDialog).find("#book-viewer").attr("src", url + "/"+ $(this).val() + "?oembed=true");
                         });
                     },
