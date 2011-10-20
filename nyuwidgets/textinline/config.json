@@ -1,0 +1,20 @@
+{
+    "userpages": false,
+    "userdashboard": true,
+    "grouppages": false,
+    "groupdashboard": true,
+    "description": "Text",
+    "hasSettings": false,
+    "id": "textinline",
+    "name": "Text Box Widget",
+    "type": "contrib",
+    "enabled": true,
+    "sakaidocs": true,
+    "showinsakaigoodies":true,
+    "url":"/nyuwidgets/textinline/textinline.html",
+    "img":"/nyuwidgets/textinline/images/textinline.png",
+    "i18n": {
+        "default": "/nyuwidgets/textinline/bundles/default.properties"
+    },
+    "indexFields": ["text"]
+}
