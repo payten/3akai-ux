@@ -414,11 +414,24 @@ require(
                             height: $(ebookReaderDialog).find(".ebook_reader_frame iframe").height(),
                             width: $(ebookReaderDialog).find(".ebook_reader_frame iframe").width()
                         });
-                        $(ebookReaderDialog).find("#ebook_page_navigation_slider").slider({min: 1, max: pages, step: 1});                        
+                        var slideInProgress = false;
+                        $(ebookReaderDialog).find("#ebook_page_navigation_slider").slider({
+                              min: 1, 
+                              max: pages, 
+                              step: 1,
+                              slide: function(event, ui) {
+                                  $(ebookReaderDialog).find("#ebook_reader_navigation_select").val(ui.value+"");
+                              },
+                              stop: function(event, ui) {
+                                  $(ebookReaderDialog).find("#ebook_reader_navigation_select").triggerHandler("change");
+                              }
+                          });                        
                         $(ebookReaderDialog).find("#ebook_page_navigation_slider").width(
                             $(ebookReaderDialog).find(".ebook_reader_frame iframe").width() - $(ebookReaderDialog).find(".ebook_reader_navigation_select_container").width() - 15);
-                        $(ebookReaderDialog).find("#ebook_page_navigation_select").change(function() {                                                        
-                            $(ebookReaderDialog).find("#book-viewer").attr("src", url + "/"+ $(this).val() + "?oembed=true");
+                        $(ebookReaderDialog).find("#ebook_reader_navigation_select").change(function() {
+                            if (!slideInProgress) {
+                                $(ebookReaderDialog).find("#book-viewer").attr("src", url + "/"+ $(this).val() + "?oembed=true");
+                            }
                         });
                     },
                     error: function (xOptions, textStatus) {
