@@ -245,11 +245,13 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
             sakai.api.Groups.searchMembers(widgetData.participants.groupid, searchTerm, NUM_PER_PAGE, currentPage-1, "firstName", $participants_sort_by.val(), preRenderParticipants);
         };
 
-        var searchTimeout;
+        var searchTimeout = null;
 
         var addBinding = function(){
             $participantsSearchField.unbind("keyup").bind("keyup", function() {                
-                clearTimeout(searchTimeout);
+                if (searchTimeout) {
+                    clearTimeout(searchTimeout);
+                }
                 searchTimeout = setTimeout(function() {
                     currentPage = 1;
                     loadParticipants();  
