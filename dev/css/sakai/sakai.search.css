@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to the Sakai Foundation (SF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +15,6 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-
 /*
  * The below CSS sections may not be necesary for your widget, but best practice
  * is to organize your CSS into sections like these (or add new sections)
@@ -34,7 +33,7 @@
 /* SEARCH RESULTS */
 .s3d-search-results{display:block; overflow:hidden;width:710px;}
 .s3d-search-results #searchall_results_container{margin:10px 0 0;padding:0;border-bottom: 1px solid #e9e9e9;}
-.s3d-search-result{color:#333;padding:10px;border-top: 1px dotted #cccccc;}
+.s3d-search-result{color:#333;padding:10px;border-top: 1px dotted #cccccc;list-style:none}
 .s3d-search-result-first{border-top: 1px solid #e9e9e9;}
 .s3d-search-result a img{float:left;padding:0 10px 10px 0;width:50px;}
 .s3d-search-result-right{margin-left:90px;}
