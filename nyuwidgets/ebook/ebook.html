@@ -184,9 +184,9 @@
         <div class="ebook_reader_frame">
            <div class="ebook_page_navigation">
                 <div id="ebook_page_navigation_slider"></div>
-                <span class="ebook_reader_navigation_select_container">  
+                <span class="ebook_reader_navigation_select_container">
                     Go to page <select id="ebook_reader_navigation_select">
-                       {for i in pages}<option value="${i}">${i}</option>{/for}
+                       {for i in pages}<option value="p${i_index}">${i_index}</option>{/for}
                     </select> of ${pages.length}
                 </span>
            </div>

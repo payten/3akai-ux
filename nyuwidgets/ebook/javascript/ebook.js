@@ -356,7 +356,7 @@ require(
             // Action for invoking the eBook Reader
             $(ebookShowReader, rootel).die("click");
             $(ebookShowReader, rootel).live("click", function(e,ui){
-               var settings = getSettingsObject();               
+               var settings = getSettingsObject();
                var nid, url, pages;
                if ($(this).parents(ebookPreview).length > 0) { //handle a selected book
                    nid = $(this).parents(ebookPreview).find("input[name='nid']").val();
@@ -366,7 +366,7 @@ require(
                    nid = $(this).parents(ebookSettingsForm).find("input[name='nid']").val();
                    url = $(this).parents(ebookSettingsForm).find("input[name='url']").val();
                    pages = $(this).parents(ebookSettingsForm).find("input[name='pages']").val();
-               }               
+               }
                sakai.api.Util.TemplateRenderer(ebookReaderDialogTemplate, {}, $("#ebook_reader_dialog"));
                $(ebookReaderDialog).jqm({
                     modal: true,
