@@ -174,13 +174,15 @@
         </div>
     --></div>
     <div id="ebook_reader_oembed_template" style="display: none;"><!--
-        <div class="ebook_reader_summary">
-           <div class="ebook_reader_summary_thumbnail"><img src="${thumbnail_url}"/></div>
-           <div class="ebook_reader_summary_title">${title}</div>
-           <div class="ebook_reader_summary_author">by ${author_name}</div>
+        <div class="ebook_reader_oembed">
+            <div class="ebook_reader_summary">
+               <div class="ebook_reader_summary_thumbnail"><img src="${thumbnail_url}"/></div>
+               <div class="ebook_reader_summary_title">${title}</div>
+               <div class="ebook_reader_summary_author">by ${author_name}</div>
+            </div>
+            <div class="ebook_reader_frame"></div>
+            <div id="ebook_reader_iframe_blockout"><img src="/dev/images/ajax_load.gif"/></div>
         </div>
-        <div class="ebook_reader_frame"></div>
-        <div id="ebook_reader_iframe_blockout"><img src="/dev/images/ajax_load.gif"/></div>
     --></div>
     <div id="ebook_settings_search_pagination_template" style="display: none;"><!--
         <span class="ebook_search_pagination_index">Results ${start} to ${end} (${total} total)</span>
@@ -209,6 +211,7 @@
             <select name="display_style" id="ebook_display_style">
                 <option value="bookshelf"  {if defined('display_style') && display_style == 'bookshelf'}selected{/if}>__MSG__OPTION_DISPLAY_STYLE_BOOKSHELF__</option>
                 <option value="listing"  {if defined('display_style') && display_style == 'listing'}selected{/if}>__MSG__OPTION_DISPLAY_STYLE_LISTING__</option>
+                <option value="reader"  {if defined('display_style') && display_style == 'reader'}selected{/if}>__MSG__OPTION_DISPLAY_STYLE_READER__</option>                                                                            
             </select>
           </div>
           <div {if defined('display_style') && display_style != 'bookshelf'} style="display:none;" {/if} >
