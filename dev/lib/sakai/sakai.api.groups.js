@@ -1227,6 +1227,17 @@ define(
             return template;
         },
 
+        getCategoryTitle: function(cat) {
+            var category = false;
+            for (var i = 0; i < sakai_conf.worldTemplates.length; i++){
+                if (sakai_conf.worldTemplates[i].id === cat){
+                    category = sakai_conf.worldTemplates[i];
+                    break;
+                }
+            }
+            return sakai_i18n.General.getValueForKey(category.titleSing);
+        },
+
         canCreateTemplate: function(category) {
             if ($.isPlainObject(category)) {
                 return (category.adminOnly && sakai_user.data.me.user.userid === "admin") || (!category.adminOnly && sakai_user.data.me.user.userid);
