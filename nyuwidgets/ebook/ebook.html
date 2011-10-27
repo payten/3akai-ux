@@ -118,7 +118,7 @@
             <form class="ebook_settings_book_form" onsubmit="return false;">
               <input type="hidden" name="nid" value="${books[id].data.nid}"/>
               <input type="hidden" name="url" value="${books[id].data.url}"/>
-              <input type="hidden" name="pages" value="${books[id].data.is_field_awdl_image_count}"/>                                          
+              <input type="hidden" name="pages" value="${books[id].data.is_field_awdl_image_count}"/>
               {if (books[id].data.ts_field_awdl_thumbnail && books[id].data.ts_field_awdl_thumbnail != "/")}
                 <a title="__MSG__INVOKE_READER_LINK_TEXT__" href="javascript:void(0);" class="ebook_btnShowReader ebook_thumbnail_link"><img src="${books[id].data.ts_field_awdl_thumbnail}" alt="" /></a>
               {/if}

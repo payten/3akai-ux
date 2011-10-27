@@ -367,6 +367,7 @@ require(
                    url = $(this).parents(ebookSettingsForm).find("input[name='url']").val();
                    pages = $(this).parents(ebookSettingsForm).find("input[name='pages']").val();
                }
+               
                sakai.api.Util.TemplateRenderer(ebookReaderDialogTemplate, {}, $("#ebook_reader_dialog"));
                $(ebookReaderDialog).jqm({
                     modal: true,
@@ -416,8 +417,8 @@ require(
                         });
                         var slideInProgress = false;
                         $(ebookReaderDialog).find("#ebook_page_navigation_slider").slider({
-                              min: 1, 
-                              max: pages, 
+                              min: 1,
+                              max: pages,
                               step: 1,
                               slide: function(event, ui) {
                                   $(ebookReaderDialog).find("#ebook_reader_navigation_select").val(ui.value+"");
@@ -425,7 +426,7 @@ require(
                               stop: function(event, ui) {
                                   $(ebookReaderDialog).find("#ebook_reader_navigation_select").triggerHandler("change");
                               }
-                          });                        
+                        });
                         $(ebookReaderDialog).find("#ebook_page_navigation_slider").width(
                             $(ebookReaderDialog).find(".ebook_reader_frame iframe").width() - $(ebookReaderDialog).find(".ebook_reader_navigation_select_container").width() - 15);
                         $(ebookReaderDialog).find("#ebook_reader_navigation_select").change(function() {
@@ -445,7 +446,6 @@ require(
                     }
                 });
             });
-
 
             // action for removing the ebook reader dialog
             $(ebookHideReader, ebookReaderDialog).die("click");
