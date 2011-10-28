@@ -104,7 +104,7 @@
     <div id="ebook_list_template" style="display: none;"><!--
       <ul class="ebook_settings_book_list ebook_sorted_by_${sort}">
       {for id in order}
-        <li class="ebook_settings_book_list_item  {if books[id].selected} already_selected{/if} {if order.indexOf(id)==0}first{/if} {if (order.indexOf(id)+1)==order.length}last{/if}">
+        <li class="ebook_preview ebook_settings_book_list_item  {if books[id].selected} already_selected{/if} {if order.indexOf(id)==0}first{/if} {if (order.indexOf(id)+1)==order.length}last{/if}">
           <div class="ebook_settings_book_list_item_header">
               <div class="ebook_settings_book_list_item_sort_handles">
                  <a class="ebook_settings_book_order_up_action" title="__MSG__ORDER_MOVE_UP_LINK_TEXT__" rel="-1" href="javascript:void(0);"></a>
@@ -136,25 +136,36 @@
                   {if (books[id].data.is_field_awdl_image_count)}
                     <div class="ebook_settings_book_metadata"><span class="ebook_settings_book_metadata_label">__MSG__IMAGE_COUNT_LABEL__:</span> <span class="ebook_settings_book_metadata_value">${books[id].data.is_field_awdl_image_count}</span></div>
                   {/if}
-                  <div class="ebook_settings_book_order">
-                    <label for="ebook_caption_${books[id].data.nid}">__MSG__ORDER_LABEL__:</label>
-                    <a href="javascript:void(0);" class="ebook_settings_book_order_up_action" rel="-1">__MSG__ORDER_MOVE_UP_LINK_TEXT__</a> <span class="ebook_settings_book_order_action_separator">|</span> <a href="javascript:void(0);" class="ebook_settings_book_order_down_action" rel="1">__MSG__ORDER_MOVE_DOWN_LINK_TEXT__</a>
-                  </div>
-                  <div class="ebook_settings_caption_input">
-                    <label for="ebook_caption_${books[id].data.nid}">__MSG__CAPTION_LABEL__:</label>
-                    <p>
-                        <textarea name="caption" id="ebook_caption_${books[id].data.nid}" col="60" rows="2">${books[id].caption}</textarea>
-                    </p>
-                  </div>
+                  {if defined('editable') && editable === true}
+                      <div class="ebook_settings_book_order">
+                        <label for="ebook_caption_${books[id].data.nid}">__MSG__ORDER_LABEL__:</label>
+                        <a href="javascript:void(0);" class="ebook_settings_book_order_up_action" rel="-1">__MSG__ORDER_MOVE_UP_LINK_TEXT__</a> <span class="ebook_settings_book_order_action_separator">|</span> <a href="javascript:void(0);" class="ebook_settings_book_order_down_action" rel="1">__MSG__ORDER_MOVE_DOWN_LINK_TEXT__</a>
+                      </div>                      
+                      <div class="ebook_settings_start_index_input">
+                        <label for="ebook_reader_start_index_${books[id].data.nid}">__MSG__READER_START_INDEX_LABEL__:</label>
+                        <select name="reader_start_index" id="ebook_reader_start_index_${books[id].data.nid}">
+                        {var all_pages = $.makeArray(new Array(books[id].data.is_field_awdl_image_count))}
+                        {for i in all_pages}<option value="${parseInt(i_index)+1}" {if (parseInt(i_index)+1) === books[id].reader_start_index}selected="selected"{/if}>${parseInt(i_index)+1}</option>{/for}
+                        </select>
+                      </div>                                                         
+                      <div class="ebook_settings_caption_input">
+                        <label for="ebook_caption_${books[id].data.nid}">__MSG__CAPTION_LABEL__:</label>
+                        <p>
+                            <textarea name="caption" id="ebook_caption_${books[id].data.nid}" col="60" rows="2">${books[id].caption}</textarea>
+                        </p>
+                      </div>
+                  {/if}
               </div>
               {if books[id].caption != null && books[id].caption.length > 0}<div class="ebook_settings_caption_display_container"><div class="ebook_arrowUp"></div><div class="ebook_settings_caption_display">${books[id].caption.replace( /\n/g, '<br />\n' )}</div></div>{/if}
-              <div class="dialog_buttons ebook_selected_actions" style="display:none;">
-                <button type="button" class="s3d-button s3d-header-button ebook_settings_btnRemove"><span class="s3d-button-inner">__MSG__REMOVE_BUTTON__</span></button>
-                <button type="button" class="s3d-button s3d-header-button ebook_settings_btnUpdate"><span class="s3d-button-inner">__MSG__UPDATE_BUTTON__</span></button>
-              </div>
-              <div class="dialog_buttons ebook_search_result_actions" style="display:none;">
-                <button type="button" class="s3d-button s3d-header-button" id="ebook_settings_btnAdd"><span class="s3d-button-inner">__MSG__SETTINGS_ADD_BOOK_BUTTON__</span></button>
-              </div>
+              {if defined('editable') && editable === true}
+                  <div class="dialog_buttons ebook_selected_actions" style="display:none;">
+                    <button type="button" class="s3d-button s3d-header-button ebook_settings_btnRemove"><span class="s3d-button-inner">__MSG__REMOVE_BUTTON__</span></button>
+                    <button type="button" class="s3d-button s3d-header-button ebook_settings_btnUpdate"><span class="s3d-button-inner">__MSG__UPDATE_BUTTON__</span></button>
+                  </div>
+                  <div class="dialog_buttons ebook_search_result_actions" style="display:none;">
+                    <button type="button" class="s3d-button s3d-header-button" id="ebook_settings_btnAdd"><span class="s3d-button-inner">__MSG__SETTINGS_ADD_BOOK_BUTTON__</span></button>
+                  </div>
+              {/if}
               <div class="fl-push"></div>
             </form>
          </div>
@@ -186,8 +197,9 @@
                 <div id="ebook_page_navigation_slider"></div>
                 <span class="ebook_reader_navigation_select_container">
                     Go to page <select id="ebook_reader_navigation_select">
-                       {for i in pages}<option value="${i}">${i}</option>{/for}
-                    </select> of ${pages.length}
+                       {var all_pages = $.makeArray(new Array(pages))}
+                       {for i in all_pages}<option value="${parseInt(i_index)+1}" {if start_index === (parseInt(i_index)+1)}selected="selected"{/if}>${parseInt(i_index)+1}</option>{/for}
+                    </select> of ${pages}
                 </span>
            </div>
         </div>

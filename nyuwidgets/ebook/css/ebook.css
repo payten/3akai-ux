@@ -91,25 +91,25 @@
 #ebook_settings_search_results .ebook_awdl_error{margin:10px 0;}
 /* Display */
 #ebook_display{padding-top:10px;}
-.ebook_preview{padding:4px 4px 12px;}
-.ebook_preview .ebook_author{margin:0;line-height:120%;font-size:0.9em;}
+.ebook_preview_wrapper .ebook_preview{padding:4px 4px 12px;}
+.ebook_preview_wrapper .ebook_preview .ebook_author{margin:0;line-height:120%;font-size:0.9em;}
 #ebook_display .ebook_no_book_set_message{padding:0 10px;}
-#ebook_display .ebook_preview{margin:4px;border:none;}
+#ebook_display .ebook_preview_wrapper .ebook_preview{margin:4px;border:none;}
 #ebook_display .ebook_details{margin-left:100px;}
-.ebook_preview .ebook_thumbnail_link{bottom:8px;padding:0 17.5px;position:absolute;}
-.ebook_preview .ebook_thumbnail_link img{width:65px;box-shadow:1px 1px 2px 1px #999;-moz-box-shadow:1px 1px 2px 1px #999;-webkit-box-shadow:1px 1px 2px 1px #999;}
-.ebook_preview .ebook_thumbnail_link.hovered{padding:0;bottom:0;}
-.ebook_preview .ebook_thumbnail_link.hovered img{width:auto;box-shadow:1px 1px 10px 1px #999;-moz-box-shadow:1px 1px 10px 1px #999;-webkit-box-shadow:1px 1px 10px 1px #999;}
-.ebook_preview .ebook_title{color:#058EC4;font-size:1.1em;font-weight:400;}
+.ebook_preview_wrapper .ebook_preview .ebook_thumbnail_link{bottom:8px;padding:0 17.5px;position:absolute;}
+.ebook_preview_wrapper .ebook_preview .ebook_thumbnail_link img{width:65px;box-shadow:1px 1px 2px 1px #999;-moz-box-shadow:1px 1px 2px 1px #999;-webkit-box-shadow:1px 1px 2px 1px #999;}
+.ebook_preview_wrapper .ebook_preview .ebook_thumbnail_link.hovered{padding:0;bottom:0;}
+.ebook_preview_wrapper .ebook_preview .ebook_thumbnail_link.hovered img{width:auto;box-shadow:1px 1px 10px 1px #999;-moz-box-shadow:1px 1px 10px 1px #999;-webkit-box-shadow:1px 1px 10px 1px #999;}
+.ebook_preview_wrapper .ebook_preview .ebook_title{color:#058EC4;font-size:1.1em;font-weight:400;}
 .ebook_caption_container{clear:both;border:2px solid #e2e2e4;border-left:none;border-right:none;}
 .ebook_arrowUp{height:10px;background:#fff url(../images/ebook_arrowup.jpg) no-repeat bottom left;display:none;}
 .ebook_captions{width:100%;background-color:#f3f3f5;color:#333;}
 .ebook_caption{color:#333333;font-size:0.95em;padding:5px;}
 .ebook_widget_actions a{font-size:11px;font-weight:bold;white-space:nowrap;}
 .ebook_widget_actions .ebook_btnShowReader{margin-right:10px;}
-.ebook_preview .ebook_bookshelf{background-image:url("../images/bookshelf.png");background-position:left bottom;background-repeat:repeat-x;position:relative;min-height:130px;height:expression(this.height > 130 ? 130 :true);}
-.ebook_preview .ebook_thumbnail{position:absolute;left:0;bottom:5px;width:100px;height:120px;background-image:url("../images/bookshelf_shadow.png");background-repeat:no-repeat;background-position:bottom center;}
-.ebook_preview .ebook_widget_actions{bottom:30px;left:100px;position:absolute;}
+.ebook_preview_wrapper .ebook_preview .ebook_bookshelf{background-image:url("../images/bookshelf.png");background-position:left bottom;background-repeat:repeat-x;position:relative;min-height:130px;height:expression(this.height > 130 ? 130 :true);}
+.ebook_preview_wrapper .ebook_preview .ebook_thumbnail{position:absolute;left:0;bottom:5px;width:100px;height:120px;background-image:url("../images/bookshelf_shadow.png");background-repeat:no-repeat;background-position:bottom center;}
+.ebook_preview_wrapper .ebook_preview .ebook_widget_actions{bottom:30px;left:100px;position:absolute;}
 #ebook_display.ebook-limit-rows .ebook_preview_wrapper{overflow:auto;position:relative;}
 #ebook_display.ebook-limit-rows .ebook_preview_wrapper{overflow:auto;position:relative;}
 /* Display style - Listing */
@@ -140,35 +140,35 @@
 /* Styles for different page/dashboard configurations */
 /* single column or full page styles */
 .fl-col-fixed #ebook_display,.fl-col-flex #ebook_display{padding:10px 8px;}
-.fl-col-fixed .ebook_preview,
-.fl-col-flex .ebook_preview,
-#s3d-page-container .ebook_preview{margin:0 !important;padding:4px 0px 12px;float:left;width:305px;}
-.fl-col-fixed #ebook_display.ebook-limit-rows .ebook_preview,
-.fl-col-flex #ebook_display.ebook-limit-rows .ebook_preview{width:286px;}
+.fl-col-fixed .ebook_preview_wrapper .ebook_preview,
+.fl-col-flex .ebook_preview_wrapper .ebook_preview,
+#s3d-page-container .ebook_preview_wrapper .ebook_preview{margin:0 !important;padding:4px 0px 12px;float:left;width:305px;}
+.fl-col-fixed #ebook_display.ebook-limit-rows .ebook_preview_wrapper .ebook_preview,
+.fl-col-flex #ebook_display.ebook-limit-rows .ebook_preview_wrapper .ebook_preview{width:286px;}
 /* multi column styles */
 .fl-col-flex2 #ebook_display,
 .fl-col-flex3 #ebook_display,
 .fl-col-flex4 #ebook_display,
 .fl-col-flex5 #ebook_display{padding:10px 1px !important;}
-.fl-col-flex2 .ebook_preview,
-.fl-col-flex3 .ebook_preview,
-.fl-col-flex4 .ebook_preview,
-.fl-col-flex5 .ebook_preview{margin:4px !important;}
-.fl-col-flex3 .ebook_preview,
-.fl-col-flex4 .ebook_preview,
-.fl-col-flex5 .ebook_preview{width:auto !important;border-bottom:1px dotted #E2E2E4 !important;}
-.fl-col-flex3 .ebook_preview .ebook_thumbnail,
-.fl-col-flex4 .ebook_preview .ebook_thumbnail,
-.fl-col-flex5 .ebook_preview .ebook_thumbnail{display:none;}
-.fl-col-flex3 .ebook_preview .ebook_widget_actions,
-.fl-col-flex4 .ebook_preview .ebook_widget_actions,
-.fl-col-flex5 .ebook_preview .ebook_widget_actions{bottom:auto;left:auto;position:relative;}
-.fl-col-flex3 .ebook_preview .ebook_details,
-.fl-col-flex4 .ebook_preview .ebook_details,
-.fl-col-flex5 .ebook_preview .ebook_details{margin-left:0 !important;}
-.fl-col-flex3 .ebook_preview .ebook_bookshelf,
-.fl-col-flex4 .ebook_preview .ebook_bookshelf,
-.fl-col-flex5 .ebook_preview .ebook_bookshelf{background:none;min-height:0;}
-.fl-col-flex3 .ebook_preview .ebook_preview_wrapper,
-.fl-col-flex4 .ebook_preview .ebook_preview_wrapper,
-.fl-col-flex5 .ebook_preview .ebook_preview_wrapper{display:inline-block;}
+.fl-col-flex2 .ebook_preview_wrapper .ebook_preview,
+.fl-col-flex3 .ebook_preview_wrapper .ebook_preview,
+.fl-col-flex4 .ebook_preview_wrapper .ebook_preview,
+.fl-col-flex5 .ebook_preview_wrapper .ebook_preview{margin:4px !important;}
+.fl-col-flex3 .ebook_preview_wrapper .ebook_preview,
+.fl-col-flex4 .ebook_preview_wrapper .ebook_preview,
+.fl-col-flex5 .ebook_preview_wrapper .ebook_preview{width:auto !important;border-bottom:1px dotted #E2E2E4 !important;}
+.fl-col-flex3 .ebook_preview_wrapper .ebook_preview .ebook_thumbnail,
+.fl-col-flex4 .ebook_preview_wrapper .ebook_preview .ebook_thumbnail,
+.fl-col-flex5 .ebook_preview_wrapper .ebook_preview .ebook_thumbnail{display:none;}
+.fl-col-flex3 .ebook_preview_wrapper .ebook_preview .ebook_widget_actions,
+.fl-col-flex4 .ebook_preview_wrapper .ebook_preview .ebook_widget_actions,
+.fl-col-flex5 .ebook_preview_wrapper .ebook_preview .ebook_widget_actions{bottom:auto;left:auto;position:relative;}
+.fl-col-flex3 .ebook_preview_wrapper .ebook_preview .ebook_details,
+.fl-col-flex4 .ebook_preview_wrapper .ebook_preview .ebook_details,
+.fl-col-flex5 .ebook_preview_wrapper .ebook_preview .ebook_details{margin-left:0 !important;}
+.fl-col-flex3 .ebook_preview_wrapper .ebook_preview .ebook_bookshelf,
+.fl-col-flex4 .ebook_preview_wrapper .ebook_preview .ebook_bookshelf,
+.fl-col-flex5 .ebook_preview_wrapper .ebook_preview .ebook_bookshelf{background:none;min-height:0;}
+.fl-col-flex3 .ebook_preview_wrapper .ebook_preview .ebook_preview_wrapper,
+.fl-col-flex4 .ebook_preview_wrapper .ebook_preview .ebook_preview_wrapper,
+.fl-col-flex5 .ebook_preview_wrapper .ebook_preview .ebook_preview_wrapper{display:inline-block;}

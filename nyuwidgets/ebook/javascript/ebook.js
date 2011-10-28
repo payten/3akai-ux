@@ -188,10 +188,11 @@ require(
                 var settings = getSettingsObject();
                 if(settings !== false){
                     // update this book in the widget settings
-                    var formData = serializeFormToObject($this.parents(ebookSettingsForm));
-                    var nid = parseInt(formData.nid, 10);
+                    var formData = serializeFormToObject($this.parents(ebookSettingsForm));                    
+                    var nid = parseInt(formData.nid, 10);                    
                     if (settings.books[nid]) {
                         settings.books[nid].caption = formData.caption;
+                        settings.books[nid].reader_start_index = parseInt(formData.reader_start_index);
                         // disable the button
                         $this.addClass("s3d-disabled");
                         // update widget details
@@ -296,6 +297,7 @@ require(
                     // add book to widget settings
                     settings.books[bookData.nid] = {data: bookData};
                     settings.books[bookData.nid]["caption"] = formData.caption;
+                    settings.books[bookData.nid]["reader_start_index"] = 1;
                     settings.books[bookData.nid]["bookId"] = bookData.url.split("/").pop();
                     settings.books[bookData.nid].data = sanitizeBookData(settings.books[bookData.nid].data);
 
@@ -357,17 +359,18 @@ require(
             $(ebookShowReader, rootel).die("click");
             $(ebookShowReader, rootel).live("click", function(e,ui){
                var settings = getSettingsObject();
-               var nid, url, pages;
-               if ($(this).parents(ebookPreview).length > 0) { //handle a selected book
-                   nid = $(this).parents(ebookPreview).find("input[name='nid']").val();
-                   url = settings.books[nid].data.url;
-                   pages = settings.books[nid].data.is_field_awdl_image_count;
-               } else { // handle a search result
+               var nid, url, pages, start_index;
+               if ($(this).parents(ebookSettingsSearchResults).length > 0) { //handle a search result
                    nid = $(this).parents(ebookSettingsForm).find("input[name='nid']").val();
                    url = $(this).parents(ebookSettingsForm).find("input[name='url']").val();
                    pages = $(this).parents(ebookSettingsForm).find("input[name='pages']").val();
+                   start_index = 1;
+               } else { // handle a selected book
+                   nid = $(this).parents(ebookPreview).find("input[name='nid']").val();
+                   url = settings.books[nid].data.url;
+                   pages = settings.books[nid].data.is_field_awdl_image_count;
+                   start_index = settings.books[nid].reader_start_index || 1;
                }
-               
                sakai.api.Util.TemplateRenderer(ebookReaderDialogTemplate, {}, $("#ebook_reader_dialog"));
                $(ebookReaderDialog).jqm({
                     modal: true,
@@ -394,7 +397,7 @@ require(
                 var oembedParams = $.extend({}, sakai.config.URL.AWDL_OEMBED_DEFAULT_PARAMS);
                 oembedParams.height = $(ebookReaderDialog).find(".ebook_reader_dialog_content").height() - 24;
                 oembedParams.width = $(ebookReaderDialog).find(".ebook_reader_dialog_content").width() - 210;
-                oembedParams.url = url + "/1";
+                oembedParams.url = url + "/" + start_index;
 
                 // load reader from AWDL using oembed + jsonp solution
                 $.jsonp({
@@ -403,10 +406,8 @@ require(
                     timeout: 20000,
                     success: function(data) {
                         data.currentPage = 1;
-                        data.pages = [];
-                        for (var i=0; i<pages;i++) {
-                            data.pages.push(i+1);
-                        }
+                        data.pages = pages;
+                        data.start_index = start_index;
                         $(".ebook_reader_dialog_content",ebookReaderDialog).html(sakai.api.Util.TemplateRenderer(ebookReaderOembedTemplate, data));
                         $(ebookReaderDialog).find(".ebook_reader_summary").width(200);
                         $(ebookReaderDialog).find(".ebook_reader_frame").width($(ebookReaderDialog).find(".ebook_reader_dialog_content").width() - 210);
@@ -420,6 +421,7 @@ require(
                               min: 1,
                               max: pages,
                               step: 1,
+                              value: start_index,
                               slide: function(event, ui) {
                                   $(ebookReaderDialog).find("#ebook_reader_navigation_select").val(ui.value+"");
                               },
@@ -432,6 +434,7 @@ require(
                         $(ebookReaderDialog).find("#ebook_reader_navigation_select").change(function() {
                             if (!slideInProgress) {
                                 $(ebookReaderDialog).find("#book-viewer").attr("src", url + "/"+ $(this).val() + "?oembed=true");
+                                $(ebookReaderDialog).find("#ebook_page_navigation_slider").slider("value", $(this).val());
                             }
                         });
                     },
@@ -734,8 +737,11 @@ require(
                 if (!settings.order || settings.order.length === 0) {
                     $(ebookSettingsSelectedBooks, rootel).append($(ebookNoBooksSetMsg, rootel).html());
                 } else {
+                    // currate some book settings
+                    var settings_clone = $.extend({}, settings);
+                    settings_clone.editable = true;
                     // show selected books
-                    $(ebookSettingsSelectedBooks, rootel).html(sakai.api.Util.TemplateRenderer(ebookListTemplate, settings));
+                    $(ebookSettingsSelectedBooks, rootel).html(sakai.api.Util.TemplateRenderer(ebookListTemplate, settings_clone));
                 }
 
             } else {
@@ -875,7 +881,6 @@ require(
 
             if (settings.display_style == "listing") {
                 $(ebookDisplay, rootel).html(sakai.api.Util.TemplateRenderer(ebookListTemplate, settings));
-                //$(ebookListItem+":first",ebookDisplay, rootel).addClass("expanded").find(ebookListItemContent).show();
             } else {
                 $(ebookDisplay, rootel).html(sakai.api.Util.TemplateRenderer(ebookDisplayTemplate, settings));
 
@@ -1036,7 +1041,7 @@ require(
                 var settings = getSettingsObject();
 
                 // create a dummy object to render template
-                var dummyWidgetData = {books: {}, order: [], sort: "none"};
+                var dummyWidgetData = {books: {}, order: [], sort: "none", editable: true};
                 for (var i=0; i<resultsJSON.response.docs.length; i++) {
                     // check if object has already been selected
                     if (settings.books.hasOwnProperty(resultsJSON.response.docs[i].nid)) {
