@@ -182,28 +182,28 @@
     <div id="ebook_reader_dialog_template" style="display: none;"><!--
         <div class="s3d-dialog-close jqmClose"></div>
         <h1 class="s3d-dialog-header ebook_reader_dialog_title">__MSG__READER_DIALOG_TITLE__</h1>
-        <div class="ebook_reader_dialog_content">
-            <div id="ebook_reader_blockout"><img src="/dev/images/ajax_load.gif"/></div>
-        </div>
+        <div class="ebook_reader_dialog_content"></div>
     --></div>
     <div id="ebook_reader_oembed_template" style="display: none;"><!--
-        <div class="ebook_reader_summary">
-           <div class="ebook_reader_summary_thumbnail"><img src="${thumbnail_url}"/></div>
-           <div class="ebook_reader_summary_title">${title}</div>
-           <div class="ebook_reader_summary_author">by ${author_name}</div>
+         <div class="ebook_reader_oembed ebook_reader_for_${nid}">
+            <div class="ebook_reader_summary">
+               <div class="ebook_reader_summary_thumbnail"><img src="${thumbnail_url}"/></div>
+               <div class="ebook_reader_summary_title">${title}</div>
+               <div class="ebook_reader_summary_author">by ${author_name}</div>
+            </div>
+            <div class="ebook_reader_frame">
+               <div class="ebook_page_navigation">
+                    <div id="ebook_page_navigation_slider"></div>
+                    <span class="ebook_reader_navigation_select_container">
+                        Go to page <select id="ebook_reader_navigation_select">
+                           {var all_pages = $.makeArray(new Array(pages))}
+                           {for i in all_pages}<option value="${parseInt(i_index)+1}" {if start_index === (parseInt(i_index)+1)}selected="selected"{/if}>${parseInt(i_index)+1}</option>{/for}
+                        </select> of ${pages}
+                    </span>
+               </div>
+            </div>
+            <div id="ebook_reader_iframe_blockout"><img src="/dev/images/ajax_load.gif"/></div>
         </div>
-        <div class="ebook_reader_frame">
-           <div class="ebook_page_navigation">
-                <div id="ebook_page_navigation_slider"></div>
-                <span class="ebook_reader_navigation_select_container">
-                    Go to page <select id="ebook_reader_navigation_select">
-                       {var all_pages = $.makeArray(new Array(pages))}
-                       {for i in all_pages}<option value="${parseInt(i_index)+1}" {if start_index === (parseInt(i_index)+1)}selected="selected"{/if}>${parseInt(i_index)+1}</option>{/for}
-                    </select> of ${pages}
-                </span>
-           </div>
-        </div>
-        <div id="ebook_reader_iframe_blockout"><img src="/dev/images/ajax_load.gif"/></div>
     --></div>
     <div id="ebook_settings_search_pagination_template" style="display: none;"><!--
         <span class="ebook_search_pagination_index">Results ${start} to ${end} (${total} total)</span>
@@ -232,6 +232,7 @@
             <select name="display_style" id="ebook_display_style">
                 <option value="bookshelf"  {if defined('display_style') && display_style == 'bookshelf'}selected{/if}>__MSG__OPTION_DISPLAY_STYLE_BOOKSHELF__</option>
                 <option value="listing"  {if defined('display_style') && display_style == 'listing'}selected{/if}>__MSG__OPTION_DISPLAY_STYLE_LISTING__</option>
+                <option value="reader"  {if defined('display_style') && display_style == 'reader'}selected{/if}>__MSG__OPTION_DISPLAY_STYLE_READER__</option>
             </select>
           </div>
           <div {if defined('display_style') && display_style != 'bookshelf'} style="display:none;" {/if} >

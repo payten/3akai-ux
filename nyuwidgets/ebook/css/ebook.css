@@ -112,6 +112,11 @@
 .ebook_preview_wrapper .ebook_preview .ebook_widget_actions{bottom:30px;left:100px;position:absolute;}
 #ebook_display.ebook-limit-rows .ebook_preview_wrapper{overflow:auto;position:relative;}
 #ebook_display.ebook-limit-rows .ebook_preview_wrapper{overflow:auto;position:relative;}
+#ebook_display .ebook_reader_oembed {
+        position: relative;overflow: hidden;padding:10px;border: 1px solid #AAA; background-color: #EEE; margin-bottom: 10px;
+        -moz-box-shadow: 0 2px 3px #999 inset;-webkit-box-shadow: 0 2px 3px #999 inset;box-shadow: 0 2px 3px #999 inset;
+}
+#ebook_display .ebook_reader_summary_thumbnail img {max-width: 160px;}
 /* Display style - Listing */
 #ebook_display .ebook_settings_book_order,
 #ebook_display .ebook_settings_caption_input{display:none;}
