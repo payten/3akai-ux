@@ -188,8 +188,8 @@ require(
                 var settings = getSettingsObject();
                 if(settings !== false){
                     // update this book in the widget settings
-                    var formData = serializeFormToObject($this.parents(ebookSettingsForm));                    
-                    var nid = parseInt(formData.nid, 10);                    
+                    var formData = serializeFormToObject($this.parents(ebookSettingsForm));
+                    var nid = parseInt(formData.nid, 10);
                     if (settings.books[nid]) {
                         settings.books[nid].caption = formData.caption;
                         settings.books[nid].reader_start_index = parseInt(formData.reader_start_index);
