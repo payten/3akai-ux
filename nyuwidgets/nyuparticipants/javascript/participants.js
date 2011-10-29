@@ -36,7 +36,13 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
         // Configuration variables //
         /////////////////////////////
         var NUM_PER_PAGE = 10,
-            currentPage = 1;
+            currentPage = 1,
+            checkedParticipants = [],
+            checkedParticipantsIDs = [],
+            allParticipantsCache = [],
+            prevAllParticipantsSearch = false,
+            totalParticipants = 0,
+            allPagesSelected = false;
 
         // Containers
         var $participantsListContainer = $("#participants_list_container", rootel);
@@ -53,6 +59,14 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
         var participantsListParticipantName = ".participants_list_participant_name";
         var $participants_pager = $("#participants_pager", rootel);
         var $participants_sort_by = $("#participants_sort_by", rootel);
+        var $participants_select_all = $("#participants_select_all", rootel);
+        var $participants_select_all_container = $("#participants_select_all_container", rootel);
+        var $participants_num_selected = $("#participants_num_selected", rootel);
+        var $participants_select_all_pages = $("#participants_select_all_pages", rootel);
+        var $participants_select_all_pages_button = $("#participants_select_all_pages button", rootel);
+        var $participants_select_this_page = $("#participants_select_this_page", rootel);
+        var $participants_select_this_page_button = $("#participants_select_this_page button", rootel);
+        var $participants_total = $("#participants_total", rootel);
 
 
         ///////////////////////
@@ -72,31 +86,98 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
          * Set the attributes needed by the sendmessage widget to send a message to all selected users
          */
         var setSendSelectedMessageAttributes = function(){
-            var userArr = [];
-            var userIDArr = [];
-            $.each($(participantsListParticipantCheckbox + ":checked", rootel), function(index, item){
-                userIDArr.push($(item)[0].id.split("_")[0]);
-                userArr.push($(item).parent().nextAll(participantsListParticipantName).text());
-            });
             $participantsSendSelectedMessage.attr("sakai-entitytype", "user");
-            $participantsSendSelectedMessage.attr("sakai-entityname", userArr);
-            $participantsSendSelectedMessage.attr("sakai-entityid", userIDArr);
+            $participantsSendSelectedMessage.attr("sakai-entityname", checkedParticipants);
+            $participantsSendSelectedMessage.attr("sakai-entityid", checkedParticipantsIDs);
             enableDisableButtons();
+        };
+
+        var checkSingleParticipant = function(e) {
+            var $this = $(e.target),
+                thisID = $this.attr("id").split("_")[0],
+                thisName = $this.parent().nextAll(participantsListParticipantName).text();
+            if ($this.is(":checked")) {
+                checkedParticipantsIDs.push(thisID);
+                checkedParticipants.push(thisName);
+            } else {
+                $participants_select_all_container.hide();
+                $participantsSelectAll.removeAttr("checked");
+                checkedParticipantsIDs = _.without(checkedParticipantsIDs, thisID);
+                checkedParticipants = _.without(checkedParticipants, thisName);
+            }
+            addAllSelectedOnPage();
         };
 
         /**
          * Check/Uncheck all items in the members list and enable/disable buttons
          */
         var checkAll = function(){
-            if($(this).is(":checked")){
+            if ($(this).is(":checked")) {
                 $(participantsListParticipantCheckbox, rootel).attr("checked","checked");
-                setSendSelectedMessageAttributes();
-            }else{
-                $(participantsListParticipantCheckbox, rootel).removeAttr("checked");
-                enableDisableButtons();
+                addAllSelectedOnPage();
+            } else {
+                selectNone();
             }
         };
 
+        var selectNone = function() {
+            allPagesSelected = false;
+            $participants_select_all_container.hide();
+            checkedParticipants = [];
+            $(participantsListParticipantCheckbox, rootel).removeAttr("checked");
+            enableDisableButtons();
+        };
+
+        var addAllSelectedOnPage = function() {
+            allPagesSelected = false;
+            checkedParticipants = [];
+            checkedParticipantsIDs = [];
+            $.each($(participantsListParticipantCheckbox + ":checked", rootel), function(index, item){
+                checkedParticipantsIDs.push($(item).attr("id").split("_")[0]);
+                checkedParticipants.push($(item).parent().nextAll(participantsListParticipantName).text());
+            });
+            setSendSelectedMessageAttributes();
+            if (totalParticipants > NUM_PER_PAGE && $(participantsListParticipantCheckbox + ":checked", rootel).length === $(participantsListParticipantCheckbox, rootel).length) {
+                toggleSelectAll(true);
+            }
+        };
+
+        var toggleSelectAll = function(showSelectall) {
+            $participants_select_all_container.show();
+            if (showSelectall) {
+                $participants_select_this_page.hide();
+                $participants_num_selected.text($(participantsListParticipantCheckbox, rootel).length);
+                $participants_select_all_pages.show();
+            } else {
+                $participants_select_all_pages.hide();
+                $participants_select_this_page.show();
+            }
+        };
+
+        var checkAllPages = function() {
+            allPagesSelected = true;
+            if (prevAllParticipantsSearch === $.trim($participantsSearchField.val())) {
+                selectAllParticipants(allParticipantsCache);
+            } else {
+                sakai.api.Groups.searchMembers(widgetData.participants.groupid, $.trim($participantsSearchField.val()), 1000000000, 0, "firstName", $participants_sort_by.val(), function(success, data) {
+                    prevAllParticipantsSearch = $.trim($participantsSearchField.val());
+                    allParticipantsCache = data.results;
+                    selectAllParticipants(data.results);
+                });
+            }
+        };
+
+        var selectAllParticipants = function(participants) {
+            toggleSelectAll(false);
+            $participants_total.text(participants.length);
+            checkedParticipants = [];
+            checkedParticipantsIDs = [];
+            $.each(participants, function(i, user) {
+                checkedParticipantsIDs.push(user.userid);
+                checkedParticipants.push(sakai.api.User.getDisplayName(user));
+            });
+            setSendSelectedMessageAttributes();
+        };
 
         //////////////////////
         // Render functions //
@@ -200,6 +281,8 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                             "participants": participantsArr,
                             "sakai": sakai
                         }));
+                        selectNone();
+                        totalParticipants = data.total;
                         if (data.total > NUM_PER_PAGE) {
                             $participants_pager.pager({ pagenumber: currentPage, pagecount: Math.ceil(data.total/NUM_PER_PAGE), buttonClickCallback: handlePageClick }).show();
                         } else {
@@ -231,9 +314,9 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
 
         var loadParticipants = function(){
             // current search term
-            var searchTerm = $.trim($participantsSearchField.val());            
+            var searchTerm = $.trim($participantsSearchField.val());
             // add busy spinner
-            $participantsSearchField.addClass("participants_searching");         
+            $participantsSearchField.addClass("participants_searching");
             // ensure current search is the one to render
             // otherwise ignore and presume other search is running
             var preRenderParticipants = function(success, data) {
@@ -248,18 +331,22 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
         var searchTimeout = null;
 
         var addBinding = function(){
-            $participantsSearchField.unbind("keyup").bind("keyup", function() {                
+            $participantsSearchField.unbind("keyup").bind("keyup", function() {
+                $(participantsListParticipantCheckbox, rootel).removeAttr("checked");
+                $participantsSelectAll.removeAttr("checked");
+                $participants_select_all_container.hide();
+
                 if (searchTimeout) {
                     clearTimeout(searchTimeout);
                 }
                 searchTimeout = setTimeout(function() {
                     currentPage = 1;
-                    loadParticipants();  
-                }, 400);                
+                    loadParticipants();
+                }, 400);
             });
             $participants_sort_by.unbind("change").bind("change", loadParticipants);
             $participantsSelectAll.unbind("click").bind("click", checkAll);
-            $(participantsListParticipantCheckbox, rootel).live("click", setSendSelectedMessageAttributes);
+            $(participantsListParticipantCheckbox, rootel).live("click", checkSingleParticipant);
 
             $(".participants_accept_invitation").live("click", function(ev){
                 var userid = $(this).attr("sakai-entityid");
@@ -279,6 +366,8 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                     }
                 });
             });
+            $participants_select_all_pages_button.unbind("click").bind("click", checkAllPages);
+            $participants_select_this_page_button.unbind("click").bind("click", addAllSelectedOnPage);
         };
 
         var init = function(){
