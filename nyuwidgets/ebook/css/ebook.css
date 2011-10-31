@@ -99,7 +99,7 @@
 .ebook_preview_wrapper .ebook_preview .ebook_thumbnail_link{bottom:8px;padding:0 17.5px;position:absolute;}
 .ebook_preview_wrapper .ebook_preview .ebook_thumbnail_link img{width:65px;box-shadow:1px 1px 2px 1px #999;-moz-box-shadow:1px 1px 2px 1px #999;-webkit-box-shadow:1px 1px 2px 1px #999;}
 .ebook_preview_wrapper .ebook_preview .ebook_thumbnail_link.hovered{padding:0;bottom:0;}
-.ebook_preview_wrapper .ebook_preview .ebook_thumbnail_link.hovered img{width:auto;box-shadow:1px 1px 10px 1px #999;-moz-box-shadow:1px 1px 10px 1px #999;-webkit-box-shadow:1px 1px 10px 1px #999;}
+.ebook_preview_wrapper .ebook_preview .ebook_thumbnail_link.hovered img{width:auto;max-width: 100px;box-shadow:1px 1px 10px 1px #999;-moz-box-shadow:1px 1px 10px 1px #999;-webkit-box-shadow:1px 1px 10px 1px #999;}
 .ebook_preview_wrapper .ebook_preview .ebook_title{color:#058EC4;font-size:1.1em;font-weight:400;}
 .ebook_caption_container{clear:both;border:2px solid #e2e2e4;border-left:none;border-right:none;}
 .ebook_arrowUp{height:10px;background:#fff url(../images/ebook_arrowup.jpg) no-repeat bottom left;display:none;}
@@ -112,11 +112,12 @@
 .ebook_preview_wrapper .ebook_preview .ebook_widget_actions{bottom:30px;left:100px;position:absolute;}
 #ebook_display.ebook-limit-rows .ebook_preview_wrapper{overflow:auto;position:relative;}
 #ebook_display.ebook-limit-rows .ebook_preview_wrapper{overflow:auto;position:relative;}
+.ebook_reader_oembed {position: relative;overflow: hidden;margin-bottom: 10px;}
 #ebook_display .ebook_reader_oembed {
-        position: relative;overflow: hidden;padding:10px;border: 1px solid #AAA; background-color: #EEE; margin-bottom: 10px;
+        padding:10px;border: 1px solid #AAA; background-color: #EEE; margin-bottom: 10px;
         -moz-box-shadow: 0 2px 3px #999 inset;-webkit-box-shadow: 0 2px 3px #999 inset;box-shadow: 0 2px 3px #999 inset;
 }
-#ebook_display .ebook_reader_summary_thumbnail img {max-width: 160px;}
+.ebook_reader_summary_thumbnail img {max-width: 160px;}
 /* Display style - Listing */
 #ebook_display .ebook_settings_book_order,
 #ebook_display .ebook_settings_caption_input{display:none;}

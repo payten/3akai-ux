@@ -357,23 +357,20 @@ require(
 
             // Action for invoking the eBook Reader
             $(ebookShowReader, rootel).die("click");
-            $(ebookShowReader, rootel).live("click", function(e,ui){                                             
-               var nid, url, pages, start_index;
+            $(ebookShowReader, rootel).live("click", function(e,ui){                                                            
                var bookData = {};
                if ($(this).parents(ebookSettingsSearchResults).length > 0) { //handle a search result
                    bookData.data = {
                        nid: $(this).parents(ebookSettingsForm).find("input[name='nid']").val(),
                        url: $(this).parents(ebookSettingsForm).find("input[name='url']").val(),
                        is_field_awdl_image_count: parseInt($(this).parents(ebookSettingsForm).find("input[name='pages']").val()),
-                       start_index: 1
+                       reader_start_index: 1
                    }                                        
                } else { // handle a selected book
                    var settings = getSettingsObject();
                    nid = parseInt($(this).parents(ebookPreview).find("input[name='nid']").val());
                    bookData = settings.books[nid]                   
-               }
-               
-               ;
+               }              
                
                sakai.api.Util.TemplateRenderer(ebookReaderDialogTemplate, {}, $("#ebook_reader_dialog"));
                $(ebookReaderDialog).jqm({
@@ -896,9 +893,9 @@ require(
                     $(data.html).load(function() {
                         $(ebookReaderContainer, targetContainer).find("#ebook_reader_iframe_blockout").hide();
                     }).prependTo($(ebookReaderContainer, targetContainer).find(".ebook_reader_frame"));
-                    $(ebookReaderContainer, targetContainer).find("#ebook_reader_iframe_blockout").css({
-                        height: $(ebookReaderContainer, targetContainer).find(".ebook_reader_frame iframe").height(),
-                        width: $(ebookReaderContainer, targetContainer).find(".ebook_reader_frame iframe").width()
+                    $(ebookReaderContainer, targetContainer).find("#ebook_reader_iframe_blockout, iframe").css({
+                        height: height,
+                        width: width
                     });
                     var slideInProgress = false;
                     $(ebookReaderContainer, targetContainer).find("#ebook_page_navigation_slider").slider({
