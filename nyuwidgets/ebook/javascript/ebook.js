@@ -358,14 +358,14 @@ require(
             // Action for invoking the eBook Reader
             $(ebookShowReader, rootel).die("click");
             $(ebookShowReader, rootel).live("click", function(e,ui){                                                            
-               var bookData = {};
+               var bookData = {};               
                if ($(this).parents(ebookSettingsSearchResults).length > 0) { //handle a search result
                    bookData.data = {
                        nid: $(this).parents(ebookSettingsForm).find("input[name='nid']").val(),
                        url: $(this).parents(ebookSettingsForm).find("input[name='url']").val(),
-                       is_field_awdl_image_count: parseInt($(this).parents(ebookSettingsForm).find("input[name='pages']").val()),
-                       reader_start_index: 1
-                   }                                        
+                       is_field_awdl_image_count: parseInt($(this).parents(ebookSettingsForm).find("input[name='pages']").val())
+                   };
+                   bookData.reader_start_index = 1;
                } else { // handle a selected book
                    var settings = getSettingsObject();
                    nid = parseInt($(this).parents(ebookPreview).find("input[name='nid']").val());
