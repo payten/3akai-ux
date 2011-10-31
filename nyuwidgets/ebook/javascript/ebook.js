@@ -296,9 +296,9 @@ require(
 
                     // add book to widget settings
                     settings.books[bookData.nid] = {data: bookData};
-                    settings.books[bookData.nid]["caption"] = formData.caption;
-                    settings.books[bookData.nid]["reader_start_index"] = 1;
-                    settings.books[bookData.nid]["bookId"] = bookData.url.split("/").pop();
+                    settings.books[bookData.nid].caption = formData.caption;
+                    settings.books[bookData.nid].reader_start_index = parseInt(formData.reader_start_index);
+                    settings.books[bookData.nid].bookId = bookData.url.split("/").pop();
                     settings.books[bookData.nid].data = sanitizeBookData(settings.books[bookData.nid].data);
 
                     // add new id to the order array (at the end!)
@@ -334,8 +334,9 @@ require(
                             itemEl.removeClass("expanded").addClass("added");
                             //clone the item
                             var clonedBookEl = itemEl.clone();
-                            //ensure caption value is retained in clone
+                            //ensure input value is retained in clone
                             clonedBookEl.find("textarea[name=caption]").val(settings.books[bookData.nid].caption);
+                            clonedBookEl.find("select[name=reader_start_index]").val(settings.books[bookData.nid].reader_start_index);
                             //add clone to list
                             var selectedListEl = $(ebookSettingsSelectedBooks, rootel).find(ebookList);
                             $(ebookSettingsSelectedBooks, rootel).find(".ebook_no_book_set_message").remove();
@@ -875,6 +876,9 @@ require(
             var oembedParams = $.extend({}, sakai.config.URL.AWDL_OEMBED_DEFAULT_PARAMS);
             oembedParams.height = height;
             oembedParams.width = width;
+            if (!bookData.hasOwnProperty('reader_start_index')) {
+                bookData.reader_start_index = 1;
+            }
             oembedParams.url = bookData.data.url + "/" + bookData.reader_start_index;
             $.jsonp({
                 url: (bookData.data.oembed_url || sakai.config.URL.AWDL_OEMBED) + "?callback=?",
