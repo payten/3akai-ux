@@ -22,6 +22,7 @@ require(
     [
         "jquery", "sakai/sakai.api.core",
         "/nyuwidgets/ebook/lib/jquery-ui.sortable.js",
+        "/nyuwidgets/ebook/lib/jquery.ui.slider.js",
         "/nyuwidgets/ebook/lib/jquery.jsonp.js"
     ],
     function($, sakai) {
@@ -58,7 +59,7 @@ require(
         };
         sakai.config.URL.AWDL_OEMBED_DEFAULT_PARAMS = {
            format: 'json',
-           mode: 'double_page'
+           mode: 'single_page'
         };
 
         var rootel = "#" + tuid;
@@ -191,6 +192,7 @@ require(
                     var nid = parseInt(formData.nid, 10);
                     if (settings.books[nid]) {
                         settings.books[nid].caption = formData.caption;
+                        settings.books[nid].reader_start_index = parseInt(formData.reader_start_index);
                         // disable the button
                         $this.addClass("s3d-disabled");
                         // update widget details
@@ -294,8 +296,9 @@ require(
 
                     // add book to widget settings
                     settings.books[bookData.nid] = {data: bookData};
-                    settings.books[bookData.nid]["caption"] = formData.caption;
-                    settings.books[bookData.nid]["bookId"] = bookData.url.split("/").pop();
+                    settings.books[bookData.nid].caption = formData.caption;
+                    settings.books[bookData.nid].reader_start_index = parseInt(formData.reader_start_index);
+                    settings.books[bookData.nid].bookId = bookData.url.split("/").pop();
                     settings.books[bookData.nid].data = sanitizeBookData(settings.books[bookData.nid].data);
 
                     // add new id to the order array (at the end!)
@@ -331,8 +334,9 @@ require(
                             itemEl.removeClass("expanded").addClass("added");
                             //clone the item
                             var clonedBookEl = itemEl.clone();
-                            //ensure caption value is retained in clone
+                            //ensure input value is retained in clone
                             clonedBookEl.find("textarea[name=caption]").val(settings.books[bookData.nid].caption);
+                            clonedBookEl.find("select[name=reader_start_index]").val(settings.books[bookData.nid].reader_start_index);
                             //add clone to list
                             var selectedListEl = $(ebookSettingsSelectedBooks, rootel).find(ebookList);
                             $(ebookSettingsSelectedBooks, rootel).find(".ebook_no_book_set_message").remove();
@@ -354,17 +358,21 @@ require(
 
             // Action for invoking the eBook Reader
             $(ebookShowReader, rootel).die("click");
-            $(ebookShowReader, rootel).live("click", function(e,ui){
-               var settings = getSettingsObject();
-               var nid, url;
-               if ($(this).parents(ebookPreview).length > 0) { //handle a selected book
-                   nid = $(this).parents(ebookPreview).find("input[name='nid']").val();
-                   url = settings.books[nid].data.url;
-               } else { // handle a search result
-                   nid = $(this).parents(ebookSettingsForm).find("input[name='nid']").val();
-                   url = $(this).parents(ebookSettingsForm).find("input[name='url']").val();
-               }
-
+            $(ebookShowReader, rootel).live("click", function(e,ui){                                                            
+               var bookData = {};               
+               if ($(this).parents(ebookSettingsSearchResults).length > 0) { //handle a search result
+                   bookData.data = {
+                       nid: $(this).parents(ebookSettingsForm).find("input[name='nid']").val(),
+                       url: $(this).parents(ebookSettingsForm).find("input[name='url']").val(),
+                       is_field_awdl_image_count: parseInt($(this).parents(ebookSettingsForm).find("input[name='pages']").val())
+                   };
+                   bookData.reader_start_index = 1;
+               } else { // handle a selected book
+                   var settings = getSettingsObject();
+                   nid = parseInt($(this).parents(ebookPreview).find("input[name='nid']").val());
+                   bookData = settings.books[nid]                   
+               }              
+               
                sakai.api.Util.TemplateRenderer(ebookReaderDialogTemplate, {}, $("#ebook_reader_dialog"));
                $(ebookReaderDialog).jqm({
                     modal: true,
@@ -388,40 +396,8 @@ require(
 
                 $(ebookReaderDialog).jqmShow();
 
-                var oembedParams = $.extend({}, sakai.config.URL.AWDL_OEMBED_DEFAULT_PARAMS);
-                oembedParams.height = $(ebookReaderDialog).find(".ebook_reader_dialog_content").height();
-                oembedParams.width = $(ebookReaderDialog).find(".ebook_reader_dialog_content").width() - 210;
-                oembedParams.url = url + "/1";
-
-                // load reader from AWDL using oembed + jsonp solution
-                $.jsonp({
-                    url: sakai.config.URL.AWDL_OEMBED + "?callback=?",
-                    data: oembedParams,
-                    timeout: 20000,
-                    success: function(data) {
-                        $(".ebook_reader_dialog_content",ebookReaderDialog).html(sakai.api.Util.TemplateRenderer(ebookReaderOembedTemplate, data));
-                        $(ebookReaderDialog).find(".ebook_reader_summary").width(200);
-                        $(ebookReaderDialog).find(".ebook_reader_frame").width($(ebookReaderDialog).find(".ebook_reader_dialog_content").width() - 210);
-                        $(data.html).load(function() {$(ebookReaderDialog).find("#ebook_reader_iframe_blockout").hide();}).appendTo($(".ebook_reader_frame",ebookReaderDialog));
-                        //$(ebookReaderDialog).find(".ebook_reader_frame iframe").attr("height", $(ebookReaderDialog).find(".ebook_reader_dialog_content").height());
-                        //$(ebookReaderDialog).find(".ebook_reader_frame iframe").attr("width", $(ebookReaderDialog).find(".ebook_reader_frame").width());
-                        $(ebookReaderDialog).find("#ebook_reader_iframe_blockout").css({
-                            height: $(ebookReaderDialog).find(".ebook_reader_frame iframe").height(),
-                            width: $(ebookReaderDialog).find(".ebook_reader_frame iframe").width()
-                        });
-                    },
-                    error: function (xOptions, textStatus) {
-                        var errorDiv = $("<div class='fl-widget-content'>");
-                        if (textStatus == "timeout") {
-                            errorDiv.html($($(ebookAWDLTimeoutMsg, rootel).html()));
-                        } else {
-                            errorDiv.html($($(ebookAWDLErrorMsg, rootel).html()));
-                        }
-                        $(".ebook_reader_dialog_content",ebookReaderDialog).html(errorDiv);
-                    }
-                });
+                renderOembedReader(bookData, $(ebookReaderDialog).find(".ebook_reader_dialog_content"), $(ebookReaderDialog).find(".ebook_reader_dialog_content").height() - 24, $(ebookReaderDialog).find(".ebook_reader_dialog_content").width() - 210);                
             });
-
 
             // action for removing the ebook reader dialog
             $(ebookHideReader, ebookReaderDialog).die("click");
@@ -710,8 +686,11 @@ require(
                 if (!settings.order || settings.order.length === 0) {
                     $(ebookSettingsSelectedBooks, rootel).append($(ebookNoBooksSetMsg, rootel).html());
                 } else {
+                    // currate some book settings
+                    var settings_clone = $.extend({}, settings);
+                    settings_clone.editable = true;
                     // show selected books
-                    $(ebookSettingsSelectedBooks, rootel).html(sakai.api.Util.TemplateRenderer(ebookListTemplate, settings));
+                    $(ebookSettingsSelectedBooks, rootel).html(sakai.api.Util.TemplateRenderer(ebookListTemplate, settings_clone));
                 }
 
             } else {
@@ -841,7 +820,7 @@ require(
 
         ////////////////////
         // Main functions //
-        ////////////////////
+        ////////////////////               
 
         /**
          * Display the set ebook details
@@ -851,7 +830,10 @@ require(
 
             if (settings.display_style == "listing") {
                 $(ebookDisplay, rootel).html(sakai.api.Util.TemplateRenderer(ebookListTemplate, settings));
-                //$(ebookListItem+":first",ebookDisplay, rootel).addClass("expanded").find(ebookListItemContent).show();
+            } else if (settings.display_style == "reader") {               
+                for (var i=0; i<settings.order.length;i++) {
+                    renderOembedReader(settings.books[settings.order[i]], $(ebookDisplay, rootel), $(window).height() - 50, 680);
+                }                
             } else {
                 $(ebookDisplay, rootel).html(sakai.api.Util.TemplateRenderer(ebookDisplayTemplate, settings));
 
@@ -881,6 +863,76 @@ require(
                     }
                 }
             }
+        };
+        
+        /**
+         * Render the digital library reader for the given book
+         *  @param bookData the book's data
+         *  @param targetContainer tne target element to render the reader within
+         *  @param height height of the iframe/reader
+         *  @param width width of the iframe/reader (note that 200 will be added for the book metadata)
+         */
+        var renderOembedReader = function(bookData, targetContainer, height, width) {
+            var oembedParams = $.extend({}, sakai.config.URL.AWDL_OEMBED_DEFAULT_PARAMS);
+            oembedParams.height = height;
+            oembedParams.width = width;
+            if (!bookData.hasOwnProperty('reader_start_index')) {
+                bookData.reader_start_index = 1;
+            }
+            oembedParams.url = bookData.data.url + "/" + bookData.reader_start_index;
+            $.jsonp({
+                url: (bookData.data.oembed_url || sakai.config.URL.AWDL_OEMBED) + "?callback=?",
+                data: oembedParams,
+                timeout: 20000,
+                success: function(data) {                   
+                    data.pages = bookData.data.is_field_awdl_image_count;
+                    data.start_index = bookData.reader_start_index;
+                    data.nid = bookData.data.nid;
+                    
+                    var ebookReaderContainer = ".ebook_reader_for_"+data.nid;
+                    
+                    targetContainer.append(sakai.api.Util.TemplateRenderer(ebookReaderOembedTemplate, data));
+                    $(ebookReaderContainer, targetContainer).find(".ebook_reader_summary").width(200);
+                    $(ebookReaderContainer, targetContainer).find(".ebook_reader_frame").width(width);
+                    $(data.html).load(function() {
+                        $(ebookReaderContainer, targetContainer).find("#ebook_reader_iframe_blockout").hide();
+                    }).prependTo($(ebookReaderContainer, targetContainer).find(".ebook_reader_frame"));
+                    $(ebookReaderContainer, targetContainer).find("#ebook_reader_iframe_blockout, iframe").css({
+                        height: height,
+                        width: width
+                    });
+                    var slideInProgress = false;
+                    $(ebookReaderContainer, targetContainer).find("#ebook_page_navigation_slider").slider({
+                          min: 1,
+                          max: data.pages,
+                          step: 1,
+                          value: data.start_index,
+                          slide: function(event, ui) {
+                              $(ebookReaderContainer, targetContainer).find("#ebook_reader_navigation_select").val(ui.value+"");
+                          },
+                          stop: function(event, ui) {
+                              $(ebookReaderContainer, targetContainer).find("#ebook_reader_navigation_select").triggerHandler("change");
+                          }
+                    });
+                    $(ebookReaderContainer, targetContainer).find("#ebook_page_navigation_slider").width(
+                        $(ebookReaderContainer, targetContainer).find(".ebook_reader_frame iframe").width() - $(ebookReaderContainer, targetContainer).find(".ebook_reader_navigation_select_container").width() - 15);
+                    $(ebookReaderContainer, targetContainer).find("#ebook_reader_navigation_select").change(function() {
+                        if (!slideInProgress) {
+                            $(ebookReaderContainer, targetContainer).find("#book-viewer").attr("src", bookData.data.url + "/"+ $(this).val() + "?oembed=true");
+                            $(ebookReaderContainer, targetContainer).find("#ebook_page_navigation_slider").slider("value", $(this).val());
+                        }
+                    });                    
+                },
+                error: function (xOptions, textStatus) {
+                    var errorDiv = $("<div class='fl-widget-content'>");
+                    if (textStatus == "timeout") {
+                        errorDiv.html($($(ebookAWDLTimeoutMsg, rootel).html()));
+                    } else {
+                        errorDiv.html($($(ebookAWDLErrorMsg, rootel).html()));
+                    }
+                    $(".ebook_reader_for_"+bookData.data.nid, targetContainer).html(errorDiv);
+                } 
+            });            
         };
 
         /**
@@ -1012,7 +1064,7 @@ require(
                 var settings = getSettingsObject();
 
                 // create a dummy object to render template
-                var dummyWidgetData = {books: {}, order: [], sort: "none"};
+                var dummyWidgetData = {books: {}, order: [], sort: "none", editable: true};
                 for (var i=0; i<resultsJSON.response.docs.length; i++) {
                     // check if object has already been selected
                     if (settings.books.hasOwnProperty(resultsJSON.response.docs[i].nid)) {
