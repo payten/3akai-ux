@@ -237,7 +237,7 @@
                         function preProcessData(new_data, string) {
                             // ensure completing search is for the current string value
                             // to avoid race condition with slower searches
-                            if (input.val() === string) {
+                            if (input.val().replace(/[\\]+|[\/]+/g,"") === string) {
                                 processData(new_data, string);
                             }
                         }
