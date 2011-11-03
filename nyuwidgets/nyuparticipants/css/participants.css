@@ -51,3 +51,7 @@
 .participants_widget .participants_list_extra_field_title{color:#777;display:block;float:left;text-align:right;width:100px;}
 .participants_widget .participants_list_extra_field_value{color:#000;margin-left:10px;display:block;padding-left:100px;}
 .participants_widget .participants_list_bottom_items_extra{margin-left:30px;}
+
+/* Select/deselect all */
+.participants_widget #participants_select_all_container{background-color:#ffbc55;margin:5px;padding:5px;text-align:center;}
+.participants_widget #participants_select_all_container button{font-size:12px;}
