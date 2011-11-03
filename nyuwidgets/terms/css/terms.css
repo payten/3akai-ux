@@ -1,4 +1,5 @@
 #terms_container {width:400px;margin-left:-200px;height:225px;}
 #terms {height:125px;font-size:14px;}
 #action_buttons {margin-top:10px;}
-#action_buttons button {float:right;}
+#action_buttons button, #action_buttons a {float:right;}
+#action_buttons a{margin-right:20px;font-size:11px;margin-top:7px;}
