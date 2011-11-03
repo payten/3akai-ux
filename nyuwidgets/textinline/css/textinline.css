@@ -17,6 +17,9 @@
  */
 #textinline_main{margin:10px;border:1px solid #ccc;border-radius:5px;padding:10px}
 /* white space fix from http://labnol.blogspot.com/2006/10/html-css-trick-for-displaying-code.html */
-#textinline_main pre{font-family:Arial,Helvetica,sans-serif;line-height:120%;white-space:pre-wrap;white-space:0!important;white-space:0;white-space:0;word-wrap:break-word;}
-#textinline_main h1{word-wrap:break-word;}
+#textinline_main pre{font-family:Arial,Helvetica,sans-serif;line-height:120%;white-space:pre-wrap;white-space:0!important;white-space:0;white-space:0;word-wrap:break-word;padding:5px;}
+#textinline_main h1{word-wrap:break-word;padding:5px;}
 #textinline_main .editable:hover{cursor:pointer;background-color:#FFFFDD;}
+#textinline_main form{margin-bottom:35px;}
+#textinline_main button {float:right;margin-top:10px;}
+#textinline_main button.s3d-link-button{margin-top:20px;}
