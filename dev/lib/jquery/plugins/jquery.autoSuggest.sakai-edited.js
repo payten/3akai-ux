@@ -234,6 +234,13 @@
                     prev = string;
                     if (string.length >= opts.minChars) {
                         selections_holder.addClass("loading");
+                        function preProcessData(new_data, string) {
+                            // ensure completing search is for the current string value
+                            // to avoid race condition with slower searches
+                            if (input.val() === string) {
+                                processData(new_data, string);
+                            }
+                        }
                         if(d_type == "string"){
                             var limit = "";
                             if(opts.retrieveLimit){
@@ -247,21 +254,21 @@
                                     d_count = 0;
                                     var new_data = opts.retrieveComplete.call(this, data);
                                     for (k in new_data) if (new_data.hasOwnProperty(k)) d_count++;
-                                    processData(new_data, string);
+                                    preProcessData(new_data, string);
                                 });
                             } else {
                                 $.getJSON(req_string+"?"+opts.queryParam+"="+encodeURIComponent(string)+limit+opts.extraParams, function(data){ 
                                     d_count = 0;
                                     var new_data = opts.retrieveComplete.call(this, data);
                                     for (k in new_data) if (new_data.hasOwnProperty(k)) d_count++;
-                                    processData(new_data, string); 
+                                    preProcessData(new_data, string); 
                                 });
                             }
                         } else {
                             if(opts.beforeRetrieve){
                                 string = opts.beforeRetrieve.call(this, string);
                             }
-                            processData(org_data, string);
+                            preProcessData(org_data, string);
                         }
                     } else {
                         selections_holder.removeClass("loading");
