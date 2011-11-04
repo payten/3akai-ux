@@ -442,5 +442,15 @@ define(["config/config"], function(config) {
     };
 
 
+    /**
+     * Kaltura Settings
+     */
+    config.kaltura = {
+        enabled: false, // Enable/disable Kaltura player
+        serverURL:  "http://www.kaltura.com", //INSERT_KALTURA_INSTALLATION_URL_HERE
+        partnerId:  100, //INSERT_YOUR_PARTNER_ID_HERE
+        playerId: 100 //INSERT_YOUR_PLAYER_ID_HERE
+    };
+
     return config;
 });
