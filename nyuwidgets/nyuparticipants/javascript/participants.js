@@ -172,9 +172,17 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
             $participants_total.text(participants.length);
             checkedParticipants = [];
             checkedParticipantsIDs = [];
-            $.each(participants, function(i, user) {
-                checkedParticipantsIDs.push(user.userid);
-                checkedParticipants.push(sakai.api.User.getDisplayName(user));
+            $.each(participants, function(i, auth) {
+                var authID, authDisplayName;
+                if (auth.userid) {
+                    authID = auth.userid;
+                    authDisplayName = sakai.api.User.getDisplayName(auth);
+                } else if (auth.groupid) {
+                    authID = auth.groupid;
+                    authDisplayName = auth["sakai:group-title"];
+                }
+                checkedParticipantsIDs.push(authID);
+                checkedParticipants.push(authDisplayName);
             });
             setSendSelectedMessageAttributes();
         };
