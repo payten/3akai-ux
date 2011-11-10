@@ -840,12 +840,12 @@ define(function(){
             "kaltura/video": {
                 cssClass: "icon-video-sprite",
                 URL: "/dev/images/mimetypes/video.png",
-                description: "VIDEO_FILE"
+                description: "KALTURA_VIDEO_FILE"
             },
             "kaltura/audio": {
                 cssClass: "icon-sound-sprite",
                 URL: "/dev/images/mimetypes/sound.png",
-                description: "SOUND_FILE"
+                description: "KALTURA_AUDIO_FILE"
             },
             "other": {
                 cssClass: "icon-unknown-sprite",
