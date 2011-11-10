@@ -229,7 +229,7 @@
                 function keyChange() {
                     // ignore if the following keys are pressed: [del] [shift] [capslock]
                     if( lastKeyPressCode == 46 || (lastKeyPressCode > 8 && lastKeyPressCode < 32) ){ return results_holder.hide(); }
-                    var string = input.val().replace(/[\\]+|[\/]+/g,"");
+                    var string = $.trim(input.val());
                     if (string == prev) return;
                     prev = string;
                     if (string.length >= opts.minChars) {
@@ -237,7 +237,7 @@
                         function preProcessData(new_data, string) {
                             // ensure completing search is for the current string value
                             // to avoid race condition with slower searches
-                            if (input.val().replace(/[\\]+|[\/]+/g,"") === string) {
+                            if ($.trim(input.val()) === string) {
                                 processData(new_data, string);
                             }
                         }
