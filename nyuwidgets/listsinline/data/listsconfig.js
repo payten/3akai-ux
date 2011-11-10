@@ -1,6 +1,6 @@
 define(function() {
-    return [
-    {
+    return {
+    "program": {
         "title": "Program",
         "multiple": false,
         "list": [
@@ -30,49 +30,97 @@ define(function() {
             }
         ]
     },
-    {
+    "specialization": {
         "title": "Specialization",
         "multiple": true,
         "list": [
-            "Finance",
-            "International",
-            "Management",
-            "Policy",
-            "Environment, Infrastructure, and Transportation",
-            "Economic Development and Housing Policy",
-            "International Planning"
+            {
+                "title": "Finance"
+            },
+            {
+                "title": "International"
+            },
+            {
+                "title": "Management"
+            },
+            {
+                "title": "Policy"
+            },
+            {
+                "title": "Environment, Infrastructure, and Transportation"
+            },
+            {
+                "title": "Economic Development and Housing Policy"
+            },
+            {
+                "title": "International Planning"
+            }
         ]
     },
-    {
+    "enrollment": {
         "title": "Enrollment Status",
         "multiple": false,
         "list": [
-            "Full-Time",
-            "Part-Time"
+            {
+                "title": "Full-Time"
+            },
+            {
+                "title": "Part-Time"
+            }
         ]
     },
-    {
+    "graddate": {
         "title": "Graduation Date",
         "multiple": false,
         "list": [
-            "January 2011",
-            "May 2011",
-            "September 2011",
-            "January 2012",
-            "May 2012",
-            "September 2012",
-            "January 2013",
-            "May 2013",
-            "September 2013",
-            "January 2014",
-            "May 2014",
-            "September 2014",
-            "January 2015",
-            "May 2015",
-            "September 2015"
+            {
+                "title": "January 2011"
+            },
+            {
+                "title": "May 2011"
+            },
+            {
+                "title": "September 2011"
+            },
+            {
+                "title": "January 2012"
+            },
+            {
+                "title": "May 2012"
+            },
+            {
+                "title": "September 2012"
+            },
+            {
+                "title": "January 2013"
+            },
+            {
+                "title": "May 2013"
+            },
+            {
+                "title": "September 2013"
+            },
+            {
+                "title": "January 2014"
+            },
+            {
+                "title": "May 2014"
+            },
+            {
+                "title": "September 2014"
+            },
+            {
+                "title": "January 2015"
+            },
+            {
+                "title": "May 2015"
+            },
+            {
+                "title": "September 2015"
+            }
         ]
     },
-    {
+    "interests": {
         "title": "Interest Area(s)",
         "multiple": true,
         "newtab": true,
@@ -295,33 +343,77 @@ define(function() {
             }
         ]
     },
-    {
+    "studentgroups": {
         "title": "Student Groups",
         "multiple": true,
         "list": [
-            "Wagner Student Association (WSA)",
-            "Alliance of Latin American Students (ALAS)",
-            "Asian Pacific American Student Alliance (APASA)",
-            "Black Student Alliance (BSA)",
-            "Jewish Wagner Professional Association (JeWPA)",
-            "Non Profit Network (NPN)",
-            "Stonewall Policy Alliance (SPA)",
-            "Students for Criminal Justice Reform (SCJR)",
-            "Students Exploring Arts and Culture (SNEAC)",
-            "Students for Innovation (BRIDGE)",
-            "Urban Planning Student Association (UPSA)",
-            "Wagner Review",
-            "Wagner Economic and Finance Association (WEFA)",
-            "Wagner Environmental Policy Association (WEPA)",
-            "Wagner Education Policy Studies Association (WEPSA)",
-            "Wagner Health Network (WHN)",
-            "Wagner International Student Society (WISS)",
-            "Wagner Policy Alliance (WPA)",
-            "Wagner Student Association for Africa(WSAFA)",
-            "Wagner Transportation Association (WTA)",
-            "Wagner Volunteer Corps (WVC)",
-            "Wagner Women's Caucus (WWC)"
+            {
+                "title": "Wagner Student Association (WSA)"
+            },
+            {
+                "title":"Alliance of Latin American Students (ALAS)"
+            },
+            {
+                "title": "Asian Pacific American Student Alliance (APASA)"
+            },
+            {
+                "title": "Black Student Alliance (BSA)"
+            },
+            {
+                "title": "Jewish Wagner Professional Association (JeWPA)"
+            },
+            {
+                "title": "Non Profit Network (NPN)"
+            },
+            {
+                "title": "Stonewall Policy Alliance (SPA)"
+            },
+            {
+                "title": "Students for Criminal Justice Reform (SCJR)"
+            },
+            {
+                "title": "Students Exploring Arts and Culture (SNEAC)"
+            },
+            {
+                "title": "Students for Innovation (BRIDGE)"
+            },
+            {
+                "title": "Urban Planning Student Association (UPSA)"
+            },
+            {
+                "title": "Wagner Review"
+            },
+            {
+                "title": "Wagner Economic and Finance Association (WEFA)"
+            },
+            {
+                "title": "Wagner Environmental Policy Association (WEPA)"
+            },
+            {
+                "title": "Wagner Education Policy Studies Association (WEPSA)"
+            },
+            {
+                "title": "Wagner Health Network (WHN)"
+            },
+            {
+                "title": "Wagner International Student Society (WISS)"
+            },
+            {
+                "title": "Wagner Policy Alliance (WPA)"
+            },
+            {
+                "title": "Wagner Student Association for Africa(WSAFA)"
+            },
+            {
+                "title": "Wagner Transportation Association (WTA)"
+            },
+            {
+                "title": "Wagner Volunteer Corps (WVC)"
+            },
+            {
+                "title": "Wagner Women's Caucus (WWC)"
+            }
         ]
     }
-];
+};
 });
