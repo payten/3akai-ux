@@ -4,7 +4,7 @@
     "grouppages": false,
     "groupdashboard": true,
     "description": "Lists",
-    "hasSettings": false,
+    "hasSettings": true,
     "id": "listsinline",
     "name": "Lists Widget",
     "type": "contrib",
@@ -16,5 +16,5 @@
     "i18n": {
         "default": "/nyuwidgets/listsinline/bundles/default.properties"
     },
-    "indexFields": ["savedSelections"]
+    "indexFields": ["listsinline/choicesSearchable"]
 }

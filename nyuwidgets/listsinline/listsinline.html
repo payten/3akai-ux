@@ -3,14 +3,16 @@
 
 <div class="listsinline_widget">
     <div class="fl-widget-content s3d-widget-content">
-        <div id="listsinline_main" style="display:none">
-            <div id="listsinline_title">
-                <h1>Lists</h1>
-            </div>
-            <button type="button" id="listsinline_edit_button" class="s3d-button" style="display:none">Edit</button>
-            <div id="listsinline_display_lists" style="display:none">
-            </div>
-            <div id="listsinline_choose_values" style="display:none">
+        <div id="listsinline_main_container" style="display:none">
+            <div id="listsinline_main">
+                <div id="listsinline_title">
+                    <h1>Lists</h1>
+                </div>
+                <button type="button" id="listsinline_edit_button" class="s3d-button" style="display:none">Edit</button>
+                <div id="listsinline_display_lists" style="display:none">
+                </div>
+                <div id="listsinline_choose_values" style="display:none">
+                </div>
             </div>
         </div>
         <div id="listsinline_settings" style="display:none">
@@ -19,7 +21,7 @@
             <form>
                 <select name="listsinline_category">
                 {for category in categories}
-                    <option value="${category.id}">${category.title}</option>
+                    <option value="${category.id}"{if selected === category.id} selected="selected"{/if}>${category.title}</option>
                 {/for}
                 </select>
                 <button type="submit" class="s3d-button">Save</button>
@@ -34,10 +36,22 @@
         --></div>
         <div id="listsinline_choose_values_template" style="display:none"><!--
             <form>
-                {if list.multiple}
-                {else}
-                {/if}
-                <button type="submit" class="s3d-button">Save</button>
+            {if list.multiple}
+                <ul>
+                {for choice in list.list}
+                    <li><input type="checkbox" value="${choice_index}" id="${choice_index}"{if $.inArray(choice_index, choices) > -1} checked="checked"{/if}/><label for="${choice_index}">${choice.title}</label></li>
+                {/for}
+                </ul>
+            {else}
+                <select>
+                {for choice in list.list}
+                    <option value="${choice_index}"{if $.inArray(choice_index, choices) > -1} selected="selected"{/if}>${choice.title}</option>
+                {/for}
+                </select>
+            {/if}
+                <div id="listsinline_action_buttons">
+                    <button type="submit" class="s3d-button">Save</button>
+                </div>
             </form>
         --></div>
     </div>
