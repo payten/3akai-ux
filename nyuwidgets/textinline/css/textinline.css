@@ -1,4 +1,5 @@
-#textinline_main{margin:10px;border:1px solid #ccc;border-radius:5px;padding:10px}
+#textinline_main_container{border:1px solid #ccc;border-radius:5px;float:left;width:350px;}
+#textinline_main{margin:10px;padding:10px}
 /* white space fix from http://labnol.blogspot.com/2006/10/html-css-trick-for-displaying-code.html */
 #textinline_main pre{font-family:Arial,Helvetica,sans-serif;line-height:120%;white-space:pre-wrap;white-space:0!important;white-space:0;white-space:0;word-wrap:break-word;padding:5px;}
 #textinline_main h1{word-wrap:break-word;padding:5px;font-size:18px;}

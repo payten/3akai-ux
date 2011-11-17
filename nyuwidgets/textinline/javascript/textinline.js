@@ -3,6 +3,7 @@ require(["jquery", "sakai/sakai.api.core", "jquery-plugins/jquery.jeditable"], f
     sakai_global.textinline = function(tuid, showSettings, widgetData) {
 
         var $rootel = $("#"+tuid),
+            $textinline_main_container = $("#textinline_main_container", $rootel),
             $textinline_main = $("#textinline_main", $rootel),
             $textinline_main_template = $("#textinline_main_template", $rootel),
             $textinline_settings = $("#textinline_settings", $rootel),
@@ -24,7 +25,8 @@ require(["jquery", "sakai/sakai.api.core", "jquery-plugins/jquery.jeditable"], f
         };
 
         var doInit = function(){
-            $textinline_main.html(sakai.api.Util.TemplateRenderer($textinline_main_template, {data:widgetData.textinline})).show();
+            sakai.api.Util.TemplateRenderer($textinline_main_template, {data:widgetData.textinline}, $textinline_main);
+            $textinline_main_container.show();
             // Use a local widget data here for checking if the user can edit the container
             // if widgetData has no data property, it is our local widget data
             var localwd = false;
