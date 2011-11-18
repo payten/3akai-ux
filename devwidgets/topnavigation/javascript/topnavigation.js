@@ -431,7 +431,11 @@ require(["jquery", "sakai/sakai.api.core", "jquery-plugins/jquery.fieldselection
                 temp.subnav = [];
                 for (var ii in sakai.config.Navigation[i].subnav) {
                     if (sakai.config.Navigation[i].subnav.hasOwnProperty(ii)) {
-                        temp.subnav.push(getNavItem(ii, sakai.config.Navigation[i].subnav));
+                        if (!sakai.config.Navigation[i].subnav[ii].hasOwnProperty("pseudogroup") ||
+                            sakai.api.Groups.isCurrentUserAMember(sakai.config.Navigation[i].subnav[ii]["pseudogroup"], sakai.data.me)) {
+
+                            temp.subnav.push(getNavItem(ii, sakai.config.Navigation[i].subnav));
+                        }
                     }
                 }
             }

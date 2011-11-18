@@ -442,5 +442,19 @@ define(["config/config"], function(config) {
     };
 
 
+    /**
+     * Add extra navigation items
+     */
+    config.Navigation[0]["subnav"].push({
+        "id": "subnavigation_hr",
+        "pseudogroup": "g-gradecenter"
+    });
+    config.Navigation[0]["subnav"].push({
+        "url": "http://www.google.com",
+        "id": "subnavigation_gradecenter_link",
+        "label": "MY_GRADECENTER",
+        "pseudogroup": "g-gradecenter"
+    });
+
     return config;
 });
