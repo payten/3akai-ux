@@ -373,14 +373,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                 json = parameters;
             }
             else {
-                json = {
-                    border_size: 0,
-                    border_color: "cccccc",
-                    height: defaultHeight,
-                    url: "",
-                    width: defaultWidth,
-                    width_unit: defaultWidthUnit
-                };
+                json = sakai.widgets.ggadget.defaultConfiguration.ggadget;
             }
             renderRemoteContentSettings();
             renderIframeSettings(true);
