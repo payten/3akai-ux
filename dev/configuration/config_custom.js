@@ -156,6 +156,315 @@ define(["config/config"], function(config) {
     // Remove research groups
     config.worldTemplates = config.worldTemplates.splice(0,2);
 
+    // Portfolio Template
+    config.worldTemplates.push({
+        id: "portfolio",
+        title: "PORTFOLIOS",
+        titleSing: "PORTFOLIO",
+        adminOnly: true,
+        templates: [
+        {
+            "id": "basic-portfolio",
+            "title": "Basic Portfolio",
+            "img": "",
+            "fullImg": "",
+            "perfectFor": "All of your portfolio needs",
+            "roles": [
+                {
+                    "id": "member",
+                    "roleTitle": "Members",
+                    "title": "Member",
+                    "allowManage": false
+                },
+                {
+                    "id": "manager",
+                    "roleTitle": "Managers",
+                    "title": "Manager",
+                    "allowManage": true
+                }
+            ],
+            "docs": {
+                "${pid}0": {
+                    "structure0": {
+                        "My-work": {
+                            "_ref": "${refid}0",
+                            "_order": 0,
+                            "_nonEditable": true,
+                            "_title": "My work",
+                            "main": {
+                                "_ref": "${refid}0",
+                                "_order": 0,
+                                "_nonEditable": true,
+                                "_title": "My work"
+                            }
+                        }
+                    },
+                    "${refid}0": {
+                        "page": "<img id='widget_mylibrary_${refid}1' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='/devwidgets/mylibrary/images/mylibrary.png' data-mce-src='/devwidgets/mylibrary/images/mylibrary.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'><br><p></p>"
+                    },
+                    "${refid}1": {
+                        "mylibrary": {
+                            "groupid": "${groupid}"
+                        }
+                    }
+                },
+                "${pid}1": {
+                    "structure0": {
+                        "Members-of-my-Portfolio": {
+                            "_ref": "${refid}2",
+                            "_order": 0,
+                            "_title": "Members of my Portfolio",
+                            "_nonEditable": true,
+                            "main": {
+                                "_ref": "${refid}2",
+                                "_order": 0,
+                                "_nonEditable": true,
+                                "_title": "Members of my Portfolio"
+                            }
+                        }
+                    },
+                    "${refid}2": {
+                        "page": "<img id='widget_nyuparticipants_${refid}3' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='/dev/images/person_icon.png' data-mce-src='/dev/images/person_icon.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'>"
+                    },
+                    "${refid}3": {
+                        "participants": {
+                            "groupid": "${groupid}"
+                        }
+                    }
+                },
+                "${pid}2": {
+                    "structure0": {
+                        "Resume": {
+                            "_ref": "${refid}4",
+                            "_order": 0,
+                            "_nonEditable": true,
+                            "_title": "Resume",
+                            "main": {
+                                "_ref": "${refid}4",
+                                "_order": 0,
+                                "_nonEditable": true,
+                                "_title": "Resume"
+                            }
+                        }
+                    },
+                    "${refid}4": {
+                        "page": "<img id='widget_groupbasicinfo_${refid}5' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='/nyuwidgets/groupbasicinfo/images/icon.png' data-mce-src='/nyuwidgets/groupbasicinfo/images/icon.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'><br><p></p>"
+                    },
+                    "${refid}5": {
+                        "groupbasicinfo": {}
+                    }
+                },
+                "${pid}3": {
+                    "structure0": {
+                        "Collaborator-Discussion-Area": {
+                            "_title": "Collaborator Discussion Area",
+                            "_order": 0,
+                            "_ref": "${refid}6",
+                            "_nonEditable": true,
+                            "main": {
+                                "_title": "Collaborator Discussion Area",
+                                "_order": 0,
+                                "_ref": "${refid}6",
+                                "_nonEditable": true
+                            }
+                        }
+                    },
+                    "${refid}6": {
+                        "page": "<p><img src='/devwidgets/discussion/images/discussion.png' id='widget_discussion_${refid}7' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' border='1'></p><p><br data-mce-bogus='1'></p>"
+                    },
+                    "${refid}7": {
+                        "discussion": {
+                            "groupid": "${groupid}"
+                        }
+                    }
+                },
+                "${pid}4": {
+                    "structure0": {
+                        "About-Me": {
+                            "_title": "About Me",
+                            "_order": 0,
+                            "_ref": "${refid}8",
+                            "_nonEditable": true,
+                            "main": {
+                                "_title": "About Me",
+                                "_order": 0,
+                                "_ref": "${refid}8",
+                                "_nonEditable": true
+                            }
+                        }
+                    },
+                    "${refid}8": {
+                        "page": "<table class='mceItemTable' border='0'><tbody><tr><td><img id='widget_listsinline_${refid}9' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='nyuwidgets/listsinline/images/listsinline.png' data-mce-src='nyuwidgets/listsinline/images/listsinline.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'></td><td><img id='widget_listsinline_${refid}10' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='nyuwidgets/listsinline/images/listsinline.png' data-mce-src='nyuwidgets/listsinline/images/listsinline.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'></td></tr><tr><td><img id='widget_listsinline_${refid}11' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='nyuwidgets/listsinline/images/listsinline.png' data-mce-src='nyuwidgets/listsinline/images/listsinline.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'></td><td><img id='widget_textinline_${refid}12' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='nyuwidgets/textinline/images/textinline.png' data-mce-src='nyuwidgets/textinline/images/textinline.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'></td></tr><tr><td><img id='widget_listsinline_${refid}13' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='nyuwidgets/listsinline/images/listsinline.png' data-mce-src='nyuwidgets/listsinline/images/listsinline.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'></td><td><img id='widget_textinline_${refid}14' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='nyuwidgets/textinline/images/textinline.png' data-mce-src='nyuwidgets/textinline/images/textinline.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'></td></tr><tr><td><img id='widget_listsinline_${refid}15' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='nyuwidgets/listsinline/images/listsinline.png' data-mce-src='nyuwidgets/listsinline/images/listsinline.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'></td><td><img id='widget_textinline_${refid}16' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='nyuwidgets/textinline/images/textinline.png' data-mce-src='nyuwidgets/textinline/images/textinline.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'></td></tr><tr><td><img id='widget_listsinline_${refid}17' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='nyuwidgets/listsinline/images/listsinline.png' data-mce-src='nyuwidgets/listsinline/images/listsinline.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'></td><td><img id='widget_textinline_${refid}18' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='nyuwidgets/textinline/images/textinline.png' data-mce-src='nyuwidgets/textinline/images/textinline.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'></td></tr></tbody></table><p><br mce_bogus='1'></p>"
+                    },
+                    "${refid}9": {
+                        "listsinline": {
+                            "listsinline": {
+                                "category": "program",
+                                "sakai:indexed-fields": "choicesSearchable"
+                            }
+                        }
+                    },
+                    "${refid}10": {
+                        "listsinline": {
+                            "listsinline": {
+                                "category": "interests",
+                                "sakai:indexed-fields": "choicesSearchable"
+                            }
+                        }
+                    },
+                    "${refid}11": {
+                        "listsinline": {
+                            "listsinline": {
+                                "category": "specialization",
+                                "sakai:indexed-fields": "choicesSearchable"
+                            }
+                        }
+                    },
+                    "${refid}12": {
+                        "textinline": {
+                            "title": "Current Job/Internship",
+                            "text": "",
+                            "sakai:indexed-fields": "text",
+                            "allowTitleEdit": false
+                        }
+                    },
+                    "${refid}13": {
+                        "listsinline": {
+                            "listsinline": {
+                                "category": "graddate",
+                                "sakai:indexed-fields": "choicesSearchable"
+                            }
+                        }
+                    },
+                    "${refid}14": {
+                        "textinline": {
+                            "title": "Previous Jobs/Internships",
+                            "text": "",
+                            "sakai:indexed-fields": "text",
+                            "allowTitleEdit": false
+                        }
+                    },
+                    "${refid}15": {
+                        "listsinline": {
+                            "listsinline": {
+                                "category": "enrollment",
+                                "sakai:indexed-fields": "choicesSearchable"
+                            }
+                        }
+                    },
+                    "${refid}16": {
+                        "textinline": {
+                            "title": "Projects/Assignments",
+                            "text": "",
+                            "sakai:indexed-fields": "text",
+                            "allowTitleEdit": false
+                        }
+                    },
+                    "${refid}17": {
+                        "listsinline": {
+                            "listsinline": {
+                                "category": "studentgroups",
+                                "sakai:indexed-fields": "choicesSearchable"
+                            }
+                        }
+                    },
+                    "${refid}18": {
+                        "textinline": {
+                            "text": "1.\n\n2.\n\n3.",
+                            "title": "Me in 3",
+                            "sakai:indexed-fields": "text",
+                            "allowTitleEdit": false
+                        }
+                    }
+                }
+            },
+            "structure": {
+                "About-me": {
+                    "_title": "About me",
+                    "_order": 0,
+                    "_view": [
+                        "-member"
+                    ],
+                    "_edit": [
+                        "-manager"
+                    ],
+                    "_nonEditable": true,
+                    "_canView": true,
+                    "_canSubedit": true,
+                    "_canEdit": true,
+                    "_docref": "${pid}4"
+                },
+                "Resume": {
+                    "_title": "Resume",
+                    "_order": 1,
+                    "_view": [
+                        "-member"
+                    ],
+                    "_edit": [
+                        "-manager"
+                    ],
+                    "_nonEditable": true,
+                    "_canView": true,
+                    "_canSubedit": true,
+                    "_canEdit": true,
+                    "_docref": "${pid}2"
+                },
+                "My-work": {
+                    "_title": "My work",
+                    "_order": 2,
+                    "_nonEditable": true,
+                    "_view": [
+                        "everyone",
+                        "anonymous",
+                        "-member"
+                    ],
+                    "_edit": [
+                        "-manager"
+                    ],
+                    "_canView": true,
+                    "_canSubedit": true,
+                    "_canEdit": true,
+                    "_docref": "${pid}0"
+                },
+                "Members-of-my-Portfolio": {
+                    "_title": "Members of my Portfolio",
+                    "_order": 3,
+                    "_nonEditable": true,
+                    "_view": [
+                        "everyone",
+                        "anonymous",
+                        "-member"
+                    ],
+                    "_edit": [
+                        "-manager"
+                    ],
+                    "_canView": true,
+                    "_canSubedit": true,
+                    "_canEdit": true,
+                    "_docref": "${pid}1"
+                },
+                "Collaborator-Discussion-Area": {
+                    "_title": "Collaborator Discussion Area",
+                    "_order": 4,
+                    "_view": [
+                        "-member"
+                    ],
+                    "_edit": [
+                        "-manager"
+                    ],
+                    "_nonEditable": true,
+                    "_canView": true,
+                    "_canSubedit": true,
+                    "_canEdit": true,
+                    "_docref": "${pid}3"
+                }
+            },
+            "joinRole": "member",
+            "creatorRole": "manager"
+        }]
+    });
+
+
     /**
      * Footer Links
      */

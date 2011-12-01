@@ -111,7 +111,6 @@ require(["jquery", "sakai/sakai.api.core", "/nyuwidgets/listsinline/data/listsco
             thisList = $.extend(true, {}, listconfig);
             sakai.api.Widgets.loadWidgetData(tuid, function(success, data) {
                 if (success && data && data.listsinline) {
-                    debug.log(data);
                     thisData = data.listsinline;
                 }
                 if (showSettings) {
