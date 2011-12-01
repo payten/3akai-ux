@@ -159,7 +159,9 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
             if (prevAllParticipantsSearch === $.trim($participantsSearchField.val())) {
                 selectAllParticipants(allParticipantsCache);
             } else {
+                $participants_select_all_pages.addClass("participants_searching");
                 sakai.api.Groups.searchMembers(widgetData.participants.groupid, $.trim($participantsSearchField.val()), 1000000000, 0, "firstName", $participants_sort_by.val(), function(success, data) {
+                    $participants_select_all_pages.removeClass("participants_searching");
                     prevAllParticipantsSearch = $.trim($participantsSearchField.val());
                     allParticipantsCache = data.results;
                     selectAllParticipants(data.results);

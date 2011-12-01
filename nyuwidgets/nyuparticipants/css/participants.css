@@ -43,7 +43,6 @@
 .participants_selectall{float:left;width:20px;height:20px;margin-left:10px;}
 .participants_selectall input{margin-top:4px;}
 .participants_widget #participants_sort{float:right;}
-.participants_searching {background:url("/dev/images/ajax-loader-gray.gif") no-repeat scroll right transparent;}
 
 /* Extra Fields */
 .participants_widget .participants_list_extra_fields{margin-top:20px;}
@@ -55,3 +54,7 @@
 /* Select/deselect all */
 .participants_widget #participants_select_all_container{background-color:#ffbc55;margin:5px;padding:5px;text-align:center;}
 .participants_widget #participants_select_all_container button{font-size:12px;}
+
+/* Busy spinner styles */
+.participants_widget .participants_searching {background:url("/dev/images/ajax-loader-gray.gif") no-repeat scroll right transparent;}
+.participants_widget #participants_select_all_pages.participants_searching {background-image:url("../images/ajax-loader-ffbc55.gif") !important;}
