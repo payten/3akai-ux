@@ -456,5 +456,15 @@ define(["config/config"], function(config) {
         "pseudogroup": "g-gradecenter"
     });
 
+    /**
+     * Kaltura Settings
+     */
+    config.kaltura = {
+        enabled: true,
+        serverURL:  "http://kvapi.home.nyu.edu",
+        partnerId:  141,
+        playerId: 4422411
+    };
+
     return config;
 });
