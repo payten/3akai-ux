@@ -1,7 +1,7 @@
 #listsinline_settings {width:100%;}
 #listsinline_settings button{float:right;}
 
-#listsinline_main_container{border:1px solid #ccc;border-radius:5px;float:left;width:350px;}
+#listsinline_main_container{border:1px solid #ccc;border-radius:5px;float:left;width:350px;margin:0 5px 5px 0;}
 #listsinline_main{margin:10px;padding:10px;}
 #listsinline_title{float:left;}
 #listsinline_title h1{font-size:18px;}
