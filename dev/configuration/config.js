@@ -837,16 +837,6 @@ define(function(){
                 URL: "/dev/images/mimetypes/sakaidoc.png",
                 description: "DOCUMENT"
             },
-            "kaltura/video": {
-                cssClass: "icon-video-sprite",
-                URL: "/dev/images/mimetypes/video.png",
-                description: "KALTURA_VIDEO_FILE"
-            },
-            "kaltura/audio": {
-                cssClass: "icon-sound-sprite",
-                URL: "/dev/images/mimetypes/sound.png",
-                description: "KALTURA_AUDIO_FILE"
-            },
             "other": {
                 cssClass: "icon-unknown-sprite",
                 URL: "/dev/images/mimetypes/unknown.png",
