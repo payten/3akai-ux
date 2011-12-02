@@ -1,0 +1,115 @@
+/*
+* Licensed to the Sakai Foundation (SF) under one
+* or more contributor license agreements. See the NOTICE file
+* distributed with this work for additional information
+* regarding copyright ownership. The SF licenses this file
+* to you under the Apache License,Version 2.0 (the
+* "License");you may not use this file except in compliance
+* with the License. You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing,
+* software distributed under the License is distributed on an
+* "AS IS" BASIS,WITHOUT WARRANTIES OR CONDITIONS OF ANY
+* KIND,either express or implied. See the License for the
+* specific language governing permissions and limitations under the License.
+*/
+
+#groupactivity_display .groupactivity-report {border: 1px solid #CCC; width: 100%; border-spacing: 0; border-collapse: collapse;}
+#groupactivity_display .groupactivity-report th,
+#groupactivity_display .groupactivity-report td {
+    border: 1px solid #DDD;
+    padding: 4px 4px;
+    font-size: 0.9em;
+}
+#groupactivity_display .groupactivity-report th {
+    background-color: #EEE;text-align: left; width: 15%;
+    border-bottom: none;
+}
+#groupactivity_display .groupactivity-report th.col-title {width: 40%;}
+
+#groupactivity_display .groupactivity-report .odd td {
+    background-color: #fafafa;
+}
+
+#groupactivity_display .groupactivity-report td.date {
+    white-space: nowrap;
+}
+
+#groupactivity_display .groupactivity-report tr .header {
+	background-image: url(../images/bg.gif);
+	background-repeat: no-repeat;
+	background-position: center right;
+	cursor: pointer;
+}
+
+#groupactivity_display .groupactivity-report tr:nth-child(even) td,
+#groupactivity_display .groupactivity-report tbody tr.even td {
+    background-color:#F0F0F6;
+}
+
+#groupactivity_display .groupactivity-report thead tr .headerSortUp {
+	background-image: url(../images/desc.gif);
+}
+#groupactivity_display .groupactivity-report thead tr .headerSortDown {
+	background-image: url(../images/asc.gif);
+}
+
+#groupactivity_display .groupactivity-report .filters td {
+    background-color: #f8f8f8 !important;
+}
+
+#groupactivity_display .groupactivity-report .filters .label {
+    text-align: right;
+    color: #666;
+}
+
+#groupactivity_display .groupactivity-report .filters select {
+    width: 100%;
+}
+
+#groupactivity_display .groupactivity-report tr.filtered-by-area td,
+#groupactivity_display .groupactivity-report tr.filtered-by-user td {
+    display: none;
+}
+
+#groupactivity_display #localcontent, 
+#groupactivity_display #librarycontent {
+    clear: both;
+    border-top: 1px solid #AAA;   
+}
+
+
+#groupactivity_display #tabs li {
+    border: 1px solid #AAA;
+    background-color: #EEE;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+}
+
+#groupactivity_display #tabs li.ui-tabs-selected {
+    border-bottom: 0;
+    background-color: white !important;
+}
+
+#groupactivity_display #tabs li.ui-state-hover {
+    background-color: #F0F0F6;
+}
+
+#groupactivity_display .actions {
+    margin-bottom: 12px;
+    float: right;
+}
+
+#groupactivity_display #refreshLocalContent,
+#groupactivity_display #refreshLibraryContent {
+    padding-left: 20px;
+    background-image: url(../images/refresh.png);
+    background-repeat: no-repeat;
+    background-position: left center;
+}
+
+#groupactivity_display .report {
+    clear: both;
+}
