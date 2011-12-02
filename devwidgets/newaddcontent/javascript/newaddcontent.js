@@ -118,6 +118,8 @@ require(["jquery", "config/sakaidoc", "sakai/sakai.api.core"], function($, sakai
         var lastUpload = [];
         var libraryToUploadTo = "";
         var existingItems = [];
+        var existingItemsToAdd = {};
+        
         // Keep track of number of files in the upload list selected by browsing the OS
         // This number will later be used to check against the multifile list of uploads to avoid bug (https://jira.sakaiproject.org/browse/SAKIII-3269)
         var numberOfBrowsedFiles = 0;
@@ -334,31 +336,14 @@ require(["jquery", "config/sakaidoc", "sakai/sakai.api.core"], function($, sakai
                     addContentToQueue(documentObj);
                     $documentForm.reset();
                     break;
-                case "newaddcontent_existing_content_form":
-                    var $existingContentForm = $(this).prev().children(":visible").find(newAddContentForm);
-                    $.each($existingContentForm.find(":checked"), function(index, item){
-                        if (!$(item).is(":disabled")) {
-                            var viewers = [];
-                            if ($(item).data("sakai-pooled-content-viewer")){
-                                viewers = ("" + $(item).data("sakai-pooled-content-viewer")).split(",");
-                            }
-                            var managers = [];
-                            if ($(item).data("sakai-pooled-content-manager")){
-                                managers = ("" + $(item).data("sakai-pooled-content-manager")).split(",");
-                            }
-                            var contentObj = {
-                                "title": $(item).next().text(),
-                                "id": item.id,
-                                "viewers": viewers,
-                                "managers": managers,
-                                "type": "existing",
-                                "css_class": $(item).next().children(newaddcontentExistingItemsListContainerListItemIcon)[0].id
-                            };
-                            addContentToQueue(contentObj);
-                            $(item).attr("disabled", "disabled");
-                            $(item).parent().addClass(newaddcontentExistingItemsListContainerDisabledListItem);
-                        }
+                case "newaddcontent_existing_content_form":                    
+                    $.each(existingItemsToAdd, function(id, contentObj) {
+                        addContentToQueue(contentObj);
+                        var item = $("#newaddcontent_existing_content_form input:input[id='"+id+"']");
+                        item.attr("disabled", "disabled");
+                        item.parent().addClass(newaddcontentExistingItemsListContainerDisabledListItem);                        
                     });
+                    existingItemsToAdd = {};
                     break;
             }
         };
@@ -778,18 +763,40 @@ require(["jquery", "config/sakaidoc", "sakai/sakai.api.core"], function($, sakai
          * Check if a field is valid and the button to add to the list should be enabled
          */
         var checkFieldValidToAdd = function(){
-            if ($(this).attr("type") == "text") {
-                var val = $.trim($(this).val());
+            var $this = $(this);
+            if ($this.attr("type") == "text") {
+                var val = $.trim($this.val());
                 if (val) {
                     enableAddToQueue();
                 } else {
                     disableAddToQueue();
                 }
             } else {
-                if ($(newaddcontentExistingContentForm + " input[type=checkbox]:checked:enabled").length) {
-                    enableAddToQueue();
+                if ($this.is("input:checked")) {
+                    var viewers = [];
+                    if ($this.data("sakai-pooled-content-viewer")){
+                        viewers = ("" + $this.data("sakai-pooled-content-viewer")).split(",");
+                    }
+                    var managers = [];
+                    if ($this.data("sakai-pooled-content-manager")){
+                        managers = ("" + $this.data("sakai-pooled-content-manager")).split(",");
+                    }
+                    var contentObj = {
+                        "title": $this.next().text(),
+                        "id": $this.attr("id"),
+                        "viewers": viewers,
+                        "managers": managers,
+                        "type": "existing",
+                        "css_class": $this.next().children(newaddcontentExistingItemsListContainerListItemIcon)[0].id
+                    };                    
+                    existingItemsToAdd[$this.attr("id")] = contentObj;
                 } else {
+                    delete existingItemsToAdd[$this.val()]                    
+                }
+                if ($.isEmptyObject(existingItemsToAdd)) {
                     disableAddToQueue();
+                } else {
+                    enableAddToQueue();
                 }
             }
         };
@@ -858,16 +865,19 @@ require(["jquery", "config/sakaidoc", "sakai/sakai.api.core"], function($, sakai
                 url: searchURL,
                 type: "GET",
                 success: function(data){
-                    var existingIDs = [];
+                    var existingIDs = [], existingSelection = [];
                     $.each(itemsToUpload, function(index, item){
                         if(item.type === "existing"){
                             existingIDs.push(item.id);
                         }
                     });
+                    $.each(existingItemsToAdd, function(id, data){
+                        existingSelection.push(id);
+                    });                    
                     if (data && data.results) {
                         existingItems = data.results;
                     }
-                    $container.html(sakai.api.Util.TemplateRenderer(newaddcontentExistingItemsTemplate, {"data": data, "query":q, "sakai":sakai, "queue":existingIDs, "context":currentExistingContext}));
+                    $container.html(sakai.api.Util.TemplateRenderer(newaddcontentExistingItemsTemplate, {"data": data, "query":q, "sakai":sakai, "queue":existingIDs, "context":currentExistingContext, "selection": existingSelection}));
                     var numberOfPages = Math.ceil(data.total / 10);
                     $("#newaddcontent_existingitems_paging").pager({
                         pagenumber: pagenum,
