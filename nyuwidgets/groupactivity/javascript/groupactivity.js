@@ -21,6 +21,7 @@
 require(
     [
         "jquery", "sakai/sakai.api.core",
+        "/nyuwidgets/groupactivity/lib/jquery.tablesorter.js"
     ],
     function($, sakai) {
     /**
@@ -43,6 +44,11 @@ require(
 
         var rootel = "#" + tuid;
 
+        // All the data
+        var pubdata = {};
+        var items = [];
+        var groupId = sakai.api.Util.extractEntity(window.location.pathname);
+        
         // Main ids
         var groupActivityId = "#groupactivity";
         var groupActivityName = "groupactivity";
@@ -126,11 +132,71 @@ require(
                 true
             );
         };
+                
 
         ////////////////////
         // Main functions //
         ////////////////////               
 
+        var loadDocStructure = function(forceOpenPage){
+            $.ajax({
+                url: "/~" + groupId+ "/docstructure.infinity.json",
+                async: false,
+                cache: false,
+                success: function(data){
+                    pubdata = sakai.api.Server.cleanUpSakaiDocObject(data);                                        
+                }
+            });
+        };
+        
+        var loadContentVisibleToGroup = function() {
+             sakai.api.Server.loadJSON("/var/search/pool/manager-viewer.json",
+                renderContentActivityReport, {
+                    userid: groupId,
+                    items: 100000000,
+                    q: "*"
+                }
+            );
+        }
+        
+        var renderContentActivityReport = function(success, data) {            
+            items = data.results;       
+            $(mainDisplay).html(sakai.api.Util.TemplateRenderer("groupactivity_report_template", {items: items}));
+            $.tablesorter.addParser({
+                id: "customDate",
+                is: function(s) {
+                    //return false;
+                    //use the above line if you don't want table sorter to auto detected this parser
+                    //else use the below line.
+                    //attention: doesn't check for invalid stuff
+                    //2009-77-77 77:77:77.0 would also be matched
+                    //if that doesn't suit you alter the regex to be more restrictive
+                    return /\d{1,4}-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/.test(s);
+                },
+                format: function(s) {
+                    s = s.replace(/\-/g," ");
+                    s = s.replace(/:/g," ");
+                    s = s.replace(/\./g," ");
+                    s = s.split(" ");
+                    return $.tablesorter.formatFloat(new Date(s[0], s[1]-1, s[2], s[3], s[4], s[5]).getTime());
+                },
+                type: "numeric"
+            });
+            $("table.groupactivity-report", rootel).tablesorter(
+                {
+                    headers: {
+                        2: {
+                            sorter: "customDate"
+                        },
+                        4: {
+                            sorter: "customDate"
+                        }
+                    },
+                    sortForce: [[3,1]]
+                }
+            );
+        }
+               
         /////////////////////////////
         // Initialisation function //
         /////////////////////////////
@@ -141,7 +207,11 @@ require(
             //});
         };
 
+        loadDocStructure();    
+        loadContentVisibleToGroup();
+        
         renderMainDisplay();
+        
         addBinding();
 
     };

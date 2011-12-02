@@ -3,8 +3,7 @@
 
 <div>   
     <!-- MAIN VIEW -->
-    <div  id="groupactivity_display" class="s3d-widget-content fl-widget-content" style="display:none">
-        Hello world.
+    <div  id="groupactivity_display" class="s3d-widget-content fl-widget-content" style="display:none">        
     </div>
 
     <!-- WIDGET FOOTER-->
@@ -14,7 +13,32 @@
 
 
     <!-- TEMPLATES -->
-
+    <div id="groupactivity_report_template"><!--
+        <table class="groupactivity-report" class="tablesorter">
+            <thead>
+                <tr>
+                    <th class="col-title">Title</th>
+                    <th class="col-modifiedby">Updated By</th>
+                    <th class="col-modified">Updated Date</th>                                            
+                    <th class="col-createdby">Created By</th>
+                    <th class="col-created">Created Date</th>
+                </tr>
+            </thead>
+            <tbody>
+               {for item in items}
+                   <tr class="{if item_index % 2 === 0}even{else}odd{/if}">
+                      <td><a href="/content#p=${item["path"]}/${item["sakai:pooled-content-file-name"]}">${item["sakai:pooled-content-file-name"]}</a></td>
+                      <td>${item["_lastModifiedBy"]}</td>
+                      <td class="date" sortby="${item["_lastModified"]}">${new Date(item["_lastModified"]).toLocaleFormat("%Y-%m-%d %T")}</td>                                            
+                      <td>${item["_createdBy"]}</td>
+                      <td class="date" sortby="${item["_created"]}">${new Date(item["_created"]).toLocaleFormat("%Y-%m-%d %T")}</td>
+                   </tr>
+               {/for}
+            </tbody>
+        </table>
+    --></div>
+   
+    
     <!-- MESSAGES -->    
 
 </div>
