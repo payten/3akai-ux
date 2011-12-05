@@ -26,7 +26,7 @@
                         {for subnav in i.subnav}
                             {if subnav !== "hr"}
                             <li>
-                                <a tabindex="-1" role="menuitem" href="${subnav.url}" title="${subnav.label}" id="${subnav.id}" class="s3d-bold">${subnav.label}</a>
+                                <a tabindex="-1" role="menuitem" href="${subnav.url}" title="${subnav.label}" id="${subnav.id}" class="s3d-bold" {if subnav.target}target="${subnav.target}"{/if}>${subnav.label}</a>
                             </li>
                             {else}
                                 <hr class="s3d-split-line"/>
