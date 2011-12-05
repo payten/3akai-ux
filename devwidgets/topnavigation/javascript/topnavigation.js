@@ -392,6 +392,9 @@ require(["jquery", "sakai/sakai.api.core", "jquery-plugins/jquery.fieldselection
                 } else {
                     temp.url = array[index].url;
                 }
+                if (array[index].opennewwindow === "true") {
+                    temp.target = "_blank";
+                }                
                 temp.label = sakai.api.i18n.General.getValueForKey(array[index].label);
             }
             return temp;

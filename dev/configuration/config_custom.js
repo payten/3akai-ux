@@ -981,7 +981,8 @@ define(["config/config"], function(config) {
         "url": "http://www.yahoo.edu",
         "id": "subnavigation_gradecenter_link",
         "label": "MY_GRADECENTER",
-        "pseudogroup": "g-gradecenter"
+        "pseudogroup": "g-gradecenter",
+        "opennewwindow": "true"
     });
 
     return config;
