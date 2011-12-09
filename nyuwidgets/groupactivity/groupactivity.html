@@ -1,9 +1,28 @@
 <!-- CSS -->
+<link rel="stylesheet" type="text/css" href="/nyuwidgets/groupactivity/lib/jquery.ui.tabs.css" />
 <link rel="stylesheet" type="text/css" href="/nyuwidgets/groupactivity/css/groupactivity.css" />
 
 <div>   
     <!-- MAIN VIEW -->
-    <div  id="groupactivity_display" class="s3d-widget-content fl-widget-content" style="display:none">        
+    <div  id="groupactivity_display" class="s3d-widget-content fl-widget-content" style="display:none">
+        <div id="tabs">
+            <ul>
+                    <li><a href="#localcontent">Group Pages</a></li>
+                    <li><a href="#librarycontent">Group Library Content</a></li>
+            </ul>
+            <div id="localcontent">
+                <div class="actions">
+                    <a href="javascript:void(0);" id="refreshLocalContent">Refresh</a>
+                </div>
+                <div class="report"></div>
+            </div>
+            <div id="librarycontent">
+                <div class="actions">
+                    <a href="javascript:void(0);" id="refreshLibraryContent">Refresh</a>
+                </div>
+                <div class="report"></div>
+            </div>
+        </div>
     </div>
 
     <!-- WIDGET FOOTER-->
@@ -13,7 +32,7 @@
 
 
     <!-- TEMPLATES -->
-    <div id="groupactivity_report_template"><!--
+    <div id="groupactivity_report_template"><!--        
         <table class="groupactivity-report" class="tablesorter">
             <thead>
                 <tr>
@@ -26,7 +45,7 @@
             </thead>
             <tbody>
                {for item in items}
-                   <tr class="{if item_index % 2 === 0}even{else}odd{/if}">
+                   <tr>
                       <td><a href="/content#p=${item["path"]}/${item["sakai:pooled-content-file-name"]}">${item["sakai:pooled-content-file-name"]}</a></td>
                       <td>${item["_lastModifiedBy"]}</td>
                       <td class="date" sortby="${item["_lastModified"]}">${new Date(item["_lastModified"]).toLocaleFormat("%Y-%m-%d %T")}</td>                                            
@@ -37,6 +56,29 @@
             </tbody>
         </table>
     --></div>
+    
+    <div id="groupactivity_content_report_template"><!--        
+        <table class="groupactivity-report" class="tablesorter">
+            <thead>
+                <tr>
+                    <th class="col-title">Title</th>
+                    <th class="col-area">Area</th>
+                    <th class="col-modifiedby">Updated By</th>
+                    <th class="col-modified">Updated Date</th>
+                </tr>
+            </thead>
+            <tbody>
+               {for item in items}
+                   <tr>
+                      <td><a href="/content#p=${item["path"]}/${item["title"]}">${item["title"]}</a></td>
+                      <td>${item["area"]}</td>                                                        
+                      <td>${item["_lastModifiedBy"]}</td>
+                      <td class="date" sortby="${item["_lastModified"]}">${new Date(item["_lastModified"]).toLocaleFormat("%Y-%m-%d %T")}</td>
+                   </tr>
+               {/for}
+            </tbody>
+        </table>
+    --></div>    
    
     
     <!-- MESSAGES -->    

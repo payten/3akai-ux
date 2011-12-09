@@ -21,7 +21,8 @@
 require(
     [
         "jquery", "sakai/sakai.api.core",
-        "/nyuwidgets/groupactivity/lib/jquery.tablesorter.js"
+        "/nyuwidgets/groupactivity/lib/jquery.tablesorter.js",
+        "/nyuwidgets/groupactivity/lib/jquery.ui.tabs.js"
     ],
     function($, sakai) {
     /**
@@ -75,6 +76,15 @@ require(
         // Event Handlers //
         ////////////////////
         var addBinding = function(){
+            $("#refreshLocalContent",rootel).click(function() {
+               $("#localcontent .report",rootel).html("loading...");
+               loadDocStructure(); 
+            });
+            
+            $("#refreshLibraryContent",rootel).click(function() {
+               $("#librarycontent .report",rootel).html("loading...");
+               loadContentVisibleToGroup(); 
+            });
 
         };
 
@@ -122,8 +132,6 @@ require(
                         showHideSettings(showSettings);
                     }
                     else {
-                        //sakai.api.Widgets.Container.informFinish(tuid, "ebook");
-                        //widgetData = data;
                         if (callback) {
                             callback();
                         }
@@ -138,16 +146,75 @@ require(
         // Main functions //
         ////////////////////               
 
-        var loadDocStructure = function(forceOpenPage){
-            $.ajax({
-                url: "/~" + groupId+ "/docstructure.infinity.json",
-                async: false,
-                cache: false,
-                success: function(data){
-                    pubdata = sakai.api.Server.cleanUpSakaiDocObject(data);                                        
+        var loadDocStructure = function(){
+            var pids = [];
+            var batchRequests = [];
+            var topLevelPages = {};
+            pubdata = sakai_global.group.pubdata;
+                
+            for (var pub in pubdata.structure0) {
+                if (pubdata.structure0.hasOwnProperty(pub) && typeof pubdata.structure0[pub] === "object") {
+                    pids.push(pubdata.structure0[pub]._pid);
+                    topLevelPages[pubdata.structure0[pub]._pid] = pubdata.structure0[pub];
                 }
-            });
+            }
+                                
+            for (var i = 0; i < pids.length; i++) {
+                batchRequests.push({
+                    "url": "/p/" + pids[i] + ".infinity.json",
+                    "method": "GET"
+                });
+            }           
+            sakai.api.Server.batch(batchRequests, function(success, data) {
+                if (success) {
+                    var pages = {
+                        items: [],                    
+                    };
+                    for (var i = 0; i < pids.length; i++){
+                        var result = data.results[i];
+                        if (result.status === 404 || result.status === 403) {
+                            // do nothing... 
+                        } else {
+                            var docInfo = sakai.api.Server.cleanUpSakaiDocObject($.parseJSON(result.body));                      
+                            for (var page in docInfo.structure0) {
+                                if (docInfo.structure0.hasOwnProperty(page) && docInfo.hasOwnProperty(docInfo.structure0[page]._ref)){
+                                    try {                                         
+                                         var cleanedUpDocInfo = {
+                                            "title": docInfo.structure0[page]._title,
+                                            "_lastModifiedBy": docInfo[docInfo.structure0[page]._ref]._lastModifiedBy,
+                                            "_lastModified": docInfo[docInfo.structure0[page]._ref]._lastModified,
+                                            "area": topLevelPages[pids[i]]._title
+                                         }                                         
+                                         pages.items.push(cleanedUpDocInfo);
+                                    } catch(e) {
+                                        // ignore for now... coz i iz dodgy
+                                    }                                                                    
+                                }
+                            }
+                        }
+                    }
+                    $("#localcontent .report",rootel).html(sakai.api.Util.TemplateRenderer("groupactivity_content_report_template", pages));            
+                    $("#localcontent table.groupactivity-report", rootel).tablesorter(
+                        {
+                            headers: {
+                                3: {
+                                    sorter: "customDate"
+                                }
+                            },
+                            sortList: [[1,0],[2,0]]
+                        }
+                    );
+                }
+
+            });                     
+          
+            
+            $(window).bind("ready.sakaidocs.sakai", function(){
+                debugger;
+                                 
+            });            
         };
+              
         
         var loadContentVisibleToGroup = function() {
              sakai.api.Server.loadJSON("/var/search/pool/manager-viewer.json",
@@ -161,28 +228,8 @@ require(
         
         var renderContentActivityReport = function(success, data) {            
             items = data.results;       
-            $(mainDisplay).html(sakai.api.Util.TemplateRenderer("groupactivity_report_template", {items: items}));
-            $.tablesorter.addParser({
-                id: "customDate",
-                is: function(s) {
-                    //return false;
-                    //use the above line if you don't want table sorter to auto detected this parser
-                    //else use the below line.
-                    //attention: doesn't check for invalid stuff
-                    //2009-77-77 77:77:77.0 would also be matched
-                    //if that doesn't suit you alter the regex to be more restrictive
-                    return /\d{1,4}-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/.test(s);
-                },
-                format: function(s) {
-                    s = s.replace(/\-/g," ");
-                    s = s.replace(/:/g," ");
-                    s = s.replace(/\./g," ");
-                    s = s.split(" ");
-                    return $.tablesorter.formatFloat(new Date(s[0], s[1]-1, s[2], s[3], s[4], s[5]).getTime());
-                },
-                type: "numeric"
-            });
-            $("table.groupactivity-report", rootel).tablesorter(
+            $("#librarycontent .report",rootel).html(sakai.api.Util.TemplateRenderer("groupactivity_report_template", {items: items}));            
+            $("#librarycontent table.groupactivity-report", rootel).tablesorter(
                 {
                     headers: {
                         2: {
@@ -192,7 +239,7 @@ require(
                             sorter: "customDate"
                         }
                     },
-                    sortForce: [[3,1]]
+                    sortList: [[2,1]]
                 }
             );
         }
@@ -204,8 +251,30 @@ require(
         var renderMainDisplay = function(){
             //sakai.api.Widgets.loadWidgetData(tuid, function(success, data) {                
                 $(mainDisplay, rootel).show();
+                $("#tabs",rootel).tabs();
             //});
         };
+
+        $.tablesorter.addParser({
+            id: "customDate",
+            is: function(s) {
+                //return false;
+                //use the above line if you don't want table sorter to auto detected this parser
+                //else use the below line.
+                //attention: doesn't check for invalid stuff
+                //2009-77-77 77:77:77.0 would also be matched
+                //if that doesn't suit you alter the regex to be more restrictive
+                return /\d{1,4}-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/.test(s);
+            },
+            format: function(s) {
+                s = s.replace(/\-/g," ");
+                s = s.replace(/:/g," ");
+                s = s.replace(/\./g," ");
+                s = s.split(" ");
+                return $.tablesorter.formatFloat(new Date(s[0], s[1]-1, s[2], s[3], s[4], s[5]).getTime());
+            },
+            type: "numeric"
+        });
 
         loadDocStructure();    
         loadContentVisibleToGroup();
