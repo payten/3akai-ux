@@ -40,12 +40,55 @@
 	background-position: center right;
 	cursor: pointer;
 }
-#groupactivity_display .groupactivity-report tbody tr.odd td {
-	background-color:#F0F0F6;
+
+#groupactivity_display .groupactivity-report tr:nth-child(even) td,
+#groupactivity_display .groupactivity-report tbody tr.even td {
+    background-color:#F0F0F6;
 }
+
 #groupactivity_display .groupactivity-report thead tr .headerSortUp {
 	background-image: url(../images/asc.gif);
 }
 #groupactivity_display .groupactivity-report thead tr .headerSortDown {
 	background-image: url(../images/desc.gif);
+}
+
+#groupactivity_display #localcontent, 
+#groupactivity_display #librarycontent {
+    clear: both;
+    border-top: 1px solid #AAA;   
+}
+
+
+#groupactivity_display #tabs li {
+    border: 1px solid #AAA;
+    background-color: #EEE;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+}
+
+#groupactivity_display #tabs li.ui-tabs-selected {
+    border-bottom: 0;
+    background-color: white !important;
+}
+
+#groupactivity_display #tabs li.ui-state-hover {
+    background-color: #F0F0F6;
+}
+
+#groupactivity_display .actions {
+    margin-bottom: 12px;
+    float: right;
+}
+
+#groupactivity_display #refreshLocalContent,
+#groupactivity_display #refreshLibraryContent {
+    padding-left: 20px;
+    background-image: url(../images/refresh.png);
+    background-repeat: no-repeat;
+    background-position: left center;
+}
+
+#groupactivity_display .report {
+    clear: both;
 }
