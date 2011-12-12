@@ -978,7 +978,7 @@ define(["config/config"], function(config) {
         "pseudogroup": "g-gradecenter"
     });
     config.Navigation[0]["subnav"].push({
-        "url": "http://www.yahoo.edu",
+        "url": "https://admin.portal.nyu.edu/psp/paprod/EMPLOYEE/EMPL/h/?tab",
         "id": "subnavigation_gradecenter_link",
         "label": "MY_GRADECENTER",
         "pseudogroup": "g-gradecenter",
