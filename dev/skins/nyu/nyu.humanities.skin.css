@@ -1,0 +1,9 @@
+@charset "UTF-8";
+/* CSS Document */
+/* This is the basic CSS skin for the "HI Fellows" group on ATLAS. */
+
+html, .requireUser {background: #c91b00 url("images/body_nyu_humanities_bg.png") left top repeat-x !important;}
+
+#institutionalskinning_logo,#top_banner_logo {background:transparent url("images/nyu_humanities_logo.png") top center no-repeat !important;}
+
+#lhnavigation_container ul li.lhnavigation_selected_item.lhnavigation_outer, #lhnavigation_container ul li ul li.lhnavigation_selected_item div.lhnavigation_subnav_item_content {background-image: url("images/lhnav_selected_item_humanities_bg.png") !important;}
