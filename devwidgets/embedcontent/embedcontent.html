@@ -30,7 +30,7 @@
                         </div>
                     </div>
                 {else}
-                    <div class="${embedClass} ${layout}">
+                    <div class="${embedClass} ${layout} {if embedmethod === "thumbnail"} s3d-draggable-container {/if}" data-scope="content" data-entityid="${item.fullresult["_path"]}" {if sakai.api.Content.Collections.isCollection(item.fullresult)} data-collection="true" {/if}>
                         {var mimeType = sakai.api.Content.getMimeType(item.fullresult)}
                         {var thumbnail = sakai.api.Content.getThumbnail(item.fullresult)}
                         {if embedmethod === "thumbnail" && thumbnail}
@@ -49,15 +49,17 @@
                                 <img src="${sakai.config.MimeTypes['other'].URL}" alt="${sakai.config.MimeTypes['other'].description}"/>
                             </a>
                         {/if}
-                        <div class="embedcontent_details fl-push">
+                        <div class="embedcontent_details">
                             {if name}<span><a href="/content#p=${item.link}" class="s3d-action embedcontent_include_name">${item.name}</a></span>{/if}
                             {if details}<span class="embedcontent_include_details">${item.description|safeOutput}</span>{/if}
                             {if download}
                                 <span>
                                 {if item._mimeType === "x-sakai/document"}
-                                    <a href="/content#p=${item.link}" class="s3d-action embedcontent_include_download" target="_blank">__MSG__OPEN_LINK__</a>
+                                    <a href="/content#p=${item.link}" class="s3d-action embedcontent_include_download" target="_blank">__MSG__VIEW_DOCUMENT__</a>
+                                {elseif sakai.api.Content.Collections.isCollection(item)}
+                                    <a href="/content#p=${item.link}" class="s3d-action embedcontent_include_download" target="_blank">__MSG__VIEW_COLLECTION__</a>
                                 {elseif item._mimeType === "x-sakai/link"}
-                                    <a href="${item.name|safeOutput}" class="s3d-action embedcontent_include_download" target="_blank">__MSG__OPEN_LINK__</a>
+                                    <a href="${item.link|safeOutput}" class="s3d-action embedcontent_include_download" target="_blank">__MSG__OPEN_LINK__</a>
                                 {else}
                                     <a href="/p/${item.link}" class="s3d-action embedcontent_include_download" target="_blank">__MSG__DOWNLOAD__</a>
                                 {/if}
@@ -116,7 +118,7 @@
                             <div class="fl-force-right">
                                 
                                 <button type="button" class="s3d-link-button s3d-bold embedcontent_dont_add">__MSG__DONT_ADD__</button>
-                                <button type="button" id="embedcontent_just_add" class="s3d-button s3d-overlay-button" disabled="disabled">__MSG__ADD_SELECTED_CONTENT__</button>
+                                <button type="button" id="embedcontent_just_add" class="s3d-button s3d-overlay-action-button" disabled="disabled">__MSG__ADD_SELECTED_CONTENT__</button>
                             </div>
                         </div>
                     </div>
@@ -190,7 +192,7 @@
                                         <label for="embedcontent_title">__MSG__TITLE__</label>
                                         <input type="text" id="embedcontent_title" name="title"/>
                                         <label for="embedcontent_description">__MSG__DESCRIPTION__</label>
-                                        <textarea id="embedcontent_description" name="description" title="__MSG__ENTER_A_DESCRIPTION__"></textarea>
+                                        <textarea id="embedcontent_description" name="description" placeholder="__MSG__ENTER_A_DESCRIPTION__"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -198,7 +200,7 @@
                                 <div class="fl-force-right">
                                     <p>__MSG__YOU_CAN_CHANGE__</p>
                                     <button type="button" class="s3d-bold s3d-link-button embedcontent_dont_add">__MSG__DONT_ADD__</button>
-                                    <button type="button" id="embedcontent_button_add_selected_content" class="s3d-button s3d-overlay-button" disabled="disabled">__MSG__ADD_SELECTED_CONTENT__</button>
+                                    <button type="button" id="embedcontent_button_add_selected_content" class="s3d-button s3d-overlay-action-button" disabled="disabled">__MSG__ADD_SELECTED_CONTENT__</button>
                                 </div>
                             </div>
                         </form>

@@ -28,6 +28,8 @@
  * to the login page with the current URL encoded in the url. This will cause the system to
  * redirect to the page we used to be on once logged in.
  */
+require(["jquery", "jquery-plugins/jquery.validate"], function(jQuery) {
+
 (function($){
 
     /**
@@ -132,20 +134,46 @@
  * http://stackoverflow.com/questions/1184624/serialize-form-to-json-with-jquery
  */
 (function($){
-    $.fn.serializeObject = function()
-    {
+    $.fn.serializeObject = function( includeEmpty ) {
         var o = {};
         var a = this.serializeArray();
+        includeEmpty = includeEmpty === false ? false : true;
         $.each(a, function() {
             if (o[this.name]) {
                 if (!o[this.name].push) {
                     o[this.name] = [o[this.name]];
                 }
-                o[this.name].push(this.value || '');
+                if (includeEmpty || $.trim(this.value) !== "") {
+                    o[this.name].push(this.value || "");
+                }
             } else {
-                o[this.name] = this.value || '';
+                if (includeEmpty || $.trim(this.value) !== "") {
+                    o[this.name] = this.value || '';
+                }
             }
         });
         return o;
     };
 })(jQuery);
+
+/**
+ * Add some jquery validate methods
+ */
+
+// Don't allow spaces in the field
+$.validator.addMethod("nospaces", function(value, element){
+    return this.optional(element) || (value.indexOf(" ") === -1);
+}, "* No spaces are allowed");
+
+// this method appends http:// or ftp:// or https://
+$.validator.addMethod("appendhttp", function(value, element) {
+    if(value.substring(0,7) !== "http://" &&
+    value.substring(0,6) !== "ftp://" &&
+    value.substring(0,8) !== "https://" &&
+    $.trim(value) !== "") {
+        $(element).val("http://" + value);
+    }
+    return true;
+}, "No error message, this is just an appender");
+
+});

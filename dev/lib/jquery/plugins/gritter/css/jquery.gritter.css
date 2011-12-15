@@ -4,13 +4,13 @@
     top: 20px;
     right: 20px;
     width: 301px;
-    z-index: 9999;
+    z-index: 999999;
 }
 
 .gritter-item-wrapper {
     position: relative;
     margin: 0 0 10px 0;
-    background: url('.'); /* ie7/8 fix */
+    background: 0; /* ie7/8 fix */
 }
 
 .gritter-top {
