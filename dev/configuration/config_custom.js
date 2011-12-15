@@ -274,7 +274,10 @@ define(["config/config"], function(config) {
                     },
                     "${refid}7": {
                         "discussion": {
-                            "groupid": "${groupid}"
+                            "groupid": "${groupid}",
+                            "message": {
+                                "sling:resourceType": "sakai/messagestore"
+                            }
                         }
                     }
                 },
@@ -570,7 +573,10 @@ define(["config/config"], function(config) {
                     },
                     "${refid}7": {
                         "discussion": {
-                            "groupid": "${groupid}"
+                            "groupid": "${groupid}",
+                            "message": {
+                                "sling:resourceType": "sakai/messagestore"
+                            }
                         }
                     }
                 },
