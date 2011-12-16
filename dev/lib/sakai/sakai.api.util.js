@@ -2207,7 +2207,10 @@ define(
 
                 $.extend( defaults, options );
 
-                var data = getTranslatedCategories();
+                var data = {};
+                if ( sakai_conf.enableCategories ) {
+                    data = getTranslatedCategories();
+                }
 
                 sakai_util.AutoSuggest.destroy( $elt );
                 sakai_util.AutoSuggest.setup( $elt, defaults, callback, data );

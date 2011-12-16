@@ -102,7 +102,7 @@ require([ 'jquery' ], function(jQuery) {
                             next( new_data, query );
                         });
                     };
-                } else if ( typeof data === "object" && countValidItems( data ) > 0 ) {
+                } else if ( typeof data === "object" ) {
                     d_fetcher = function( query, next ) {
                         next( data, query );
                     };
