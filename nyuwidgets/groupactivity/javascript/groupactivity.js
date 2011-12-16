@@ -115,11 +115,12 @@ require(
             $(contentReport_userFilter_dropdown, rootel).die("change");
             $(contentReport_userFilter_dropdown, rootel).live("change", function() {
                var val = $(this).val();
+               var reportTable = $(this).parents("table.groupactivity-report:first");
                if (val === "") {
                    // show all rows
-                   $(localContentReportTable+" tr", rootel).removeClass("filtered-by-user");
+                   $("tr", reportTable).removeClass("filtered-by-user");
                } else {
-                   $(localContentReportTable + " td.user").each(function() {
+                   $("td.user", reportTable).each(function() {
                       if ($(this).text() === val) {
                           $(this).parents("tr:first").removeClass("filtered-by-user");
                       } else {
@@ -279,8 +280,16 @@ require(
         
         var renderLibraryActivityReport = function(success, data) {         
             var renderData = {
-                items : data.results
-            };
+                items : data.results,
+                allUsers: []
+            };            
+            for (var i=0; i<renderData.items.length; i++) {             
+               var userid = renderData.items[i]["sakai:pool-content-created-for"] || renderData.items[i]["_createdBy"];
+                if (renderData.allUsers.indexOf(userid) < 0) {
+                    renderData.allUsers.push(userid);
+                } 
+            }            
+            renderData.allUsers = renderData.allUsers.sort();
             $(libraryContentReportContainer,rootel).html(sakai.api.Util.TemplateRenderer(libraryReportTemplate, renderData));
             $(libraryContentReportTable, rootel).tablesorter(
                 {
