@@ -64,13 +64,29 @@
                     <th class="col-modifiedby">Updated By</th>
                     <th class="col-modified">Updated Date</th>
                 </tr>
+                <tr class="filters">
+                    <td class="label">Filter by:</td>
+                    <td>
+                       <select id="groupactivity_areaFilter">
+                       <option value=""></option>
+                       {for area in allAreas}<option value="${area}">${area}</option>{/for}
+                       </select>
+                    </td>
+                    <td>
+                       <select id="groupactivity_userFilter">
+                       <option value=""></option>
+                       {for user in allUsers}<option value="${user}">${user}</option>{/for}
+                       </select>
+                    </td>
+                    <td></td>
+                </tr>
             </thead>
             <tbody>
                {for item in items}
                    <tr>
                       <td><a href="#l=${item["area_id"]}/${item["_ref"]}">${item["title"]}</a></td>
-                      <td>${item["area"]}</td>                                                        
-                      <td>${item["_lastModifiedBy"]}</td>
+                      <td class="area">${item["area"]}</td>                                                        
+                      <td class="user">${item["_lastModifiedBy"]}</td>
                       <td class="date" sortby="${item["_lastModified"]}">${new Date(item["_lastModified"]).toLocaleFormat("%Y-%m-%d %T")}</td>
                    </tr>
                {/for}

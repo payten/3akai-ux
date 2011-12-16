@@ -23,7 +23,10 @@
     padding: 4px 4px;
     font-size: 0.9em;
 }
-#groupactivity_display .groupactivity-report th {background-color: #EEE;text-align: left; width: 15%;}
+#groupactivity_display .groupactivity-report th {
+    background-color: #EEE;text-align: left; width: 15%;
+    border-bottom: none;
+}
 #groupactivity_display .groupactivity-report th.col-title {width: 40%;}
 
 #groupactivity_display .groupactivity-report .odd td {
@@ -51,6 +54,24 @@
 }
 #groupactivity_display .groupactivity-report thead tr .headerSortDown {
 	background-image: url(../images/desc.gif);
+}
+
+#groupactivity_display .groupactivity-report .filters td {
+    background-color: #f8f8f8 !important;
+}
+
+#groupactivity_display .groupactivity-report .filters .label {
+    text-align: right;
+    color: #666;
+}
+
+#groupactivity_display .groupactivity-report .filters select {
+    width: 100%;
+}
+
+#groupactivity_display .groupactivity-report tr.filtered-by-area td,
+#groupactivity_display .groupactivity-report tr.filtered-by-user td {
+    display: none;
 }
 
 #groupactivity_display #localcontent, 
