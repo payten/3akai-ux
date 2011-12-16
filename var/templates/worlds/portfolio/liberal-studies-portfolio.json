@@ -1,10 +1,10 @@
 {
-    "id": "simple-group",
-    "title": "GROUP",
+    "id": "liberal-studies-portfolio",
+    "title": "Liberal Studies Portfolio",
     "img": "",
     "fullImg": "",
-    "perfectFor": "SIMPLE_GROUP_PERFECT_FOR",
-    "order": 0,
+    "perfectFor": "A portfolio group for Liberal Studies",
+    "order": 1,
     "roles": [
         {
             "id": "manager",

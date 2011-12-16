@@ -1,7 +1,7 @@
 {
     "id": "portfolio",
     "title" : "PORTFOLIO",
-    "titlePlural": "PORTFOLIO",
+    "titlePlural": "PORTFOLIOS",
     "menuLabel" : "CREATE_A_PORTFOLIO",
-    "order": 1
+    "order": 2
 }
