@@ -10,7 +10,7 @@
         "default": "/nyuwidgets/groupactivity/bundles/default.properties"
     },
     "id":"groupactivity",
-    "img":"/nyuwidgets/groupactivity/images/ebook.png",    
+    "img":"/nyuwidgets/groupactivity/images/groupactivity.png",    
     "name":"Group Activity Report",
     "showinsakaigoodies":true,
     "type":"sakai",
