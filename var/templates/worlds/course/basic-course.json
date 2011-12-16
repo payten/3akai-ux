@@ -86,12 +86,31 @@
                     "groupid": "${groupid}"
                 }
             }
+        },
+        "${pid}2": {
+            "structure0": {
+                "about":{
+                    "_ref":"${refid}4",
+                    "_order":0,
+                    "_nonEditable": true,
+                    "_title": "About this Group",
+                    "main":{
+                        "_ref":"${refid}4",
+                        "_order":0,
+                        "_nonEditable": true,
+                        "_title":"About this Group"
+                    }
+                }
+            },
+            "${refid}4": {
+                "page": "<img id='widget_groupbasicinfo' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='/nyuwidgets/groupbasicinfo/images/icon.png' data-mce-src='/nyuwidgets/groupbasicinfo/images/icon.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'><br></p>"
+            }
         }
     },
     "structure": {
         "library": {
             "_title": "Library",
-            "_order": 0,
+            "_order": 1,
             "_docref": "${pid}0",
             "_nonEditable": true,
             "_view": [
@@ -106,8 +125,23 @@
         },
         "participants": {
             "_title": "Participants",
-            "_order": 1,
+            "_order": 2,
             "_docref": "${pid}1",
+            "_nonEditable": true,
+            "_view": [
+                "everyone",
+                "anonymous",
+                "-student"
+            ],
+            "_edit": [
+                "-ta",
+                "-lecturer"
+            ]
+        },
+        "about": {
+            "_title": "About this Group",
+            "_order": 0,
+            "_docref": "${pid}2",
             "_nonEditable": true,
             "_view": [
                 "everyone",

@@ -314,12 +314,32 @@
                     "groupid": "${groupid}"
                 }
             }
+        },
+        "${pid}8": {
+            "excludeSearch": true,
+            "structure0": {
+                "about":{
+                    "_ref":"${refid}20",
+                    "_order":0,
+                    "_nonEditable": true,
+                    "_title": "About this Group",
+                    "main":{
+                        "_ref":"${refid}20",
+                        "_order":0,
+                        "_nonEditable": true,
+                        "_title":"About this Group"
+                    }
+                }
+            },
+            "${refid}20": {
+                "page": "<img id='widget_groupbasicinfo' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='/nyuwidgets/groupbasicinfo/images/icon.png' data-mce-src='/nyuwidgets/groupbasicinfo/images/icon.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'><br></p>"
+            }
         }
     },
     "structure": {
         "syllabus": {
             "_title": "Syllabus",
-            "_order": 0,
+            "_order": 1,
             "_docref": "${pid}0",
             "_view": [
                 "everyone",
@@ -332,7 +352,7 @@
         },
         "lectures": {
             "_title": "Lectures",
-            "_order": 1,
+            "_order": 2,
             "_docref": "${pid}1",
             "_view": [
                 "-student"
@@ -344,7 +364,7 @@
         },
         "problemsets": {
             "_title": "Problem sets",
-            "_order": 2,
+            "_order": 3,
             "_docref": "${pid}2",
             "_view": [
                 "-student"
@@ -356,7 +376,7 @@
         },
         "coursewebsite": {
             "_title": "Course website",
-            "_order": 3,
+            "_order": 4,
             "_docref": "${pid}3",
             "_view": [
                 "-student",
@@ -370,7 +390,7 @@
         },
         "organizationnotes": {
             "_title": "Organization Notes",
-            "_order": 4,
+            "_order": 5,
             "_docref": "${pid}4",
             "_view": [
                 "-ta"
@@ -381,7 +401,7 @@
         },
         "lecturetemplate": {
             "_title": "Lecture Template",
-            "_order": 5,
+            "_order": 6,
             "_docref": "${pid}5",
             "_view": [
                 "-ta"
@@ -392,7 +412,7 @@
         },
         "library": {
             "_title": "Library",
-            "_order": 6,
+            "_order": 7,
             "_docref": "${pid}6",
             "_nonEditable": true,
             "_view": [
@@ -405,7 +425,7 @@
         },
         "participants": {
             "_title": "Participants",
-            "_order": 7,
+            "_order": 8px,
             "_docref": "${pid}7",
             "_nonEditable": true,
             "_view": [
@@ -414,6 +434,20 @@
             "_edit": [
                 "-lecturer",
                 "-ta"
+            ]
+        },
+        "about": {
+            "_title": "About this Group",
+            "_order": 0,
+            "_docref": "${pid}8",
+            "_nonEditable": true,
+            "_view": [
+                "everyone",
+                "-student",
+                "-ta"
+            ],
+            "_edit": [
+                "-lecturer"
             ]
         }
     }
