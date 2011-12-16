@@ -1391,15 +1391,12 @@ define(
         },
 
         canCreateTemplate: function(category) {
-            if ($.isPlainObject(category)) {
-                return (category.adminOnly && sakai_user.data.me.user.userid === "admin") || (!category.adminOnly && sakai_user.data.me.user.userid);
+            if (sakai_user.data.me.user.userid === "admin" ||
+                !sakai_conf.adminOnlyTemplates ||
+                (sakai_conf.adminOnlyTemplates && $.inArray(category, sakai_conf.adminOnlyTemplates) === -1)) {
+
+                return true;
             } else {
-                for (var i = 0; i < sakai_conf.worldTemplates.length; i++){
-                    var cat = sakai_conf.worldTemplates[i];
-                    if (cat.id === category){
-                        return sakaiGroupsAPI.canCreateTemplate(cat);
-                    }
-                }
                 return false;
             }
         }
