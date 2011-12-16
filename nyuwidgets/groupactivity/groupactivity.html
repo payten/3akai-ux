@@ -32,21 +32,32 @@
 
 
     <!-- TEMPLATES -->
-    <div id="groupactivity_library_report_template"><!--        
+    <div id="groupactivity_library_report_template"><!--
         <table class="groupactivity-report tablesorter">
             <thead>
                 <tr>
-                    <th class="col-title">Title</th>                    
+                    <th class="col-title">Title</th>
                     <th class="col-createdby">Created By</th>
                     <th class="col-created">Created Date</th>
                     <th class="col-modified">Updated Date</th>
+                </tr>
+                <tr class="filters">
+                    <td class="label">Filter by:</td>
+                    <td>
+                       <select id="groupactivity_userFilter">
+                       <option value=""></option>
+                       {for user in allUsers}<option value="${user}">${user}</option>{/for}
+                       </select>
+                    </td>
+                    <td></td>
+                    <td></td>
                 </tr>
             </thead>
             <tbody>
                {for item in items}
                    <tr>
                       <td><a href="/content#p=${item["_path"]}/${item["sakai:pooled-content-file-name"]}">${item["sakai:pooled-content-file-name"]}</a></td>
-                      <td>{if item["sakai:pool-content-created-for"]}${item["sakai:pool-content-created-for"]}{else}${item["_createdBy"]}{/if}</td>
+                      <td class="user">{if item["sakai:pool-content-created-for"]}${item["sakai:pool-content-created-for"]}{else}${item["_createdBy"]}{/if}</td>
                       <td class="date" sortby="${item["_created"]}">${new Date(item["_created"]).toLocaleFormat("%Y-%m-%d %T")}</td>
                       <td class="date" sortby="${item["_lastModified"]}">${new Date(item["_lastModified"]).toLocaleFormat("%Y-%m-%d %T")}</td>
                    </tr>
