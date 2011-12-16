@@ -5,13 +5,15 @@
     "groupdashboard": true,
     "sakaidocs": true,
     "hasSettings": true,
-    "description":"Digital Library eBooks",
     "i18n": {
-        "default": "/nyuwidgets/ebook/bundles/default.properties"
+        "default": {
+            "bundle": "/nyuwidgets/ebook/bundles/default.properties",
+            "name": "Digital Library eBooks",
+            "description": "Digital Library eBooks"
+        }
     },
     "id":"ebook",
-    "img":"/nyuwidgets/ebook/images/ebook.png",    
-    "name":"Digital Library eBooks",
+    "img":"/nyuwidgets/ebook/images/ebook.png",
     "showinsakaigoodies":true,
     "type":"sakai",
     "enabled":true,

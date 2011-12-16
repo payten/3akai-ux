@@ -6,7 +6,6 @@
     "description": "Lists",
     "hasSettings": true,
     "id": "listsinline",
-    "name": "Lists Widget",
     "type": "contrib",
     "enabled": true,
     "sakaidocs": false,
@@ -14,7 +13,11 @@
     "url":"/nyuwidgets/listsinline/listsinline.html",
     "img":"/nyuwidgets/listsinline/images/listsinline.png",
     "i18n": {
-        "default": "/nyuwidgets/listsinline/bundles/default.properties"
+        "default": {
+            "bundle": "/nyuwidgets/listsinline/bundles/default.properties",
+            "name": "Lists Widget",
+            "description": "Lists Widget"
+        }
     },
     "indexFields": ["listsinline/choicesSearchable"]
 }

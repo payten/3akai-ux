@@ -15,15 +15,10 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-/*
- * Dependencies
- *
- * /dev/lib/misc/trimpath.template.js (TrimpathTemplates)
- * /dev/lib/jquery/plugins/jquery.fieldselection.js (fieldselection)
- */
+
 /*global Config, $, jQuery, get_cookie, delete_cookie, set_cookie, window, alert */
 
-require(["jquery", "sakai/sakai.api.core", "jquery-plugins/jquery.fieldselection"], function($, sakai) {
+require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
 
 
     /**
@@ -169,7 +164,7 @@ require(["jquery", "sakai/sakai.api.core", "jquery-plugins/jquery.fieldselection
             }));
             if (externalAuth){
                 setExternalLoginRedirectURL();
-            };
+            }
         };
 
         var setExternalLoginRedirectURL = function(){
@@ -183,7 +178,7 @@ require(["jquery", "sakai/sakai.api.core", "jquery-plugins/jquery.fieldselection
             var redirectURL = window.location.pathname + window.location.search + window.location.hash;
             // Check whether we require a redirect
             if (qs.get("url")) {
-                redirectURL = qs.get("url");;
+                redirectURL = qs.get("url");
             // Go to You when you're on explore page
             } else if (window.location.pathname === "/dev/explore.html" || window.location.pathname === "/register" ||
                 window.location.pathname === "/index" || window.location.pathname === "/" || window.location.pathname === "/dev") {
@@ -193,25 +188,13 @@ require(["jquery", "sakai/sakai.api.core", "jquery-plugins/jquery.fieldselection
                 redirectURL = "/me";
             }
             return redirectURL;
-        }
-        
+        };
+
         /**
          * Check if a redirect should be performed
          */
         var checkForRedirect = function() {
             var qs = new Querystring();
-            // Check for url param, path and if user is logged in
-            if (qs.get("url") && !sakai.api.User.isAnonymous(sakai.data.me) &&
-                (window.location.pathname === "/" || window.location.pathname === "/dev/explore.html" ||
-                  window.location.pathname === "/index" || window.location.pathname === "/dev")) {
-                    window.location = qs.get("url");
-            }
-        };
-
-       /**
-         * Check if a redirect should be performed
-         */
-        var checkForRedirect = function() {
             // Check for url param, path and if user is logged in
             if (qs.get("url") && !sakai.api.User.isAnonymous(sakai.data.me) &&
                 (window.location.pathname === "/" || window.location.pathname === "/dev/explore.html" ||
@@ -633,7 +616,7 @@ require(["jquery", "sakai/sakai.api.core", "jquery-plugins/jquery.fieldselection
                         $focusElement = $(this).parents(".topnavigation_counts_container");
                     }
                     if($focusElement.prev(".topnavigation_counts_container").length){
-                        $focusElement.prev(".topnavigation_counts_container").children("button").focus()
+                        $focusElement.prev(".topnavigation_counts_container").children("button").focus();
                     } else if ($focusElement.prev("li:first").length){
                         $focusElement.prev("li:first").children("a").focus();
                     } else {
@@ -648,7 +631,7 @@ require(["jquery", "sakai/sakai.api.core", "jquery-plugins/jquery.fieldselection
                         $focusElement = $(this).parents(".topnavigation_counts_container");
                     }
                     if($focusElement.next(".topnavigation_counts_container").length){
-                        $focusElement.next(".topnavigation_counts_container").children("button").focus()
+                        $focusElement.next(".topnavigation_counts_container").children("button").focus();
                     } else if ($focusElement.next("li:first").length){
                         $focusElement.next("li:first").children("a").focus();
                     } else {
