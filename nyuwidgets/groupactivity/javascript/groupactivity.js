@@ -47,7 +47,6 @@ require(
 
         // All the data
         var pubdata = {};
-        var items = [];
         var groupId = sakai.api.Util.extractEntity(window.location.pathname);
         
         // Main ids
@@ -63,6 +62,8 @@ require(
         var libraryContentReportTable = "#librarycontent table.groupactivity-report";
         
         // Textboxes / Inputs
+        var contentReport_areaFilter_dropdown = "#groupactivity_areaFilter";
+        var contentReport_userFilter_dropdown = "#groupactivity_userFilter";
 
         // Checkboxes
 
@@ -94,6 +95,40 @@ require(
                loadContentVisibleToGroup(); 
             });
 
+            $(contentReport_areaFilter_dropdown, rootel).die("change");
+            $(contentReport_areaFilter_dropdown, rootel).live("change", function() {
+               var val = $(this).val();
+               if (val === "") {
+                   // show all rows
+                   $(localContentReportTable+" tr", rootel).removeClass("filtered-by-area");
+               } else {
+                   $(localContentReportTable + " td.area").each(function() {
+                      if ($(this).text() === val) {
+                          $(this).parents("tr:first").removeClass("filtered-by-area");
+                      } else {
+                          $(this).parents("tr:first").addClass("filtered-by-area");
+                      }
+                   });
+               }
+            });
+            
+            $(contentReport_userFilter_dropdown, rootel).die("change");
+            $(contentReport_userFilter_dropdown, rootel).live("change", function() {
+               var val = $(this).val();
+               if (val === "") {
+                   // show all rows
+                   $(localContentReportTable+" tr", rootel).removeClass("filtered-by-user");
+               } else {
+                   $(localContentReportTable + " td.user").each(function() {
+                      if ($(this).text() === val) {
+                          $(this).parents("tr:first").removeClass("filtered-by-user");
+                      } else {
+                          $(this).parents("tr:first").addClass("filtered-by-user");
+                      }
+                   });
+               }
+            });            
+            
         };
 
 
@@ -175,8 +210,10 @@ require(
             }           
             sakai.api.Server.batch(batchRequests, function(success, data) {
                 if (success) {
-                    var pages = {
-                        items: []                  
+                    var renderData = {
+                        items: [],
+                        allAreas: [],
+                        allUsers: []
                     };
                     for (var i = 0; i < pids.length; i++){
                         var result = data.results[i];
@@ -195,15 +232,25 @@ require(
                                             "area": topLevelPages[pids[i]]._title,
                                             "area_id": topLevelPages[pids[i]]._id
                                          }                                         
-                                         pages.items.push(cleanedUpDocInfo);
+                                         renderData.items.push(cleanedUpDocInfo);
+                                         if (renderData.allAreas.indexOf(topLevelPages[pids[i]]._title) < 0) {
+                                             renderData.allAreas.push(topLevelPages[pids[i]]._title);
+                                         }
+                                         if (renderData.allUsers.indexOf(docInfo[docInfo.structure0[page]._ref]._lastModifiedBy) < 0) {
+                                             renderData.allUsers.push(docInfo[docInfo.structure0[page]._ref]._lastModifiedBy);
+                                         }                                         
                                     } catch(e) {
                                         // ignore for now... coz i iz dodgy
                                     }                                                                    
                                 }
                             }
                         }
-                    }                    
-                    $(localContentReportContainer,rootel).html(sakai.api.Util.TemplateRenderer(contentReportTemplate, pages));            
+                    }
+                    // sort things
+                    renderData.allAreas = renderData.allAreas.sort();
+                    renderData.allUsers = renderData.allUsers.sort();
+                    // render the report
+                    $(localContentReportContainer,rootel).html(sakai.api.Util.TemplateRenderer(contentReportTemplate, renderData));            
                     $(localContentReportTable, rootel).tablesorter(
                         {
                             headers: {
@@ -216,12 +263,6 @@ require(
                     );
                 }
 
-            });                     
-          
-            
-            $(window).bind("ready.sakaidocs.sakai", function(){
-                debugger;
-                                 
             });            
         };
               
@@ -236,16 +277,18 @@ require(
             );
         }
         
-        var renderLibraryActivityReport = function(success, data) {            
-            items = data.results;            
-            $(libraryContentReportContainer,rootel).html(sakai.api.Util.TemplateRenderer(libraryReportTemplate, {items: items}));            
+        var renderLibraryActivityReport = function(success, data) {         
+            var renderData = {
+                items : data.results
+            };
+            $(libraryContentReportContainer,rootel).html(sakai.api.Util.TemplateRenderer(libraryReportTemplate, renderData));
             $(libraryContentReportTable, rootel).tablesorter(
                 {
                     headers: {
                         2: {
                             sorter: "customDate"
                         },
-                        4: {
+                        3: {
                             sorter: "customDate"
                         }
                     },
@@ -259,10 +302,10 @@ require(
         /////////////////////////////
 
         var renderMainDisplay = function(){
-            sakai.api.Widgets.loadWidgetData(tuid, function(success, data) {                
+            //sakai.api.Widgets.loadWidgetData(tuid, function(success, data) {                
                 $(mainDisplay, rootel).show();
                 $("#tabs",rootel).tabs();
-            });
+            //});
         };
 
         $.tablesorter.addParser({
