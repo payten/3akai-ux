@@ -32,25 +32,23 @@
 
 
     <!-- TEMPLATES -->
-    <div id="groupactivity_report_template"><!--        
-        <table class="groupactivity-report" class="tablesorter">
+    <div id="groupactivity_library_report_template"><!--        
+        <table class="groupactivity-report tablesorter">
             <thead>
                 <tr>
-                    <th class="col-title">Title</th>
-                    <th class="col-modifiedby">Updated By</th>
-                    <th class="col-modified">Updated Date</th>                                            
+                    <th class="col-title">Title</th>                    
                     <th class="col-createdby">Created By</th>
                     <th class="col-created">Created Date</th>
+                    <th class="col-modified">Updated Date</th>
                 </tr>
             </thead>
             <tbody>
                {for item in items}
                    <tr>
-                      <td><a href="/content#p=${item["path"]}/${item["sakai:pooled-content-file-name"]}">${item["sakai:pooled-content-file-name"]}</a></td>
-                      <td>${item["_lastModifiedBy"]}</td>
-                      <td class="date" sortby="${item["_lastModified"]}">${new Date(item["_lastModified"]).toLocaleFormat("%Y-%m-%d %T")}</td>                                            
-                      <td>${item["_createdBy"]}</td>
+                      <td><a href="/content#p=${item["_path"]}/${item["sakai:pooled-content-file-name"]}">${item["sakai:pooled-content-file-name"]}</a></td>
+                      <td>{if item["sakai:pool-content-created-for"]}${item["sakai:pool-content-created-for"]}{else}${item["_createdBy"]}{/if}</td>
                       <td class="date" sortby="${item["_created"]}">${new Date(item["_created"]).toLocaleFormat("%Y-%m-%d %T")}</td>
+                      <td class="date" sortby="${item["_lastModified"]}">${new Date(item["_lastModified"]).toLocaleFormat("%Y-%m-%d %T")}</td>
                    </tr>
                {/for}
             </tbody>
@@ -58,7 +56,7 @@
     --></div>
     
     <div id="groupactivity_content_report_template"><!--        
-        <table class="groupactivity-report" class="tablesorter">
+        <table class="groupactivity-report tablesorter">
             <thead>
                 <tr>
                     <th class="col-title">Title</th>
@@ -70,7 +68,7 @@
             <tbody>
                {for item in items}
                    <tr>
-                      <td><a href="/content#p=${item["path"]}/${item["title"]}">${item["title"]}</a></td>
+                      <td><a href="#l=${item["area_id"]}/${item["_ref"]}">${item["title"]}</a></td>
                       <td>${item["area"]}</td>                                                        
                       <td>${item["_lastModifiedBy"]}</td>
                       <td class="date" sortby="${item["_lastModified"]}">${new Date(item["_lastModified"]).toLocaleFormat("%Y-%m-%d %T")}</td>

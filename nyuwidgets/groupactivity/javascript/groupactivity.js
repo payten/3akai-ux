@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations under the License.
  */
 
-/*global $, Config, Querystring, DOMParser */
+/*global $, Config */
 
 require(
     [
@@ -26,12 +26,12 @@ require(
     ],
     function($, sakai) {
     /**
-     * @name sakai.ebook
+     * @name sakai.groupactivity
      *
-     * @class ebook
+     * @class groupactivity
      *
      * @description
-     * Initialize the ebook widget
+     * Initialize the Group Activity Reporting widget
      *
      * @version 0.0.1
      * @param {String} tuid Unique id of the widget
@@ -57,16 +57,24 @@ require(
 
         // Containers
         var mainDisplay = groupActivityId+"_display";
-
+        var localContentReportContainer = "#localcontent .report";
+        var libraryContentReportContainer = "#librarycontent .report";        
+        var localContentReportTable = "#localcontent table.groupactivity-report";
+        var libraryContentReportTable = "#librarycontent table.groupactivity-report";
+        
         // Textboxes / Inputs
 
         // Checkboxes
 
         // Templates
-
+        var contentReportTemplate = "groupactivity_content_report_template";
+        var libraryReportTemplate = "groupactivity_library_report_template";
+        
         // Paging
 
         // Buttons
+        var refreshLocalContentReportButton = "#refreshLocalContent";
+        var refreshLibraryContentReportButton = "#refreshLibraryContent";
 
         // Buttons (no dot)
 
@@ -76,13 +84,13 @@ require(
         // Event Handlers //
         ////////////////////
         var addBinding = function(){
-            $("#refreshLocalContent",rootel).click(function() {
-               $("#localcontent .report",rootel).html("loading...");
+            $(refreshLocalContentReportButton,rootel).click(function() {
+               $(localContentReportContainer,rootel).html("loading...");
                loadDocStructure(); 
             });
             
-            $("#refreshLibraryContent",rootel).click(function() {
-               $("#librarycontent .report",rootel).html("loading...");
+            $(refreshLibraryContentReportButton,rootel).click(function() {
+               $(libraryContentReportContainer,rootel).html("loading...");
                loadContentVisibleToGroup(); 
             });
 
@@ -168,7 +176,7 @@ require(
             sakai.api.Server.batch(batchRequests, function(success, data) {
                 if (success) {
                     var pages = {
-                        items: [],                    
+                        items: []                  
                     };
                     for (var i = 0; i < pids.length; i++){
                         var result = data.results[i];
@@ -178,12 +186,14 @@ require(
                             var docInfo = sakai.api.Server.cleanUpSakaiDocObject($.parseJSON(result.body));                      
                             for (var page in docInfo.structure0) {
                                 if (docInfo.structure0.hasOwnProperty(page) && docInfo.hasOwnProperty(docInfo.structure0[page]._ref)){
-                                    try {                                         
+                                    try {
                                          var cleanedUpDocInfo = {
                                             "title": docInfo.structure0[page]._title,
+                                            "_ref": docInfo.structure0[page]._ref,
                                             "_lastModifiedBy": docInfo[docInfo.structure0[page]._ref]._lastModifiedBy,
                                             "_lastModified": docInfo[docInfo.structure0[page]._ref]._lastModified,
-                                            "area": topLevelPages[pids[i]]._title
+                                            "area": topLevelPages[pids[i]]._title,
+                                            "area_id": topLevelPages[pids[i]]._id
                                          }                                         
                                          pages.items.push(cleanedUpDocInfo);
                                     } catch(e) {
@@ -192,9 +202,9 @@ require(
                                 }
                             }
                         }
-                    }
-                    $("#localcontent .report",rootel).html(sakai.api.Util.TemplateRenderer("groupactivity_content_report_template", pages));            
-                    $("#localcontent table.groupactivity-report", rootel).tablesorter(
+                    }                    
+                    $(localContentReportContainer,rootel).html(sakai.api.Util.TemplateRenderer(contentReportTemplate, pages));            
+                    $(localContentReportTable, rootel).tablesorter(
                         {
                             headers: {
                                 3: {
@@ -218,7 +228,7 @@ require(
         
         var loadContentVisibleToGroup = function() {
              sakai.api.Server.loadJSON("/var/search/pool/manager-viewer.json",
-                renderContentActivityReport, {
+                renderLibraryActivityReport, {
                     userid: groupId,
                     items: 100000000,
                     q: "*"
@@ -226,10 +236,10 @@ require(
             );
         }
         
-        var renderContentActivityReport = function(success, data) {            
-            items = data.results;       
-            $("#librarycontent .report",rootel).html(sakai.api.Util.TemplateRenderer("groupactivity_report_template", {items: items}));            
-            $("#librarycontent table.groupactivity-report", rootel).tablesorter(
+        var renderLibraryActivityReport = function(success, data) {            
+            items = data.results;            
+            $(libraryContentReportContainer,rootel).html(sakai.api.Util.TemplateRenderer(libraryReportTemplate, {items: items}));            
+            $(libraryContentReportTable, rootel).tablesorter(
                 {
                     headers: {
                         2: {
@@ -249,10 +259,10 @@ require(
         /////////////////////////////
 
         var renderMainDisplay = function(){
-            //sakai.api.Widgets.loadWidgetData(tuid, function(success, data) {                
+            sakai.api.Widgets.loadWidgetData(tuid, function(success, data) {                
                 $(mainDisplay, rootel).show();
                 $("#tabs",rootel).tabs();
-            //});
+            });
         };
 
         $.tablesorter.addParser({
