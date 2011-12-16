@@ -1,0 +1,228 @@
+{
+    "id": "simple-group",
+    "title": "GROUP",
+    "img": "",
+    "fullImg": "",
+    "perfectFor": "SIMPLE_GROUP_PERFECT_FOR",
+    "order": 0,
+    "roles": [
+        {
+            "id": "manager",
+            "title": "MANAGER",
+            "titlePlural": "MANAGERS",
+            "isManagerRole": true,
+            "manages": [
+                "member"
+            ]
+        },
+        {
+            "id": "member",
+            "title": "MEMBER",
+            "titlePlural": "MEMBERS",
+            "isManagerRole": false
+        }
+    ],
+    "joinRole": "member",
+    "creatorRole": "manager",
+    "defaultaccess": "members-only",
+    "defaultjoin": "no",
+    "docs": {
+        "${pid}0": {
+            "structure0": {
+               "My-work": {
+                   "_ref": "${refid}0",
+                   "_order": 0,
+                   "_nonEditable": true,
+                   "_title": "My work",
+                   "main": {
+                       "_ref": "${refid}0",
+                       "_order": 0,
+                       "_nonEditable": true,
+                       "_title": "My work"
+                   }
+               }
+           },
+           "${refid}0": {
+               "page": "<img id='widget_mylibrary_${refid}1' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='/devwidgets/mylibrary/images/mylibrary.png' data-mce-src='/devwidgets/mylibrary/images/mylibrary.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'><br><p></p>"
+           },
+           "${refid}1": {
+               "mylibrary": {
+                   "groupid": "${groupid}"
+               }
+           }
+       },
+       "${pid}1": {
+           "structure0": {
+               "Members-of-my-Portfolio": {
+                   "_ref": "${refid}2",
+                   "_order": 0,
+                   "_title": "Members of my Portfolio",
+                   "_nonEditable": true,
+                   "main": {
+                       "_ref": "${refid}2",
+                       "_order": 0,
+                       "_nonEditable": true,
+                       "_title": "Members of my Portfolio"
+                   }
+               }
+           },
+           "${refid}2": {
+               "page": "<img id='widget_participants_${refid}3' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='/dev/images/person_icon.png' data-mce-src='/dev/images/person_icon.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'>"
+           },
+           "${refid}3": {
+               "participants": {
+                   "groupid": "${groupid}"
+               }
+           }
+       },
+       "${pid}2": {
+           "structure0": {
+               "Resume": {
+                   "_ref": "${refid}4",
+                   "_order": 0,
+                   "_nonEditable": false,
+                   "_title": "Resume",
+                   "main": {
+                       "_ref": "${refid}4",
+                       "_order": 0,
+                       "_nonEditable": false,
+                       "_title": "Resume"
+                   }
+               }
+           },
+           "${refid}4": {
+               "page": ""
+           }
+       },
+       "${pid}3": {
+           "structure0": {
+               "Collaborator-Discussion-Area": {
+                   "_title": "Collaborator Discussion Area",
+                   "_order": 0,
+                   "_ref": "${refid}6",
+                   "_nonEditable": true,
+                   "main": {
+                       "_title": "Collaborator Discussion Area",
+                       "_order": 0,
+                       "_ref": "${refid}6",
+                       "_nonEditable": true
+                   }
+               }
+           },
+           "${refid}6": {
+               "page": "<p><img src='/devwidgets/discussion/images/discussion.png' id='widget_discussion_${refid}7' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' border='1'></p><p><br data-mce-bogus='1'></p>"
+           },
+           "${refid}7": {
+               "discussion": {
+                   "groupid": "${groupid}",
+                   "message": {
+                       "sling:resourceType": "sakai/messagestore"
+                   }
+               }
+           }
+       },
+       "${pid}4": {
+           "structure0": {
+               "About-this-group": {
+                   "_title": "About this group",
+                   "_order": 0,
+                   "_ref": "${refid}8",
+                   "_nonEditable": true,
+                   "main": {
+                       "_title": "About this group",
+                       "_order": 0,
+                       "_ref": "${refid}8",
+                       "_nonEditable": true
+                   }
+               }
+           },
+           "${refid}8": {
+               "page": "<img id='widget_groupbasicinfo_${refid}9' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='/nyuwidgets/groupbasicinfo/images/icon.png' data-mce-src='/nyuwidgets/groupbasicinfo/images/icon.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'><br><p></p>"
+           },
+           "${refid9": {
+               "groupbasicinfo": {}
+           }
+       }
+   },
+   "structure": {
+       "About-this-group": {
+           "_title": "About this group",
+           "_order": 0,
+           "_view": [
+               "-member"
+           ],
+           "_edit": [
+               "-manager"
+           ],
+           "_nonEditable": true,
+           "_canView": true,
+           "_canSubedit": true,
+           "_canEdit": true,
+           "_docref": "${pid}4"
+       },
+       "Resume": {
+           "_title": "Resume",
+           "_order": 1,
+           "_view": [
+               "-member"
+           ],
+           "_edit": [
+               "-manager"
+           ],
+           "_nonEditable": false,
+           "_canView": true,
+           "_canSubedit": true,
+           "_canEdit": true,
+           "_docref": "${pid}2"
+       },
+       "My-work": {
+           "_title": "My work",
+           "_order": 2,
+           "_nonEditable": true,
+           "_view": [
+               "everyone",
+               "anonymous",
+               "-member"
+           ],
+           "_edit": [
+               "-manager"
+           ],
+           "_canView": true,
+           "_canSubedit": true,
+           "_canEdit": true,
+           "_docref": "${pid}0"
+       },
+       "Members-of-my-Portfolio": {
+           "_title": "Members of my Portfolio",
+           "_order": 3,
+           "_nonEditable": true,
+           "_view": [
+               "everyone",
+               "anonymous",
+               "-member"
+           ],
+           "_edit": [
+               "-manager"
+           ],
+           "_canView": true,
+           "_canSubedit": true,
+           "_canEdit": true,
+           "_docref": "${pid}1"
+       },
+       "Collaborator-Discussion-Area": {
+           "_title": "Collaborator Discussion Area",
+           "_order": 4,
+           "_view": [
+               "-member"
+           ],
+           "_edit": [
+               "-manager"
+           ],
+           "_nonEditable": true,
+           "_canView": true,
+           "_canSubedit": true,
+           "_canEdit": true,
+           "_docref": "${pid}3"
+       }
+    }
+}
