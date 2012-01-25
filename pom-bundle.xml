@@ -105,6 +105,8 @@
                 <include>dev/skins/**/*.css</include>
 				<include>devwidgets/**/css/**/*.css</include>
                 <include>devwidgets/**/javascript/**/*.js</include>
+		<include>nyuwidgets/**/css/**/*.css</include>
+                <include>nyuwidgets/**/javascript/**/*.js</include>
               </includes>
 	          <excludes>
 	            <exclude>apps/**</exclude>
@@ -195,6 +197,7 @@
             <Sling-Initial-Content>
                 SLING-INF/content/dev;path:=/dev;ignoreImportProviders:="xml,json,html,jar,zip";uninstall:=false;overwrite:=true,
                 SLING-INF/content/devwidgets;path:=/devwidgets;ignoreImportProviders:="xml,json,html,jar,zip";uninstall:=false;overwrite:=true,
+                SLING-INF/content/nyuwidgets;path:=/nyuwidgets;ignoreImportProviders:="xml,json,html,jar,zip";uninstall:=false;overwrite:=true,
                 SLING-INF/content/var/templates/worlds;path:=/var/templates/worlds;uninstall:=false;overwriteProperties:=true;overwrite:=true,
                 SLING-INF/content/var/templates/email;path:=/var/templates/email;uninstall:=false;overwrite:=true,
                 SLING-INF/content/var/ux-version;path:=/var/ux-version;uninstall:=false;overwriteProperties:=true;overwrite:=true,
