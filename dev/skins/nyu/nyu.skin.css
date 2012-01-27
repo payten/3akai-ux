@@ -18,6 +18,12 @@ a:visited{color:#3C1354 !important;}
 .s3d-button.s3d-overlay-action-button:hover, .s3d-button.s3d-overlay-action-button:focus {color:#fff !important; background-image: url("images/button_overlay_action_hover.png") !important;}
 .s3d-button.s3d-overlay-action-button:disabled, .s3d-button.s3d-overlay-action-button:disabled:hover {color: #CCC !important; background-image: url("/dev/images/button_overlay_action_default.png") !important;}
 
+.s3d-button.s3d-header-button.s3d-popout-button:hover {
+    background-image: url("images/button_popout_hover.png") !important;
+    border: 1px solid #4d10d5 !important;
+}
+.s3d-button.s3d-header-button.s3d-popout-button:disabled {background: none repeat scroll 0 0 #FFFFFF !important; border: none !important;}
+
 /* Header */
 .s3d-navigation-container{box-shadow:none;-webkit-box-shadow:none;-moz-box-shadow:none;}
 #institutionalskinning_logo,
@@ -57,6 +63,7 @@ a:visited{color:#3C1354 !important;}
 #lhnavigation_container li.lhnavigation_selected_item a:visited{color:white !important;}
 .s3d-dropdown-menu .s3d-dropdown-menu-arrow{background-image:url("images/dropdown-menu-arrow.png") !important;}
 #lhnavigation_container ul li.lhnavigation_selected_item .lhnavigation_levelcount, #lhnavigation_container ul li.lhnavigation_selected_item .lhnavigation_sublevelcount {background: url("images/lefthandnav_count_hover.png") repeat-x scroll left top #8a45d9 !important; border-color: #6f26ce !important}
+.lhnavigation_selected_submenu_image.clicked, .lhnavigation_selected_submenu_image:hover {background: url("images/lefthandnav_count_hover.png") repeat-x scroll left top #8a45d9 !important;}
 
 /* Entity overrides */
 #entity_container .entity_change_avatar .s3d-dropdown-menu-arrow {background-image: url(images/dropdown-menu-arrow.png) !important}
@@ -167,3 +174,6 @@ button.searchcontent_result_plus{color:#E4E4E4 !important}
 /* Collections */
 .collections_widget .collections_collection_title_short, .collections_widget button, .collections_widget a {color: #FFF !important}
 .collections_widget #collections_rightcolumn #collections_close_button:hover, .collections_widget #collections_rightcolumn #collections_close_button:focus {background-image: url("images/collections_delete_icon_20x20_hover.png") !important;}
+
+/* participants widget */
+.participants_widget #participants_list_container ul li .participants_message_icon:hover {background-image: url("images/message_icon.png") !important;}
