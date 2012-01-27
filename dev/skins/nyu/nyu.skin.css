@@ -14,6 +14,9 @@ button.s3d-link-button,
 #selecttemplate_preview_dialog_container h2{color:#57068c !important;}
 a:visited{color:#3C1354 !important;}
 
+.s3d-button.s3d-overlay-action-button:hover, .s3d-button.s3d-overlay-action-button:focus {color:#fff !important; background-image: url("images/button_overlay_action_hover.png") !important;}
+.s3d-button.s3d-overlay-action-button:disabled, .s3d-button.s3d-overlay-action-button:disabled:hover {color: #CCC !important; background-image: url("/dev/images/button_overlay_action_default.png") !important;}
+
 /* Header */
 .s3d-navigation-container{box-shadow:none;-webkit-box-shadow:none;-moz-box-shadow:none;}
 #institutionalskinning_logo,
@@ -34,6 +37,16 @@ a:visited{color:#3C1354 !important;}
 #topnavigation_user_options_login:focus{background:#57068c url("images/topnav_nav_hover.png") repeat-x scroll left top !important;color:#ffffff !important;}
 .s3d-dropdown-menu ul li:hover{background-image:none;background-color:#DDDDDD;}
 
+.topnavigation_counts_container .topnavigation_menuitem_counts_container:hover {background:#57068c url("images/topnav_nav_hover.png") !important;}
+
+.topnavigation_explore .topnavigation_counts_container button:focus, 
+.topnavigation_explore .s3d-dropdown-menu li a:focus, 
+.topnavigation_user_container .s3d-dropdown-menu li a:focus, 
+#topnavigation_user_options_login li a:focus, 
+#navigation_anon_signup_link:focus {
+    background-image: url("images/topnav_nav_hover.png") !important;
+}
+
 /* Navigation overrides */
 #lhnavigation_container ul li.lhnavigation_selected_item.lhnavigation_outer,
 #lhnavigation_container ul li ul li.lhnavigation_selected_item div.lhnavigation_subnav_item_content{background-image:url("images/lhnav_selected_item_bg.png") !important;}
@@ -42,9 +55,20 @@ a:visited{color:#3C1354 !important;}
 #lhnavigation_container li.lhnavigation_selected_item a:link,
 #lhnavigation_container li.lhnavigation_selected_item a:visited{color:white !important;}
 .s3d-dropdown-menu .s3d-dropdown-menu-arrow{background-image:url("images/dropdown-menu-arrow.png") !important;}
+#lhnavigation_container ul li.lhnavigation_selected_item .lhnavigation_levelcount, #lhnavigation_container ul li.lhnavigation_selected_item .lhnavigation_sublevelcount {background: url("images/lefthandnav_count_hover.png") repeat-x scroll left top #8a45d9 !important; border-color: #6f26ce !important}
+
+/* Entity overrides */
+#entity_container .entity_change_avatar .s3d-dropdown-menu-arrow {background-image: url(images/dropdown-menu-arrow.png) !important}
+#entity_container .entity_change_avatar:hover, #entity_container .entity_change_avatar.clicked {background-color: #a672d1 !important;}
+#entity_container .entity_owns_actions_container .entity_owns_actions .entity_owns_actions_private:hover, #entity_container .entity_owns_actions_container .entity_owns_actions .entity_owns_actions_private.selected {background-image: url("images/lock_icon_18x18_hover.png") !important;}
+#entity_container .entity_owns_actions_container .entity_owns_actions .entity_owns_actions_institution:hover, #entity_container .entity_owns_actions_container .entity_owns_actions .entity_owns_actions_institution.selected {background-image: url("images/institution_icon_18x18_hover.png") !important;}
+#entity_container .entity_owns_actions_container .entity_owns_actions .entity_owns_actions_public:hover, #entity_container .entity_owns_actions_container .entity_owns_actions .entity_owns_actions_public.selected {background-image: url("images/globe_icon_18x18_hover.png") !important;}
+#entity_container .entity_owns_actions_container .entity_owns_actions .entity_owns_actions_collaborator:hover, #entity_container .entity_owns_actions_container .entity_owns_actions .entity_owns_actions_collaborator.selected {background-image: url("images/collaborator_icon_20x16_hover.png") !important;}
+#entity_container .entity_owns_actions_container .entity_owns_actions .entity_owns_actions_share:hover, #entity_container .entity_owns_actions_container .entity_owns_actions .entity_owns_actions_share.selected {background-image: url("images/share_icon_20x16_hover.png") !important;}
+#entity_container .s3d-button:hover .entity_permissions_icon {background-image: url("images/settings_icon_16x16_hover.png") !important;}
 
 /* Recent activity overrides */
-.s3d-no-results-container{background-color:#DDDDDD;}
+.s3d-no-results-container{background-color:#DDDDDD !important; background-image: none !important;}
 .recentchangedcontent.fl-widget .s3d-no-results-container h1,
 .recentmemberships.fl-widget .s3d-no-results-container h1,
 .recentcontactsnew.fl-widget .s3d-no-results-container h1{color:#393939;}
@@ -118,6 +142,11 @@ button.searchcontent_result_plus{color:#E4E4E4 !important}
 .searchcontent_result:hover .searchcontent_result_author_icon{background-image:url("images/author_icon.png") !important;}
 .searchcontent_result:hover .searchcontent_result_share_icon{background-image:url("images/share_icon.png") !important;}
 
+.s3d-search-results-gridview:hover, .s3d-search-results-gridview.selected {background-image: url("images/search_grid_16x16_hover.png") !important;}
+.s3d-search-results-listview:hover, .s3d-search-results-listview.selected {background-image: url("images/search_list_16x16_hover.png") !important;}
+.s3d-search-results-carouselview:hover, .s3d-search-results-carouselview.selected {background-image: url("images/search_carousel_16x16_hover.png") !important;}
+.s3d-search-results-blogview:hover, .s3d-search-results-blogview.selected {background-image: url("images/search_blog_16x16_hover.png") !important;}
+
 /* all categories overrides */
 .allcategories_widget .allcategories_item .allcategories_item_header:hover{background-image:url("images/allcategories_item_header_hover_bg.png") !important;background-color:#3c1354 !important;}
 .allcategories_widget .allcategories_item:hover{background-color:#eae7f4 !important;}
@@ -125,7 +154,12 @@ button.searchcontent_result_plus{color:#E4E4E4 !important}
 /* Carousel overrides */
 .s3d-actions-addtolibrary:hover{background-image:url("images/add_to_library_icon.png") !important;}
 .s3d-actions-message:hover{background-image:url("images/message_icon.png") !important;}
-.s3d-actions-share:hover{background-image:url("images/share_icon.png") !important;}
+.s3d-actions-share:hover{background-image:url("images/share_icon_hover.png") !important;}
+.s3d-actions-author:hover {background-image: url("images/author_icon_hover.png") !important;}
 
 /* Notifications */
 .gritter-item a{color:#EEE !important;}
+
+/* Collections */
+.collections_widget .collections_collection_title_short, .collections_widget button, .collections_widget a {color: #FFF !important}
+.collections_widget #collections_rightcolumn #collections_close_button:hover, .collections_widget #collections_rightcolumn #collections_close_button:focus {background-image: url("images/collections_delete_icon_20x20_hover.png") !important;}
