@@ -27,7 +27,7 @@ a:visited{color:#3C1354 !important;}
 /* Header */
 .s3d-navigation-container{box-shadow:none;-webkit-box-shadow:none;-moz-box-shadow:none;}
 #institutionalskinning_logo,
-#top_banner_logo{background:transparent url("images/nyu_logos.png") top center no-repeat !important;height:80px !important;}
+#top_banner_logo{background:white url("images/nyu_logos.png") top center no-repeat !important;height:80px !important;border-bottom: 1px solid #DCDCDC;}
 .s3d-container-shadow-left,.s3d-container-shadow-right{display:none;}
 #top_banner{background:#ffffff;height:80px;left:0;position:absolute;top:40px;width:100%;}
 #top_banner_logo{margin:0 auto;width:960px;border-bottom:1px solid #DCDCDC;}
