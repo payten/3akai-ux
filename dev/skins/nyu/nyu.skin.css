@@ -43,7 +43,7 @@ a:visited{color:#3C1354 !important;}
 .topnavigation_explore .s3d-dropdown-menu a:focus,
 #topnavigation_user_options_login:focus{background:#57068c url("images/topnav_nav_hover.png") repeat-x scroll left top !important;color:#ffffff !important;}
 .s3d-dropdown-menu ul li:hover{background-image:none;background-color:#DDDDDD;}
-
+#topnavigation_user_options_login_external {color: #fff !important;}
 .topnavigation_counts_container .topnavigation_menuitem_counts_container:hover {background:#57068c url("images/topnav_nav_hover.png") !important;}
 
 .topnavigation_explore .topnavigation_counts_container button:focus, 
