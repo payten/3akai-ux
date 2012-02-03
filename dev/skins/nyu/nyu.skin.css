@@ -135,10 +135,6 @@ a.categories_item_header_link{color:white !important;}
 #explore_content.single-column .homepage-header{width:214px;padding:0 40px;}
 #explore_content.single-column .header-smallline p{margin-bottom:0;}
 
-/* sharecontent overrides */
-.mylibrary_item:hover .mylibrary_item_share_icon{background-image:url("images/share_icon.png") !important;}
-.mylibrary_item:hover .mylibrary_item_author_icon{background-image:url("images/author_icon.png") !important;}
-
 /* featurecontent overrides */
 .featuredcontent_widget .featuredcontent_content_actions_addtolibrary{background-image:url("images/add_to_library_icon.png") !important;}
 .featuredcontent_widget .featuredcontent_content_actions_share{background-image:url("images/share_icon.png") !important;}
