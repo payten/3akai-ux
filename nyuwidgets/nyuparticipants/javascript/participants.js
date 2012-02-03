@@ -200,7 +200,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                                 "profilePicture": picture
                             };
                             // Get the extra info and push it on to the users
-                            if (widgetData.participants.showExtraInfo) {
+                            if (widgetData.nyuparticipants.showExtraInfo) {
                                 var userExtraFields = [];
                                 $.each(extraFields, function(idx,field) {
                                     var val = sakai.api.User.getProfileBasicElementValue(result, field.key);
@@ -247,7 +247,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
             }
             // Set up the infinite scroll for the list of items in the library
             infinityScroll = $participantsListContainer.infinitescroll(function(parameters, callback){
-                sakai.api.Groups.searchMembers(widgetData.participants.groupid, widgetData.query, parameters.items, parameters.page, parameters.sortBy, parameters.sortOrder, function(success, data){
+                sakai.api.Groups.searchMembers(widgetData.nyuparticipants.groupid, widgetData.query, parameters.items, parameters.page, parameters.sortBy, parameters.sortOrder, function(success, data){
                     callback(true, data);
                 });
             }, {
