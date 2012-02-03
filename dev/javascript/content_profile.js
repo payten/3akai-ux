@@ -61,6 +61,10 @@ require(["jquery","sakai/sakai.api.core"], function($, sakai) {
                                     switchToOneColumnLayout(false);
                                 }
 
+                                if (contentInfo["sakai:customStyle"]) {
+                                    sakai.api.Util.include.css(contentInfo["sakai:customStyle"]);
+                                }
+
                                 var collectionId = $.bbq.getState("collectionId");
                                 var collectionName = $.bbq.getState("collectionName");
                                 if(collectionId && collectionName){
