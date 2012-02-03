@@ -30,17 +30,17 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
         var generateTagCloud = function(success, tagData){
             var newtags = [];
             // Filter out directory tagcloud
-            if (tagData.results.length && tagData.results[0].tags) {
-                for (var i = 0; i < tagData.results[0].tags.length; i++) {
-                    if (tagData.results[0].tags[i].name.substring(0, 10) !== "directory/") {
-                        newtags.push(tagData.results[0].tags[i]);
-                    }
-                }
-                tagData.results[0].tags = newtags;
+            if ( tagData.facet_fields && tagData.facet_fields.length && tagData.facet_fields[ 0 ].tagname ) {
+                $.each(tagData.facet_fields[0].tagname, function( i, tagobj ) {
+                    var tag = sakai.api.Util.formatTags( _.keys( tagobj )[ 0 ] )[ 0 ];
+                    tag.count = _.values( tagobj )[ 0 ];
+                    newtags.push( tag );
+                });
+                
                 // Sort the tagcloud in alphabetical order so we can generate a tag cloud
-                tagData.results[0].tags.sort(function(a, b){
-                    var nameA = a.name.toLowerCase();
-                    var nameB = b.name.toLowerCase();
+                newtags.sort(function(a, b){
+                    var nameA = a.value.toLowerCase();
+                    var nameB = b.value.toLowerCase();
                     if (nameA < nameB) {
                         return -1;
                     }
@@ -50,7 +50,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                     return 0;
                 });
             }
-            $tagcloud_main.html(sakai.api.Util.TemplateRenderer($tagcloud_main_template, {data: tagData, groupId: groupId})).show();
+            $tagcloud_main.html(sakai.api.Util.TemplateRenderer($tagcloud_main_template, {data: newtags, groupId: groupId})).show();
         };
 
         var loadData = function(callback){
