@@ -654,11 +654,11 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai){
             var docTitle = $("#addarea_participants_name").val();
             var docPermission = $("#addarea_participants_permissions").val();
             var widgetID = sakai.api.Util.generateWidgetId();
-            var pageContents = ["<img id='widget_participants_" + widgetID + "' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='/devwidgets/participants/images/participants.png' data-mce-src='/devwidgets/participants/images/participants.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'></p>"];
+            var pageContents = ["<img id='widget_nyuparticipants_" + widgetID + "' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='/devwidgets/participants/images/participants.png' data-mce-src='/devwidgets/participants/images/participants.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'></p>"];
             var nonEditable = true;
             var widgetContents = {};
             widgetContents[widgetID] = {
-                participants: {
+                nyuparticipants: {
                     "groupid": sakai_global.group.groupId
                 }
             };

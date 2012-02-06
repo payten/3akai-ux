@@ -39,7 +39,6 @@ define(["config/config"], function(config) {
     /**
      * World Templates
      */
-    config.widgets.defaults.participants = {"widgetid": "nyuparticipants", "path": "/nyuwidgets/nyuparticipants"};
     config.adminOnlyTemplates = ["course", "portfolio"];
 
     /**
