@@ -94,9 +94,12 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
             $(collectionCountsContentCountsNew).text("" + contentToAdd.length);
             $(collectionsNewButton).hide();
             $(collectionsNoCollections).hide();
+            if (sakai.widgets.collections.defaultConfiguration && sakai.widgets.collections.defaultConfiguration.defaultPermission) {
+                $(collectionsNewCollectionPermission).val(sakai.widgets.collections.defaultConfiguration.defaultPermission);
+            }
             $(collectionsAddNewContainer).show();
             $(collectionsNewActionButtons).show();
-            $("#collections_collection_title").focus();
+            $("#collections_collection_title").focus();            
             if (!$collectionsWidget.is(":visible")){
                 $collectionsWidget.animate({
                     'margin-bottom': 'toggle',

@@ -16,5 +16,8 @@
     "type":               "sakai",
     "url":                "/devwidgets/collections/collections.html",
     "userdashboard":      false,
-    "userpages":          false
+    "userpages":          false,
+    "defaultConfiguration" : {
+        "defaultPermission" : "everyone"
+    }
 }
