@@ -50,7 +50,7 @@ a:visited{color:#3C1354 !important;}
 .topnavigation_explore .s3d-dropdown-menu li a:focus, 
 .topnavigation_user_container .s3d-dropdown-menu li a:focus, 
 #topnavigation_user_options_login li a:focus, 
-#navigation_anon_signup_link:focus {
+.topnavigation_force_submenu_display_title, #navigation_anon_signup_link:focus {
     background-image: url("images/topnav_nav_hover.png") !important;
 }
 
