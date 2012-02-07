@@ -330,5 +330,17 @@ define(["config/config"], function(config) {
         "opennewwindow": "true"
     });
 
+    /**
+    * Kaltura Settings
+    */
+    config.MimeTypes["kaltura/video"].description = "KALTURA_VIDEO_FILE";
+    config.MimeTypes["kaltura/audio"].description = "KALTURA_AUDIO_FILE";
+    config.kaltura = {
+        enabled: true,
+        serverURL:  "http://kvapi.home.nyu.edu",
+        partnerId:  141,
+        playerId: 4422411
+    };
+
     return config;
 });
