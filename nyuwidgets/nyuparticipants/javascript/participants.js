@@ -37,6 +37,14 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
         /////////////////////////////
         var infinityScroll = false;
 
+        var showExtraInfo;
+        // if legacy participants widget (< v1.1)...
+        if (widgetData.hasOwnProperty("participants")) {
+            showExtraInfo = widgetData.participants.showExtraInfo;
+        } else { // new > v1.1 widget
+            showExtraInfo = widgetData.nyuparticipants.showExtraInfo;
+        }
+        
         // Containers
         var $participantsListContainer = $("#participants_list_container_list", rootel);
 
@@ -200,7 +208,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                                 "profilePicture": picture
                             };
                             // Get the extra info and push it on to the users
-                            if (widgetData.nyuparticipants.showExtraInfo) {
+                            if (showExtraInfo) {
                                 var userExtraFields = [];
                                 $.each(extraFields, function(idx,field) {
                                     var val = sakai.api.User.getProfileBasicElementValue(result, field.key);
@@ -247,7 +255,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
             }
             // Set up the infinite scroll for the list of items in the library
             infinityScroll = $participantsListContainer.infinitescroll(function(parameters, callback){
-                sakai.api.Groups.searchMembers(widgetData.nyuparticipants.groupid, widgetData.query, parameters.items, parameters.page, parameters.sortBy, parameters.sortOrder, function(success, data){
+                sakai.api.Groups.searchMembers(sakai_global.group.groupId, widgetData.query, parameters.items, parameters.page, parameters.sortBy, parameters.sortOrder, function(success, data){
                     callback(true, data);
                 });
             }, {
