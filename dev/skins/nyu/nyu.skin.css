@@ -177,6 +177,7 @@ button.searchcontent_result_plus{color:#E4E4E4 !important}
 /* ATLASINT-139  hide List Categeries link when adding groups and content */
 #newaddcontent_container button.list_categories,
 #newcreategroup_container button.list_categories,
-#contentmetadata_container button.list_categories {
+#contentmetadata_container button.list_categories,
+#addarea_container button.list_categories {
     display: none !important;
 }
