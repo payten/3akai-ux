@@ -18,6 +18,6 @@
     "userdashboard":      false,
     "userpages":          false,
     "defaultConfiguration" : {
-        "defaultPermission" : "everyone"
+        "defaultPermission" : "private"
     }
 }
