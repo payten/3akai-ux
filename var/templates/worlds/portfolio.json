@@ -3,5 +3,7 @@
     "title" : "PORTFOLIO",
     "titlePlural": "PORTFOLIOS",
     "menuLabel" : "CREATE_A_PORTFOLIO",
-    "order": 2
+    "order": 2,
+    "type": "content",
+    "customSearch": "/var/search/solr/portfolio.json"
 }

@@ -30,11 +30,25 @@ require(["jquery", "sakai/sakai.api.core", "/dev/javascript/search_util.js"], fu
      * @param {String} tuid Unique id of the widget
      * @param {Boolean} showSettings Show the settings of the widget or not
      */
-    sakai_global.searchcontent = function(tuid, showSettings){
+    sakai_global.searchcontent = function(tuid, showSettings, widgetData){
 
         //////////////////////
         // Config variables //
         //////////////////////
+        var selectedCategory = sakai.api.i18n.getValueForKey("CONTENT"),
+            selectedCategoryPlural = sakai.api.i18n.getValueForKey("CONTENT"),
+            selectedCategoryId = "content",
+            selectedCategoryCustomSearch;
+        for (var c = 0; c < sakai.config.worldTemplates.length; c++) {
+            if (sakai.config.worldTemplates[c].id === widgetData.category) {
+                selectedCategory = sakai.api.i18n.getValueForKey(sakai.config.worldTemplates[c].title);
+                selectedCategoryPlural = sakai.api.i18n.getValueForKey(sakai.config.worldTemplates[c].titlePlural);
+                selectedCategoryId = sakai.config.worldTemplates[c].id;
+                selectedCategoryCustomSearch = sakai.config.worldTemplates[c].customSearch;
+                break;
+            }
+        }
+
 
         // Search URL mapping
         var searchURLmap = {
@@ -45,6 +59,17 @@ require(["jquery", "sakai/sakai.api.core", "/dev/javascript/search_util.js"], fu
             pooledcontentviewer: sakai.config.URL.POOLED_CONTENT_VIEWER,
             pooledcontentviewerall: sakai.config.URL.POOLED_CONTENT_VIEWER_ALL
         };
+
+        if (selectedCategoryCustomSearch) {
+            searchURLmap = {
+                allfiles: selectedCategoryCustomSearch,
+                allfilesall: selectedCategoryCustomSearch,
+                pooledcontentmanager: selectedCategoryCustomSearch,
+                pooledcontentmanagerall: selectedCategoryCustomSearch,
+                pooledcontentviewer: selectedCategoryCustomSearch,
+                pooledcontentviewerall: selectedCategoryCustomSearch
+            }                
+        }
 
         var infinityScroll = false;
 
@@ -68,11 +93,11 @@ require(["jquery", "sakai/sakai.api.core", "/dev/javascript/search_util.js"], fu
                 noResultsTemplate: 'searchcontent_noresults_template'
             },
             facetedConfig: {
-                title: $("#searchcontent_result_title").html(),
+                title: $("#searchcontent_result_title", $rootel).html(),
                 value: "Content",
                 facets: {
                     "all": {
-                        "category": $("#searchcontent_result_all_content").html(),
+                        "category": $("#searchcontent_result_all_content", $rootel).html(),
                         "searchurl": searchURLmap.allfiles,
                         "searchurlall": searchURLmap.allfilesall
                     }
@@ -90,12 +115,14 @@ require(["jquery", "sakai/sakai.api.core", "/dev/javascript/search_util.js"], fu
                 "category": $("#searchcontent_result_content_I_m_a_viewer_of").html(),
                 "searchurl": searchURLmap.pooledcontentviewer,
                 "searchurlall": searchURLmap.pooledcontentviewerall
-            };
-        }
+            };            
+        }       
 
         ///////////////
         // Functions //
         ///////////////
+        
+        $(".searchcontent_type_title", $rootel).text(selectedCategoryPlural);
 
         /**
          * Take a list of search results retrieved by the server and process them so they are
@@ -120,11 +147,11 @@ require(["jquery", "sakai/sakai.api.core", "/dev/javascript/search_util.js"], fu
         var showSearchContent = function(params){
             // Set search box values
             if (!params.q || (params.q === "*" || params.q === "**")) {
-                $(searchConfig.global.text).val("");
+                $(searchConfig.global.text, $rootel).val("");
             } else {
-                $(searchConfig.global.text).val(params.q);
+                $(searchConfig.global.text, $rootel).val(params.q);
             }
-            $(searchConfig.results.container).html($(searchConfig.global.resultTemp).html());
+            $(searchConfig.results.container, $rootel).html($(searchConfig.global.resultTemp,$rootel).html());
         };
 
         /**
@@ -132,8 +159,8 @@ require(["jquery", "sakai/sakai.api.core", "/dev/javascript/search_util.js"], fu
          * be called by the infinite scroll plugin
          */
         var handleEmptyResultList = function(){
-            $(searchConfig.global.numberFound).text("0");
-            $(searchConfig.results.container).html(sakai.api.Util.TemplateRenderer(searchConfig.results.noResultsTemplate, {sakai: sakai}));
+            $(searchConfig.global.numberFound, $rootel).text("0");
+            $(searchConfig.results.container, $rootel).html(sakai.api.Util.TemplateRenderer(searchConfig.results.noResultsTemplate, {sakai: sakai}));
         };
 
         /**
@@ -174,7 +201,7 @@ require(["jquery", "sakai/sakai.api.core", "/dev/javascript/search_util.js"], fu
                 infinityScroll.kill();
             }
             // Set up the infinite scroll for the list of search results
-            infinityScroll = $(searchConfig.results.container).infinitescroll(url, {
+            infinityScroll = $(searchConfig.results.container, $rootel).infinitescroll(url, {
                 "q": urlsearchterm,
                 "sortOn": params["sorton"],
                 "sortOrder": params["sortby"]
@@ -187,7 +214,7 @@ require(["jquery", "sakai/sakai.api.core", "/dev/javascript/search_util.js"], fu
                 });
             }, handleEmptyResultList, sakai.config.URL.INFINITE_LOADING_ICON, renderResults, function(){
                 // Initialize content draggable
-                sakai.api.Util.Draggable.setupDraggable({}, $(searchConfig.results.container));
+                sakai.api.Util.Draggable.setupDraggable({}, $(searchConfig.results.container, $rootel));
             }, false, function(data){
                 // Generate refine by tags
                 sakai_global.data.search.generateTagsRefineBy(data, params);
@@ -199,11 +226,11 @@ require(["jquery", "sakai/sakai.api.core", "/dev/javascript/search_util.js"], fu
         /////////////////////////
 
         if (sakai.data.me.user.anon){
-            $(searchConfig.results.resultsContainer).addClass(searchConfig.results.resultsContainerAnonClass);
+            $(searchConfig.results.resultsContainer, $rootel).addClass(searchConfig.results.resultsContainerAnonClass);
         }
 
         $(window).bind("hashchange", function(ev){
-            if ($.bbq.getState("l") === "content") {
+            if ($.bbq.getState("l") === selectedCategoryId) {
                 doSearch();
             }
         });
