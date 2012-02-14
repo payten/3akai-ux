@@ -100,7 +100,7 @@
                                 <span class="participants_list_extra_field_value">
                                 {if field.isTag}
                                     {for tag in field.value}
-                                        <a href="/search#q=${tag|safeURL}">${tag}</a>{if tag_index < field.value.length-1},{/if}
+                                        <a href="${tag.link}" title="${tag.linkTitle}">${tag.value}</a>{if tag_index < field.value.length-1},{/if}
                                     {/for}
                                 {elseif field.searchable}
                                     <a href="/search#q=${field.searchField|safeURL}">${field.value}</a>
