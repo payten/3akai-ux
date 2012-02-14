@@ -180,7 +180,7 @@ define(["config/config"], function(config) {
             "label": "__MSG__TAGS__",
             "required": false,
             "display": true,
-            "type": "textarea",
+            "type": "tags",
             "tagField": true
         }
     };

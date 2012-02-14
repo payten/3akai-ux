@@ -178,6 +178,7 @@ button.searchcontent_result_plus{color:#E4E4E4 !important}
 #newaddcontent_container button.list_categories,
 #newcreategroup_container button.list_categories,
 #contentmetadata_container button.list_categories,
-#addarea_container button.list_categories {
+#addarea_container button.list_categories,
+#displayprofilesection_form_basic button.list_categories{
     display: none !important;
 }
