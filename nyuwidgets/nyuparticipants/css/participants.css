@@ -58,3 +58,6 @@
 .participants_widget .participants_list_extra_field_value{color:#000;margin-left:10px;display:block;padding-left:100px;}
 .participants_widget .participants_list_bottom_items_extra{margin-left:30px;}
 .participants_widget .s3d-search-results-grid .participants_list_extra_fields {display: none;}
+
+/* spinner when searching */
+.participants_widget .s3d-search-inputfield.searching {background:url("/dev/images/ajax-loader-gray.gif") no-repeat scroll right transparent;}

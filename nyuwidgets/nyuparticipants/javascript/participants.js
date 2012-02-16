@@ -255,7 +255,9 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
             }
             // Set up the infinite scroll for the list of items in the library
             infinityScroll = $participantsListContainer.infinitescroll(function(parameters, callback){
+                $participantsSearchField.addClass("searching");
                 sakai.api.Groups.searchMembers(sakai_global.group.groupId, widgetData.query, parameters.items, parameters.page, parameters.sortBy, parameters.sortOrder, function(success, data){
+                    $participantsSearchField.removeClass("searching");
                     callback(true, data);
                 });
             }, {
