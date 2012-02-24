@@ -66,3 +66,86 @@
 .participants_widget button.search_tag_active_item {background-image: url(/dev/images/searchbutton_hover_bg.png) !important; border-color: #AAA}
 .participants_widget .s3d-search-refineby-list {display: inline-block}
 .participants_widget .s3d-search-refineby-title {display: inline-block}
+
+/* tag cloud */
+.participants_widget .tagcloud-container {
+	display: none;
+}
+.participants_widget .tagcloud-row {
+	height: 100px;
+	width: 700px;
+}
+.participants_widget .tagcloud-row .search_tag_refine_item.active {
+	background-image: url(/dev/images/search_tag_remove.png);
+	background-repeat: no-repeat;
+	background-position: center right;
+	padding-right: 12px;
+}
+.participants_widget.tagcloud-enabled .refine-by-tags-row .s3d-search-refineby-title,
+.participants_widget.tagcloud-enabled .refine-by-tags-row .search_tag_refine_item {
+	display: none;	
+}
+.participants_widget.tagcloud-enabled .s3d-page-header-top-row,
+.participants_widget.tagcloud-enabled .s3d-search-refineby-list {
+	margin-bottom: 0;
+}
+div.jqcloud {
+  font-family: "Helvetica", "Arial", sans-serif;
+  color: #09f;
+  overflow: hidden;
+  position: relative;
+}
+div.jqcloud a {
+  color: inherit;
+  font-size: inherit;
+  text-decoration: none;
+}
+div.jqcloud a:hover {
+  color: #0df;
+}
+div.jqcloud a:hover {
+  color: #0cf;
+}
+div.jqcloud span {
+  padding: 0;
+}
+div.jqcloud span.w10 {
+  font-size: 54px;
+  color: #0cf;
+}
+div.jqcloud span.w9 {
+  font-size: 50px;
+  color: #0cf;
+}
+div.jqcloud span.w8 {
+  font-size: 44px;
+  color: #0cf;
+}
+div.jqcloud span.w7 {
+  font-size: 40px;
+  color: #39d;
+}
+div.jqcloud span.w6 {
+  font-size: 34px;
+  color: #90c5f0;
+}
+div.jqcloud span.w5 {
+  font-size: 30px;
+  color: #90a0dd;
+}
+div.jqcloud span.w4 {
+  font-size: 24px;
+  color: #90c5f0;
+}
+div.jqcloud span.w3 {
+  font-size: 20px;
+  color: #a0ddff;
+}
+div.jqcloud span.w2 {
+  font-size: 14px;
+  color: #99ccee;
+}
+div.jqcloud span.w1 {
+  font-size: 10px;
+  color: #aab5f0;
+}
