@@ -442,7 +442,7 @@ require(["jquery", "sakai/sakai.api.core", "/dev/javascript/search_util.js"], fu
                 });
             } else {
             	handleHashChange();
-            }      
+            }
         };
 
         $(window).bind("usersselected.addpeople.sakai", function(e, _newlyAdded){
