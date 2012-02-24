@@ -2,8 +2,11 @@
 <link rel="stylesheet" type="text/css" href="/nyuwidgets/nyuparticipants/css/participants.css" />
 
 <div class="participants_widget">
+	<div class="tagcloud-container" style="display: none;">
+	    <div class="s3d-contentpage-title">Tag Cloud</div>
+		<div class="tagcloud-row"></div>
+	</div>
     <div class="s3d-contentpage-title">__MSG__PARTICIPANTS__</div>
-
     <div class="s3d-page-header-top-row" style="display:none;">
         <div class="s3d-button s3d-header-button s3d-header-smaller-button s3d-listview-options">
             <div class="s3d-listview-grid">
@@ -57,6 +60,7 @@
 			        <span class="s3d-search-tag">
 					   {if $.inArray(tag_details_index, selected) >= 0}
 							<span class="s3d-search-activetags">
+							<img src="/dev/images/search_tag_active.png">
 				           <button title="Remove ${tag_details_index} from search" data-sakai-entityid="${tag_details_index}" class="search_tag_active_item">
 				               ${tag_details_index}
 							   <img src="/dev/images/search_tag_remove.png">

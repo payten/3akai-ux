@@ -43,6 +43,8 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
         } else if (widgetData.hasOwnProperty("nyuparticipants")) { // new > v1.1 widget
             showExtraInfo = widgetData.nyuparticipants.showExtraInfo;
         }
+
+        var showTagCloud = widgetData.nyuparticipants.showTagCloud || false;		
         
         // Containers
         var $participantsListContainer = $("#participants_list_container_list", rootel);
@@ -264,10 +266,34 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
 						&& data.facet_fields.length 
 						&& data.facet_fields[0].hasOwnProperty("tagname") 
 						&& data.facet_fields[0].tagname.length) {
+							var sanitisedTagData = [];
+							for (var i=0; i<data.facet_fields[0].tagname.length;i++) {
+								for (var key in data.facet_fields[0].tagname[i]) {
+									if (data.facet_fields[0].tagname[i].hasOwnProperty(key)) {
+										sanitisedTagData.push({
+											text: key,
+											weight: data.facet_fields[0].tagname[i][key],
+											url: "javascript:void(0);",
+											customClass: ($.inArray(key, selectedTags)>=0)?"search_tag_refine_item active":"search_tag_refine_item",
+											dataAttributes: {
+												"data-sakai-entityid": key
+											}
+										})										
+									}
+								}
+							}
+							if (showTagCloud) {
+								$(".tagcloud-row", rootel).empty();
+								$(".tagcloud-row", rootel).jQCloud(sanitisedTagData, {
+								  height: 100,
+								  width: 700
+								});
+								$(".tagcloud-container", rootel).show();
+							}							
 							var refinebytagsData = {
 								tags: data.facet_fields[0].tagname,
 								selected: selectedTags
-							}
+							}																					
 							$(".refine-by-tags-row",rootel).html(sakai.api.Util.TemplateRenderer("participants_refinebytags_template", refinebytagsData));											
 					} 
                     callback(true, data);
@@ -368,12 +394,17 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                 $.bbq.pushState({"ls": "grid"});
             });
 
-			$(rootel).on("click", ".s3d-search-tag button", function(event) {
-				var tag = $(this).attr("data-sakai-entityid");
+			$(rootel).on("click", ".s3d-search-tag button, .tagcloud-row a", function(event) {
+				var tag;
+				if ($(this).parents(".tagcloud-row:first").length) {
+					tag = $(this).parents(".search_tag_refine_item:first").data("data-sakai-entityid");
+				} else {
+					tag = $(this).attr("data-sakai-entityid");
+				}
 				if ($.inArray(tag,selectedTags) >= 0) {
 					selectedTags = $.grep(selectedTags, function(value) {return value != tag});
 				} else {
-					selectedTags.push($(this).attr("data-sakai-entityid"));					
+					selectedTags.push(tag);
 				}
 				var newSearchState = {"refine": selectedTags.join(",")};
 				if ($.bbq.getState("pq") === undefined) {
@@ -390,8 +421,17 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
             if (sakai.api.Groups.isCurrentUserAManager(sakai_global.group.groupId, sakai.data.me, groupData)){
                 $("#participants_manage_participants").show();
             }
-            addBinding();
-            handleHashChange();
+
+			addBinding();
+
+			if (showTagCloud) {
+				require(["/nyuwidgets/nyuparticipants/lib/jquery.jqcloud.js"], function() {
+					$(".participants_widget",rootel).addClass("tagcloud-enabled");
+	            	handleHashChange();
+				});
+			} else {
+            	handleHashChange();
+			}      
         };
 
         $(window).bind("usersselected.addpeople.sakai", function(e, _newlyAdded){
