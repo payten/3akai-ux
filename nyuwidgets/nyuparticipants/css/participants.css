@@ -61,3 +61,8 @@
 
 /* spinner when searching */
 .participants_widget .s3d-search-inputfield.searching {background:url("/dev/images/ajax-loader-gray.gif") no-repeat scroll right transparent;}
+
+/* tag refine */
+.participants_widget button.search_tag_active_item {background-image: url(/dev/images/searchbutton_hover_bg.png) !important; border-color: #AAA}
+.participants_widget .s3d-search-refineby-list {display: inline-block}
+.participants_widget .s3d-search-refineby-title {display: inline-block}

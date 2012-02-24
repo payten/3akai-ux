@@ -70,6 +70,8 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
         var newlyAdded = [],
             roles = false;
 
+	    var selectedTags = [];
+
         ///////////////////////
         // Utility functions //
         ///////////////////////
@@ -258,6 +260,17 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                 $participantsSearchField.addClass("searching");
                 sakai.api.Groups.searchMembers(sakai_global.group.groupId, widgetData.query, parameters.items, parameters.page, parameters.sortBy, parameters.sortOrder, function(success, data){
                     $participantsSearchField.removeClass("searching");
+					// if tag show filter
+					if (data.hasOwnProperty("facet_fields") 
+						&& data.facet_fields.length 
+						&& data.facet_fields[0].hasOwnProperty("tagname") 
+						&& data.facet_fields[0].tagname.length) {
+							var refinebytagsData = {
+								tags: data.facet_fields[0].tagname,
+								selected: selectedTags
+							}
+							$(".refine-by-tags-row",rootel).html(sakai.api.Util.TemplateRenderer("participants_refinebytags_template", refinebytagsData));											
+					} 
                     callback(true, data);
                 });
             }, {
@@ -296,6 +309,16 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
             }
             widgetData.query = $.bbq.getState("pq") || "";
             $participantsSearchField.val(widgetData.query);
+
+			if ($.bbq.getState("refine")) {
+				selectedTags = $.bbq.getState("refine").split(",");
+				if (widgetData.query.length > 0) {
+					widgetData.query += " AND ";
+				}
+				widgetData.query += selectedTags.join(" AND ");
+			} else {
+				selectedTags = [];
+			}
             widgetData.sortby = $.bbq.getState("psb") || "asc";
             $participants_sort_by.val(widgetData.sortby);
             loadParticipants();
@@ -345,6 +368,20 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
             $(participantsShowGrid, rootel).click(function(){
                 $.bbq.pushState({"ls": "grid"});
             });
+
+			$(rootel).on("click", ".s3d-search-tag button", function(event) {
+				var tag = $(this).attr("data-sakai-entityid");
+				if ($.inArray(tag,selectedTags) >= 0) {
+					selectedTags = $.grep(selectedTags, function(value) {return value != tag});
+				} else {
+					selectedTags.push($(this).attr("data-sakai-entityid"));					
+				}
+				var newSearchState = {"refine": selectedTags.join(",")};
+				if ($.bbq.getState("pq") === undefined) {
+					newSearchState.pq = "";
+				}
+				$.bbq.pushState(newSearchState);
+			});
         };
 
         var init = function(){
