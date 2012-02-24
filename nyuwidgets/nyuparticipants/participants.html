@@ -56,9 +56,9 @@
 		<span class="s3d-search-refineby-title">Refine your search by:</span>
         <div class="s3d-search-refineby-list">
 			{for tag in tags}
-				{for tag_details in tag}
-			        <span class="s3d-search-tag">
+				{for tag_details in tag}			        
 					   {if $.inArray(tag_details_index, selected) >= 0}
+						<span class="s3d-search-tag active">
 							<span class="s3d-search-activetags">
 							<img src="/dev/images/search_tag_active.png">
 				           <button title="Remove ${tag_details_index} from search" data-sakai-entityid="${tag_details_index}" class="search_tag_active_item">
@@ -66,13 +66,15 @@
 							   <img src="/dev/images/search_tag_remove.png">
 				           </button>
 						   </span>
+				    	</span>						
 					   {else}
+						<span class="s3d-search-tag refine">
 				           <button title="Refine search to ${tag_details_index}" data-sakai-entityid="${tag_details_index}" class="search_tag_refine_item">
 				               <img src="/dev/images/search_tag_add.png">
 				               ${tag_details_index}
 				           </button>
+				    	</span>				
 						{/if}
-				    </span>
 				{/for}
 			{/for}
 		</div>
