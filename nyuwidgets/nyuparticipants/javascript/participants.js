@@ -17,7 +17,7 @@
  */
 
 // load the master sakai object to access all Sakai OAE API methods
-require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
+require(["jquery", "sakai/sakai.api.core", "/dev/javascript/search_util.js"], function($, sakai) {
 
     /**
      * @name sakai_global.participants
@@ -46,7 +46,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
         }
 
 		// Tag related
-        var showTagCloud = false;
+        var showTagCloud = widgetData.nyuparticipants.showTagCloud || false;
 	    var selectedTags = [];
 		var MAX_TAGS_IN_CLOUD = 20;
         
@@ -268,26 +268,27 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
 						&& data.facet_fields.length 
 						&& data.facet_fields[0].hasOwnProperty("tagname") 
 						&& data.facet_fields[0].tagname.length) {
-							var sanitisedTagData = [];
-							for (var i=0; i<data.facet_fields[0].tagname.length;i++) {
-								if (i === MAX_TAGS_IN_CLOUD) {
-									break;
-								}								
-								for (var key in data.facet_fields[0].tagname[i]) {
-									if (data.facet_fields[0].tagname[i].hasOwnProperty(key)) {
-										sanitisedTagData.push({
-											text: key,
-											weight: data.facet_fields[0].tagname[i][key],
-											url: "javascript:void(0);",
-											customClass: ($.inArray(key, selectedTags)>=0)?"search_tag_refine_item active":"search_tag_refine_item",
-											dataAttributes: {
-												"data-sakai-entityid": key
-											}
-										})										
-									}
-								}
-							}
+							$("button.filter-by-tags-toggle", rootel).show();
 							if (showTagCloud) {
+								var sanitisedTagData = [];
+								for (var i=0; i<data.facet_fields[0].tagname.length;i++) {
+									if (i === MAX_TAGS_IN_CLOUD) {
+										break;
+									}								
+									for (var key in data.facet_fields[0].tagname[i]) {
+										if (data.facet_fields[0].tagname[i].hasOwnProperty(key)) {
+											sanitisedTagData.push({
+												text: key,
+												weight: data.facet_fields[0].tagname[i][key],
+												url: "javascript:void(0);",
+												customClass: ($.inArray(key, selectedTags)>=0)?"search_tag_refine_item active":"search_tag_refine_item",
+												dataAttributes: {
+													"data-sakai-entityid": key
+												}
+											})										
+										}
+									}
+								}								
 								$(".tagcloud-row", rootel).empty();
 								$(".tagcloud-row", rootel).jQCloud(sanitisedTagData, {
 								  height: 180,
@@ -295,11 +296,18 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
 								});
 								$(".tagcloud-container", rootel).show();
 							}							
-							var refinebytagsData = {
+							/*var refinebytagsData = {
 								tags: data.facet_fields[0].tagname,
 								selected: selectedTags
 							}																					
-							$(".refine-by-tags-row",rootel).html(sakai.api.Util.TemplateRenderer("participants_refinebytags_template", refinebytagsData));											
+							$(".refine-by-tags-row",rootel).html(sakai.api.Util.TemplateRenderer("participants_refinebytags_template", refinebytagsData));
+							*/
+							sakai_global.data.search.generateTagsRefineBy(data, {
+								refine: $.bbq.getState("refine")
+							})
+					} else {
+						//$("button.filter-by-tags-toggle", rootel).hide();
+						//$(".tagcloud-container, .refine-by-tags-row", rootel).hide();
 					} 
                     callback(true, data);
                 });
@@ -443,6 +451,8 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
             newlyAdded = _newlyAdded;
             setTimeout(loadParticipants, 1000);
         });
+
+		$(window).triggerHandler("sakai.search.util.init");
 
         init();
 
