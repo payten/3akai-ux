@@ -22,15 +22,18 @@
                 <option value="asc">__MSG__LAST_NAME__ __MSG__A_Z__</option>
                 <option value="desc">__MSG__LAST_NAME__ __MSG__Z_A__</option>
             </select>
-        </div>
+        </div>	
         <div class="s3d-search-container">
             <input id="participants_search_field" type="text" title="__MSG__SEARCH_PARTICIPANTS__" class="s3d-search-inputfield"/>
             <button type="button" class="s3d-button s3d-overlay-button s3d-search-button">
                 <img src="/dev/images/search_icon.png" alt="__MSG__SEARCH_PARTICIPANTS__"/>
             </button>
+			<div id="search_tags_active_container" class="s3d-search-activetags"></div>
         </div>
     </div>
-	<div class="refine-by-tags-row"></div>
+	<div class="refine-by-tags-row s3d-search-refineby">
+		<div class="search_tags_refine_container"></div>		
+	</div>
     <div class="s3d-page-header-bottom-row" style="display:none;">
         <button type="button" id="participants_manage_participants" title="__MSG__MANAGE_PARTICIPANTS__" class="s3d-button s3d-large-button fl-force-right addpeople_init" style="display:none;">__MSG__MANAGE_PARTICIPANTS__</button>
         <div class="s3d-button s3d-header-button s3d-header-smaller-button" id="participants_select_all_container">
@@ -50,36 +53,6 @@
         <ul id="participants_list_container_list"><!-- --></ul>
     </div>
 </div>
-
-<div id="participants_refinebytags_template"><!--
-	<div class="s3d-search-refineby search_tags_refine_container">
-		<span class="s3d-search-refineby-title">Refine your search by:</span>
-        <div class="s3d-search-refineby-list">
-			{for tag in tags}
-				{for tag_details in tag}			        
-					   {if $.inArray(tag_details_index, selected) >= 0}
-						<span class="s3d-search-tag active">
-							<span class="s3d-search-activetags">
-							<img src="/dev/images/search_tag_active.png">
-				           <button title="Remove ${tag_details_index} from search" data-sakai-entityid="${tag_details_index}" class="search_tag_active_item">
-				               ${tag_details_index}
-							   <img src="/dev/images/search_tag_remove.png">
-				           </button>
-						   </span>
-				    	</span>						
-					   {else}
-						<span class="s3d-search-tag refine">
-				           <button title="Refine search to ${tag_details_index}" data-sakai-entityid="${tag_details_index}" class="search_tag_refine_item">
-				               <img src="/dev/images/search_tag_add.png">
-				               ${tag_details_index}
-				           </button>
-				    	</span>				
-						{/if}
-				{/for}
-			{/for}
-		</div>
-	</div>
---></div>
 
 <div id="participants_list_template"><!--
     {for participant in participants}
@@ -173,6 +146,39 @@
         <div class="s3d-no-results-icon s3d-no-results-content less-margin"></div>
         <h1>__MSG__NO_RESULTS_DESCRIPTION__</h1>
     </div>
+--></div>
+
+<!-- TEMPLATE FOR ACTIVE REFINE BY TAGS -->
+<div id="search_tags_active_template"><!--
+    {for t in tags}
+        <span class="s3d-search-tag">
+            <img src=/dev/images/search_tag_active.png" />
+            <button class="search_tag_active_item" data-sakai-entityid="${t.original}" title="__MSG__REMOVE__ ${t.value} __MSG__FROM_SEARCH__">
+                ${sakai.api.Util.applyThreeDots(t.value, 345, null, null, true)}<img src=/dev/images/search_tag_remove.png" />
+            </button>
+        </span>
+    {/for}
+--></div>
+
+<!-- TEMPLATE FOR REFINE BY TAGS LIST -->
+<div id="search_tags_refine_template"><!--
+    {var tagsListed = false}
+    {for t in tags}
+        {if t_index === "0"}
+            <span class="s3d-search-refineby-title">__MSG__REFINE_YOUR_SEARCH_BY__</span>
+            <div class="s3d-search-refineby-list">
+            {var tagsListed = true}
+        {/if}
+        <span class="s3d-search-tag">
+            <button class="search_tag_refine_item" data-sakai-entityid="${t.original}" title="__MSG__REFINE_SEARCH_TO__ ${t.value}">
+                <img src=/dev/images/search_tag_add.png" />
+                ${sakai.api.Util.applyThreeDots(t.value, 345, null, null, true)}
+            </button>
+        </span>
+    {/for}
+    {if tagsListed === true}
+        </div>
+    {/if}
 --></div>
 
 <!-- JAVASCRIPT -->
