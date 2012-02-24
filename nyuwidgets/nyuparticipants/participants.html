@@ -27,6 +27,7 @@
             </button>
         </div>
     </div>
+	<div class="refine-by-tags-row"></div>
     <div class="s3d-page-header-bottom-row" style="display:none;">
         <button type="button" id="participants_manage_participants" title="__MSG__MANAGE_PARTICIPANTS__" class="s3d-button s3d-large-button fl-force-right addpeople_init" style="display:none;">__MSG__MANAGE_PARTICIPANTS__</button>
         <div class="s3d-button s3d-header-button s3d-header-smaller-button" id="participants_select_all_container">
@@ -46,6 +47,33 @@
         <ul id="participants_list_container_list"><!-- --></ul>
     </div>
 </div>
+
+<div id="participants_refinebytags_template"><!--
+	<div class="s3d-search-refineby search_tags_refine_container">
+		<span class="s3d-search-refineby-title">Refine your search by:</span>
+        <div class="s3d-search-refineby-list">
+			{for tag in tags}
+				{for tag_details in tag}
+			        <span class="s3d-search-tag">
+					   {if $.inArray(tag_details_index, selected) >= 0}
+							<span class="s3d-search-activetags">
+				           <button title="Remove ${tag_details_index} from search" data-sakai-entityid="${tag_details_index}" class="search_tag_active_item">
+				               ${tag_details_index}
+							   <img src="/dev/images/search_tag_remove.png">
+				           </button>
+						   </span>
+					   {else}
+				           <button title="Refine search to ${tag_details_index}" data-sakai-entityid="${tag_details_index}" class="search_tag_refine_item">
+				               <img src="/dev/images/search_tag_add.png">
+				               ${tag_details_index}
+				           </button>
+						{/if}
+				    </span>
+				{/for}
+			{/for}
+		</div>
+	</div>
+--></div>
 
 <div id="participants_list_template"><!--
     {for participant in participants}
