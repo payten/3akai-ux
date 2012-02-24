@@ -44,7 +44,10 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
             showExtraInfo = widgetData.nyuparticipants.showExtraInfo;
         }
 
-        var showTagCloud = widgetData.nyuparticipants.showTagCloud || false;		
+		// Tag related
+        var showTagCloud = false;
+	    var selectedTags = [];
+		var MAX_TAGS_IN_CLOUD = 20;
         
         // Containers
         var $participantsListContainer = $("#participants_list_container_list", rootel);
@@ -70,8 +73,6 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
 
         var newlyAdded = [],
             roles = false;
-
-	    var selectedTags = [];
 
         ///////////////////////
         // Utility functions //
@@ -268,6 +269,9 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
 						&& data.facet_fields[0].tagname.length) {
 							var sanitisedTagData = [];
 							for (var i=0; i<data.facet_fields[0].tagname.length;i++) {
+								if (i === MAX_TAGS_IN_CLOUD) {
+									break;
+								}								
 								for (var key in data.facet_fields[0].tagname[i]) {
 									if (data.facet_fields[0].tagname[i].hasOwnProperty(key)) {
 										sanitisedTagData.push({
@@ -285,8 +289,8 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
 							if (showTagCloud) {
 								$(".tagcloud-row", rootel).empty();
 								$(".tagcloud-row", rootel).jQCloud(sanitisedTagData, {
-								  height: 100,
-								  width: 700
+								  height: 180,
+								  width: 730
 								});
 								$(".tagcloud-container", rootel).show();
 							}							
