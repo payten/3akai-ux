@@ -501,7 +501,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
             if (widgetData && widgetData.mylibrary) {
                 mylibrary.contextId = widgetData.mylibrary.groupid;
                     initGroupLibrary();
-		} else if (sakai_global.group && sakai_global.group.groupId) {
+            } else if (sakai_global.group && sakai_global.group.groupId) {
                     mylibrary.contextId = sakai_global.group.groupId;
                     initGroupLibrary();
             } else {

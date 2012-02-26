@@ -183,7 +183,7 @@ require(["jquery", "sakai/sakai.api.core", "jquery-ui"], function($, sakai) {
         var getPageContent = function(ref){                        
             if ($.inArray(ref, infinityStructuresPulled) === -1) {                
                 var toplevelref = ref.split("-")[0];
-		var subpageref = ref.split("-")[1];
+                var subpageref = ref.split("-")[1];
                 
                 function pageBelongsInPrivStructure() {                   
                     return privstructure.pages.hasOwnProperty(toplevelref+"-_lastModified");
@@ -195,11 +195,11 @@ require(["jquery", "sakai/sakai.api.core", "jquery-ui"], function($, sakai) {
                     async: false,
                     success: function(data) {
                         infinityStructuresPulled.push(ref);
-        		if (pageBelongsInPrivStructure()) {
+                        if (pageBelongsInPrivStructure()) {
                             privstructure.pages[ref] = data;
-			} else {
+                        } else {
                             pubstructure.pages[ref] = data;
-			}
+                        }
                     }
                 });
             }
