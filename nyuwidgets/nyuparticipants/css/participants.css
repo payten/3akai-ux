@@ -73,7 +73,7 @@
 	height: 180px;
 	width: 730px;
 }
-.participants_widget .tagcloud-row .search_tag_refine_item.active {
+.participants_widget .tagcloud-row .search-tag.active {
 	background-image: url(/dev/images/search_tag_remove.png);
 	background-repeat: no-repeat;
 	background-position: center right;

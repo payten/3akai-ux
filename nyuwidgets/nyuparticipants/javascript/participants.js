@@ -47,8 +47,8 @@ require(["jquery", "sakai/sakai.api.core", "/dev/javascript/search_util.js"], fu
 
 		// Tag related
         var showTagCloud = widgetData.nyuparticipants.showTagCloud || false;
-	    var selectedTags = [];
-		var MAX_TAGS_IN_CLOUD = 20;
+	var selectedTags = [];
+	var MAX_TAGS_IN_CLOUD = 20;
         
         // Containers
         var $participantsListContainer = $("#participants_list_container_list", rootel);
@@ -263,52 +263,53 @@ require(["jquery", "sakai/sakai.api.core", "/dev/javascript/search_util.js"], fu
                 $participantsSearchField.addClass("searching");
                 sakai.api.Groups.searchMembers(sakai_global.group.groupId, widgetData.query, parameters.items, parameters.page, parameters.sortBy, parameters.sortOrder, function(success, data){
                     $participantsSearchField.removeClass("searching");
-					// if tag show filter
-					if (data.hasOwnProperty("facet_fields") 
-						&& data.facet_fields.length 
-						&& data.facet_fields[0].hasOwnProperty("tagname") 
-						&& data.facet_fields[0].tagname.length) {
-							$("button.filter-by-tags-toggle", rootel).show();
-							if (showTagCloud) {
-								var sanitisedTagData = [];
-								for (var i=0; i<data.facet_fields[0].tagname.length;i++) {
-									if (i === MAX_TAGS_IN_CLOUD) {
-										break;
-									}								
-									for (var key in data.facet_fields[0].tagname[i]) {
-										if (data.facet_fields[0].tagname[i].hasOwnProperty(key)) {
-											sanitisedTagData.push({
-												text: key,
-												weight: data.facet_fields[0].tagname[i][key],
-												url: "javascript:void(0);",
-												customClass: ($.inArray(key, selectedTags)>=0)?"search_tag_refine_item active":"search_tag_refine_item",
-												dataAttributes: {
-													"data-sakai-entityid": key
-												}
-											})										
-										}
-									}
-								}								
-								$(".tagcloud-row", rootel).empty();
-								$(".tagcloud-row", rootel).jQCloud(sanitisedTagData, {
-								  height: 180,
-								  width: 730
-								});
-								$(".tagcloud-container", rootel).show();
-							}							
-							/*var refinebytagsData = {
-								tags: data.facet_fields[0].tagname,
-								selected: selectedTags
-							}																					
-							$(".refine-by-tags-row",rootel).html(sakai.api.Util.TemplateRenderer("participants_refinebytags_template", refinebytagsData));
-							*/
-							sakai_global.data.search.generateTagsRefineBy(data, {
-								refine: $.bbq.getState("refine")
-							})
-					} else {
-						//$("button.filter-by-tags-toggle", rootel).hide();
-						//$(".tagcloud-container, .refine-by-tags-row", rootel).hide();
-					} 
+                    // if tag show filter
+                    if (data.hasOwnProperty("facet_fields") 
+                            && data.facet_fields.length 
+                            && data.facet_fields[0].hasOwnProperty("tagname") 
+                            && data.facet_fields[0].tagname.length) {
+                            
+                            $("button.filter-by-tags-toggle", rootel).show();
+                            if (showTagCloud) {
+                                var sanitisedTagData = [];
+                                for (var i=0; i<data.facet_fields[0].tagname.length;i++) {
+                                    if (i === MAX_TAGS_IN_CLOUD) {
+                                        break;
+                                    }								
+                                    for (var key in data.facet_fields[0].tagname[i]) {
+                                        if (data.facet_fields[0].tagname[i].hasOwnProperty(key)) {
+                                            sanitisedTagData.push({
+                                                text: key,
+                                                weight: data.facet_fields[0].tagname[i][key],
+                                                url: "javascript:void(0);",
+                                                customClass: ($.inArray(key, selectedTags)>=0)?"search-tag active":"search-tag",
+                                                dataAttributes: {
+                                                    "sakai-entityid": key
+                                                }
+                                            })
+                                        }
+                                    }
+                                }								
+                                $(".tagcloud-row", rootel).empty();
+                                $(".tagcloud-row", rootel).jQCloud(sanitisedTagData, {
+                                    height: 180,
+                                    width: 730
+                                });
+                                $(".tagcloud-container", rootel).show();
+                            }							
+                            /*var refinebytagsData = {
+                                    tags: data.facet_fields[0].tagname,
+                                    selected: selectedTags
+                            }																					
+                            $(".refine-by-tags-row",rootel).html(sakai.api.Util.TemplateRenderer("participants_refinebytags_template", refinebytagsData));
+                            */
+                            sakai_global.data.search.generateTagsRefineBy(data, {
+                                    refine: $.bbq.getState("refine")
+                            })
+                    } else {
+                            //$("button.filter-by-tags-toggle", rootel).hide();
+                            //$(".tagcloud-container, .refine-by-tags-row", rootel).hide();
+                    } 
                     callback(true, data);
                 });
             }, {
@@ -348,15 +349,16 @@ require(["jquery", "sakai/sakai.api.core", "/dev/javascript/search_util.js"], fu
             widgetData.query = $.bbq.getState("pq") || "";
             $participantsSearchField.val(widgetData.query);
 
-			if ($.bbq.getState("refine")) {
-				selectedTags = $.bbq.getState("refine").split(",");
-				if (widgetData.query.length > 0) {
-					widgetData.query += " AND ";
-				}
-				widgetData.query += selectedTags.join(" AND ");
-			} else {
-				selectedTags = [];
-			}
+            if ($.bbq.getState("refine")) {
+                    selectedTags = $.bbq.getState("refine").split(",");
+                    if (widgetData.query.length > 0) {
+                            widgetData.query += " AND ";
+                    }
+                    widgetData.query += selectedTags.join(" AND ");
+            } else {
+                    selectedTags = [];
+            }
+            
             widgetData.sortby = $.bbq.getState("psb") || "asc";
             $participants_sort_by.val(widgetData.sortby);
             loadParticipants();
@@ -407,24 +409,19 @@ require(["jquery", "sakai/sakai.api.core", "/dev/javascript/search_util.js"], fu
                 $.bbq.pushState({"ls": "grid"});
             });
 
-			$(rootel).on("click", ".s3d-search-tag button, .tagcloud-row a", function(event) {
-				var tag;
-				if ($(this).parents(".tagcloud-row:first").length) {
-					tag = $(this).parents(".search_tag_refine_item:first").data("data-sakai-entityid");
-				} else {
-					tag = $(this).attr("data-sakai-entityid");
-				}
-				if ($.inArray(tag,selectedTags) >= 0) {
-					selectedTags = $.grep(selectedTags, function(value) {return value != tag});
-				} else {
-					selectedTags.push(tag);
-				}
-				var newSearchState = {"refine": selectedTags.join(",")};
-				if ($.bbq.getState("pq") === undefined) {
-					newSearchState.pq = "";
-				}
-				$.bbq.pushState(newSearchState);
-			});
+            $(rootel).on("click", ".tagcloud-row a", function(event) {               
+                var tag = $(this).parents(".search-tag:first").data("sakai-entityid");
+                if ($.inArray(tag,selectedTags) >= 0) {
+                    selectedTags = $.grep(selectedTags, function(value) {return value != tag});
+                } else {
+                    selectedTags.push(tag);
+                }
+                var newSearchState = {"refine": selectedTags.join(",")};
+                if ($.bbq.getState("pq") === undefined) {
+                    newSearchState.pq = "";
+                }
+                $.bbq.pushState(newSearchState);
+            });
         };
 
         var init = function(){
@@ -435,16 +432,16 @@ require(["jquery", "sakai/sakai.api.core", "/dev/javascript/search_util.js"], fu
                 $("#participants_manage_participants").show();
             }
 
-			addBinding();
+            addBinding();
 
-			if (showTagCloud) {
-				require(["/nyuwidgets/nyuparticipants/lib/jquery.jqcloud.js"], function() {
-					$(".participants_widget",rootel).addClass("tagcloud-enabled");
-	            	handleHashChange();
-				});
-			} else {
+            if (showTagCloud) {
+		require(["/nyuwidgets/nyuparticipants/lib/jquery.jqcloud.js"], function() {
+                    $(".participants_widget",rootel).addClass("tagcloud-enabled");
+                    handleHashChange();
+                });
+            } else {
             	handleHashChange();
-			}      
+            }      
         };
 
         $(window).bind("usersselected.addpeople.sakai", function(e, _newlyAdded){
@@ -452,7 +449,7 @@ require(["jquery", "sakai/sakai.api.core", "/dev/javascript/search_util.js"], fu
             setTimeout(loadParticipants, 1000);
         });
 
-		$(window).triggerHandler("sakai.search.util.init");
+	$(window).triggerHandler("sakai.search.util.init");
 
         init();
 
