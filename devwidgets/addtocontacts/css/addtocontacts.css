@@ -30,3 +30,6 @@
 #addtocontacts_dialog #addtocontacts_form_personalnote_label {display:block; margin: 10px 0px 5px;}
 #addtocontacts_dialog .addtocontacts_actionbuttons {text-align:right;}
 #addtocontacts_dialog #addtocontacts_errors ul {margin:0;padding:0;}
+
+/* Validation */
+#addtocontacts_dialog #addtocontacts_types label.error{background-color:#cc0000;color:white;display:block;width:100%;padding:3px;margin-bottom:5px;}

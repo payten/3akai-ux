@@ -1,6 +1,6 @@
 .tmp_*
 .project
-/target
+target/
 *.kpf
 nginx.*
 /dev-i

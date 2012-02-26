@@ -39,122 +39,7 @@ define(["config/config"], function(config) {
     /**
      * World Templates
      */
-    config.widgets.defaults.parcitipants = {"widgetid": "nyuparticipants", "path": "/nyuwidgets/nyuparticipants"};
-    config.worldTemplates[0].templates[0].title = "Group";
-
-    // Use our custom participants widget
-    config.worldTemplates[0].templates[0].docs["${pid}1"]["${refid}2"].page = "<img id='widget_nyuparticipants_${refid}3' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='/dev/images/person_icon.png' data-mce-src='/dev/images/person_icon.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'/>";
-    config.worldTemplates[0].templates[0].docs["${pid}1"]["${refid}3"].participants.showExtraInfo = false;
-
-    // Add in the About this Group page
-    config.worldTemplates[0].templates[0].docs["${pid}2"] = {
-        structure0: {
-            "about":{
-                "_ref":"${refid}4",
-                "_order":0,
-                "_nonEditable": true,
-                "_title": "About this Group",
-                "main":{
-                    "_ref":"${refid}4",
-                    "_order":0,
-                    "_nonEditable": true,
-                    "_title":"About this Group"
-                }
-            }
-        },
-        "${refid}4": {
-            page: "<img id='widget_groupbasicinfo' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='/nyuwidgets/groupbasicinfo/images/icon.png' data-mce-src='/nyuwidgets/groupbasicinfo/images/icon.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'><br></p>"
-        }
-    };
-    config.worldTemplates[0].templates[0].structure.library._order = 1;
-    config.worldTemplates[0].templates[0].structure.participants._order = 2;
-    config.worldTemplates[0].templates[0].structure.about = {
-        "_title": "About this Group",
-        "_order": 0,
-        "_docref": "${pid}2",
-        "_nonEditable": true,
-        "_view": ["everyone", "anonymous", "-member"],
-        "_edit": ["-manager"]
-    };
-
-    // Only admin can add courses
-    config.worldTemplates[1].adminOnly = true;
-    config.worldTemplates[1].templates[0].editSettings = false;
-
-    // Math Course - add About this Group page
-    config.worldTemplates[1].templates[0].docs["${pid}6"] = {
-        structure0: {
-            "about":{
-                "_ref":"${refid}16",
-                "_order":0,
-                "_nonEditable": true,
-                "_title": "About this Group",
-                "main":{
-                    "_ref":"${refid}16",
-                    "_order":0,
-                    "_nonEditable": true,
-                    "_title":"About this Group"
-                }
-            }
-        },
-        "${refid}16": {
-            page: "<img id='widget_groupbasicinfo' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='/nyuwidgets/groupbasicinfo/images/icon.png' data-mce-src='/nyuwidgets/groupbasicinfo/images/icon.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'><br></p>"
-        }
-    };
-    config.worldTemplates[1].templates[0].structure.syllabus._order = 1;
-    config.worldTemplates[1].templates[0].structure.lectures._order = 2;
-    config.worldTemplates[1].templates[0].structure.problemsets._order = 3;
-    config.worldTemplates[1].templates[0].structure.coursewebsite._order = 4;
-    config.worldTemplates[1].templates[0].structure.organizationnotes._order = 5;
-    config.worldTemplates[1].templates[0].structure.lecturetemplate._order = 6;
-    config.worldTemplates[1].templates[0].structure.about = {
-        "_title": "About this Group",
-        "_order": 0,
-        "_docref": "${pid}6",
-        "_nonEditable": true,
-        "_view": ["everyone", "-student", "-ta"],
-        "_edit": ["-lecturer"]
-    };
-
-    // Basic course - Use the nyu participants widget
-    config.worldTemplates[1].templates[1].docs["${pid}1"]["${refid}2"].page = "<img id='widget_nyuparticipants_${refid}3' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='/dev/images/person_icon.png' data-mce-src='/dev/images/person_icon.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'/>";
-    config.worldTemplates[1].templates[1].docs["${pid}1"]["${refid}3"].participants.showExtraInfo = false;
-
-    config.worldTemplates[1].templates[1].editSettings = false;
-
-    // Basic course - add About this Group page
-    config.worldTemplates[1].templates[1].docs["${pid}2"] = {
-        structure0: {
-            "about":{
-                "_ref":"${refid}4",
-                "_order":0,
-                "_nonEditable": true,
-                "_title": "About this Group",
-                "main":{
-                    "_ref":"${refid}4",
-                    "_order":0,
-                    "_nonEditable": true,
-                    "_title":"About this Group"
-                }
-            }
-        },
-        "${refid}4": {
-            page: "<img id='widget_groupbasicinfo' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='/nyuwidgets/groupbasicinfo/images/icon.png' data-mce-src='/nyuwidgets/groupbasicinfo/images/icon.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'><br></p>"
-        }
-    };
-    config.worldTemplates[1].templates[1].structure.library._order = 1;
-    config.worldTemplates[1].templates[1].structure.participants._order = 2;
-    config.worldTemplates[1].templates[1].structure.about = {
-        "_title": "About this Group",
-        "_order": 0,
-        "_docref": "${pid}2",
-        "_nonEditable": true,
-        "_view": ["everyone", "anonymous", "-student"],
-        "_edit": ["-ta", "-lecturer"]
-    };
-
-    // Remove research groups
-    config.worldTemplates = config.worldTemplates.splice(0,2);
+    config.adminOnlyTemplates = ["course", "portfolio"];
 
     /**
      * Footer Links
@@ -295,7 +180,7 @@ define(["config/config"], function(config) {
             "label": "__MSG__TAGS__",
             "required": false,
             "display": true,
-            "type": "textarea",
+            "type": "tags",
             "tagField": true
         }
     };
@@ -369,17 +254,6 @@ define(["config/config"], function(config) {
          "selected": false
      }];
 
-     /**
-      * Permissions
-      */
-
-    config.Permissions.Groups.defaultaccess = "members-only";
-    config.Permissions.Groups.defaultjoin = "no";
-    config.Permissions.Groups.courses = {
-        defaultaccess: "members-only",
-        defaultjoin: "no"
-    };
-
 
     /**
      * Authentication
@@ -441,6 +315,32 @@ define(["config/config"], function(config) {
         }
     };
 
+    /**
+     * Add extra navigation items
+     */
+    config.Navigation[0]["subnav"].push({
+        "id": "subnavigation_hr",
+        "pseudogroup": "g-gradecenter"
+    });
+    config.Navigation[0]["subnav"].push({
+        "url": "https://admin.portal.nyu.edu/psp/paprod/EMPLOYEE/EMPL/h/?tab",
+        "id": "subnavigation_gradecenter_link",
+        "label": "MY_GRADECENTER",
+        "pseudogroup": "g-gradecenter",
+        "opennewwindow": "true"
+    });
+
+    /**
+    * Kaltura Settings
+    */
+    config.MimeTypes["kaltura/video"].description = "KALTURA_VIDEO_FILE";
+    config.MimeTypes["kaltura/audio"].description = "KALTURA_AUDIO_FILE";
+    config.kaltura = {
+        enabled: true,
+        serverURL:  "http://kvapi.home.nyu.edu",
+        partnerId:  141,
+        playerId: 4422411
+    };
 
     return config;
 });

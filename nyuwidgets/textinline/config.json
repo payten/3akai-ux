@@ -1,20 +1,23 @@
 {
     "userpages": false,
-    "userdashboard": true,
+    "userdashboard": false,
     "grouppages": false,
-    "groupdashboard": true,
+    "groupdashboard": false,
     "description": "Text",
     "hasSettings": false,
     "id": "textinline",
-    "name": "Text Box Widget",
     "type": "contrib",
     "enabled": true,
-    "sakaidocs": true,
-    "showinsakaigoodies":true,
+    "sakaidocs": false,
+    "showinsakaigoodies":false,
     "url":"/nyuwidgets/textinline/textinline.html",
     "img":"/nyuwidgets/textinline/images/textinline.png",
     "i18n": {
-        "default": "/nyuwidgets/textinline/bundles/default.properties"
+        "default": {
+            "bundle": "/nyuwidgets/textinline/bundles/default.properties",
+            "name": "Text Box Widget",
+            "description": "Text Box Widget"
+        }
     },
     "indexFields": ["text"]
 }

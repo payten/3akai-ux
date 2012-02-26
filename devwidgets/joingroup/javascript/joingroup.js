@@ -75,9 +75,9 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
             participantCount = participantCount + value;
             $("#searchgroups_result_participant_count_" + groupid).text(participantCount);
             if (participantCount === 1) {
-                $("#searchgroups_text_participant_" + groupid).text(sakai.api.i18n.General.getValueForKey("PARTICIPANT"));
+                $("#searchgroups_text_participant_" + groupid).text(sakai.api.i18n.getValueForKey("PARTICIPANT"));
             } else {
-                $("#searchgroups_text_participant_" + groupid).text(sakai.api.i18n.General.getValueForKey("PARTICIPANTS"));
+                $("#searchgroups_text_participant_" + groupid).text(sakai.api.i18n.getValueForKey("PARTICIPANTS"));
             }
             $("#searchgroups_result_participant_link_" + groupid).attr("title", $.trim($("#searchgroups_result_participant_link_" + groupid).text()));
         };
@@ -143,7 +143,8 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                         group.id =
                             groupid;
                     }
-                    sakai.api.Groups.getMembers(groupid, false, function(success, members) {
+                    sakai.api.Groups.getMembers(groupid, function(success, members) {
+                        members = members[groupid];
                         group.groupMembers = members;
 
                         $.each(members, function(role, users) {
@@ -181,6 +182,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
 
         var openTooltip = function (groupid, $item, leaveAllowed) {
             getGroup(groupid, function(group) {
+                group.sakai = sakai;
                 $(window).trigger("init.tooltip.sakai", {
                     tooltipHTML: sakai.api.Util.TemplateRenderer(
                         $joingroup_hover_template, group),
@@ -249,27 +251,9 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
 
         var doInit = function () {
             $(window).bind("initialize.joingroup.sakai", function(evObj, groupid, target){
-                sakai.api.Groups.getMembers(groupid,"",function(membersSuccess, memberData){
-                    sakai.api.Groups.getGroupAuthorizableData(groupid, function(membershipSuccess, membershipData){
-                        // Members are always allowed to leave the group, managers should always be present and cannot leave when they are the last one in the group
-                        if (!sakai.api.Groups.isCurrentUserAManager(groupid, sakai.data.me, membershipData.properties)) {
-                            openTooltip(groupid, $(target), true);
-                        } else {
-                            var roles = $.parseJSON(membershipData.properties["sakai:roles"]);
-                            var numManagers = 0;
-                            $.each(roles, function(index, role){
-                                if (role.allowManage) {
-                                    numManagers = numManagers + memberData[role.title].results.length;
-                                }
-                            });
-                            var leaveAllowed = false;
-                            if (numManagers > 1) {
-                                leaveAllowed = true;
-                            }
-                            openTooltip(groupid, $(target), leaveAllowed);
-                        }
-                    });
-                }, "everyone");
+                sakai.api.Groups.isAllowedToLeave(groupid, sakai.data.me, function(leaveAllowed){
+                    openTooltip(groupid, $(target), leaveAllowed[groupid]);
+                });
                 return false;
             });
         };

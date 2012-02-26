@@ -1,21 +1,5 @@
-/**
- * Licensed to the Sakai Foundation (SF) under one
- * or more contributor license agreements. See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership. The SF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License.
- */
-#textinline_main{margin:10px;border:1px solid #ccc;border-radius:5px;padding:10px}
+#textinline_main_container{border:1px solid #ccc;border-radius:5px;float:left;width:350px;margin:0 5px 5px 0;}
+#textinline_main{margin:10px;padding:10px}
 /* white space fix from http://labnol.blogspot.com/2006/10/html-css-trick-for-displaying-code.html */
 #textinline_main pre{font-family:Arial,Helvetica,sans-serif;line-height:120%;white-space:pre-wrap;white-space:0!important;white-space:0;white-space:0;word-wrap:break-word;padding:5px;}
 #textinline_main h1{word-wrap:break-word;padding:5px;font-size:18px;}

@@ -27,10 +27,10 @@ require(["jquery","sakai/sakai.api.core"], function($, sakai) {
         var order = 0;
         for (var i = 0; i < sakai.config.worldTemplates.length; i++){
             var category = sakai.config.worldTemplates[i];
-            if (sakai.api.Groups.canCreateTemplate(category)) {
+            if (sakai.api.Groups.canCreateTemplate(category.id)) {
                 pubdata.structure0[category.id] = {
                     "_order": order,
-                    "_title": sakai.api.i18n.General.getValueForKey(category.title),
+                    "_title": sakai.api.i18n.getValueForKey(category.title),
                     "_ref": category.id
                 };
                 pubdata[category.id] = {

@@ -1,0 +1,23 @@
+{
+    "userpages": false,
+    "userdashboard": false,
+    "grouppages": false,
+    "groupdashboard": false,
+    "description": "Lists",
+    "hasSettings": true,
+    "id": "listsinline",
+    "type": "contrib",
+    "enabled": true,
+    "sakaidocs": false,
+    "showinsakaigoodies":false,
+    "url":"/nyuwidgets/listsinline/listsinline.html",
+    "img":"/nyuwidgets/listsinline/images/listsinline.png",
+    "i18n": {
+        "default": {
+            "bundle": "/nyuwidgets/listsinline/bundles/default.properties",
+            "name": "Lists Widget",
+            "description": "Lists Widget"
+        }
+    },
+    "indexFields": ["listsinline/choicesSearchable"]
+}

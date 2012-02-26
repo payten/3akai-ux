@@ -78,7 +78,10 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                         $(".joinrequestbuttons_join").show();
                         break;
                     case "leave":
-                        $(".joinrequestbuttons_leave").show();
+                        // don't display this button on the entity widget
+                        if (!$rootel.parents("#entity_container")){
+                            $(".joinrequestbuttons_leave").show();
+                        }
                         break;
                     case "request":
                         $(".joinrequestbuttons_request").show();
@@ -162,7 +165,8 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                         showButton("request");
                     }
                 } else {
-                    sakai.api.Groups.getJoinRequests(joinrequestbuttons.groupid,
+                    var joinGroup = joinrequestbuttons.groupid+"-"+joinrequestbuttons.groupData.groupProfile["sakai:joinRole"];
+                    sakai.api.Groups.getJoinRequests(joinGroup,
                     function (success, data) {
                         if (success) {
                             if (data.results && data.results.length) {
@@ -207,7 +211,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                     ") membership");
                 return false;
             }
-            sakai.api.Groups.addJoinRequest(sakai.data.me, groupid, joinrequestbuttons.groupData, true, function (success) {
+            sakai.api.Groups.addJoinRequest(groupid, function (success) {
                 if (success) {
                     // show a notification and change the button
                     sakai.api.Util.notification.show($joinrequestbuttons_group_membership.text(),
@@ -239,10 +243,12 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                 debug.error("Anonymous user tried to join group id: " + groupid);
                 return false;
             }
-            sakai.api.Groups.addJoinRequest(sakai.data.me, joinrequestbuttons.groupid, false, false, function (success) {
+            sakai.api.Groups.addJoinRequest(joinrequestbuttons.groupid, function (success) {
                 if (success) {
                     sakai.api.Util.notification.show($joinrequestbuttons_group_membership.text(), $joinrequestbuttons_group_adding_successful.text(), sakai.api.Util.notification.type.INFORMATION);
                     showButton("leave");
+                    $(window).trigger("usersselected.addpeople.sakai");
+                    $(window).trigger("updateParticipantCount.entity.sakai", 1);
                 } else {
                     debug.error("Could not add member: " + sakai.data.me.user.userid + " to pseduoGroup: " + pseduoGroup);
                     sakai.api.Util.notification.show($joinrequestbuttons_group_membership.text(), $joinrequestbuttons_group_problem_adding.text(), sakai.api.Util.notification.type.ERROR);
@@ -278,6 +284,8 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                                 sakai.api.Util.notification.type.INFORMATION);
                             // re-render to determine which button to now show
                             render();
+                            $(window).trigger("usersselected.addpeople.sakai");
+                            $(window).trigger("updateParticipantCount.entity.sakai", -1);
                         } else {
                             sakai.api.Util.notification.show($joinrequestbuttons_group_membership.text(),
                                 $joinrequestbuttons_group_problem_removing.text(),

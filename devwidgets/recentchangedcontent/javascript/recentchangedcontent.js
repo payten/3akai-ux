@@ -65,9 +65,9 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
         var parseDataResult = function(result, isRelatedContent) {
             // initialize parsed item with default values
             var mimeType = sakai.api.Content.getMimeType(result);
-            var mimeTypeDescription = sakai.api.i18n.General.getValueForKey(sakai.config.MimeTypes["other"].description);
+            var mimeTypeDescription = sakai.api.i18n.getValueForKey(sakai.config.MimeTypes["other"].description);
             if (sakai.config.MimeTypes[mimeType]){
-                mimeTypeDescription = sakai.api.i18n.General.getValueForKey(sakai.config.MimeTypes[mimeType].description);
+                mimeTypeDescription = sakai.api.i18n.getValueForKey(sakai.config.MimeTypes[mimeType].description);
             }
             var item = {
                 name: result["sakai:pooled-content-file-name"],
@@ -78,7 +78,9 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                 size: "",
                 mimeType: mimeType,
                 mimeTypeDescription: mimeTypeDescription,
+                usedin: sakai.api.Content.getPlaceCount(result),
                 thumbnail: sakai.api.Content.getThumbnail(result),
+                totalcomment: sakai.api.Content.getCommentCount(result),
                 "_mimeType/page1-small": result["_mimeType/page1-small"],
                 "_path": result["_path"]
             };
@@ -91,43 +93,22 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
             if(result.hasOwnProperty("_length") && result["_length"]) {
                 item.size = "(" + sakai.api.Util.convertToHumanReadableFileSize(result["_length"]) + ")";
             }
-            var usedin = 0;
-            usedin = result["sakai:pooled-content-manager"].length;
-            if (result["sakai:pooled-content-viewer"]) {
-                for (var i = 0; i < result["sakai:pooled-content-viewer"].length; i++) {
-                    if (result["sakai:pooled-content-viewer"][i] !== "anonymous" && result["sakai:pooled-content-viewer"][i] !== "everyone") {
-                        usedin++;
-                    }
-                }
-            }
-            if (result["sakai:pooled-content-viewer"]) {
-                for (var j =0;j<result["sakai:pooled-content-viewer"].length;j++) {
-                    if(result["sakai:pooled-content-viewer"][j] !== "anonymous" && result["sakai:pooled-content-viewer"][j] !== "everyone") {
-                        usedin++;
-                    }
-                }
-            }
 
-            item.usedin = usedin;
             var path = result["_path"];
-            if (result[path + "/comments"]) {
-                var totalcomment = 0; // store total number of comments realted to content
+            if (result["comments"]) {
                 var commentpath = ""; // store the path of the comment to display
                 var latestDate = 0; // store the latest date of the comment
-                for (var obj in result[path + "/comments"]) {
+                for (var obj in result["comments"]) {
                     // if the object is comment
-                    if (obj.indexOf(path + "/comments") > -1) {
-                        // add the comment count
-                        totalcomment++;
+                    if (obj.substring(0,1) !== "-1") {
                         // check if the comment is latest comment
-                        if (result[path + "/comments"][obj]["_created"] > latestDate) {
+                        if (result["comments"][obj]["_created"] > latestDate) {
                             commentpath = obj;
-                            latestDate = result[path + "/comments"][obj]["_created"];
+                            latestDate = result["comments"][obj]["_created"];
                         }
                     }
                 }
-                item.comment = result[path + "/comments"][commentpath];
-                item.totalcomment = totalcomment;
+                item.comment = result["comments"][commentpath];
 
                 if (item.comment.comment) {
                     item.comment.comment = sakai.api.Util.applyThreeDots(item.comment.comment, $(".recentchangedcontent_widget").width() / 2, {
@@ -147,10 +128,10 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                         sakai: sakai
                     };
                     if (item.comment){
-                        json.commentCreated = item.comment._created;
+                        json.commentCreated = new Date(item.comment._created);
                     }
 
-                    $("#recentchangedcontent_item_comment_author").html(sakai.api.Util.TemplateRenderer("#recentchangedcontent_item_comment_author_template",json));
+                    sakai.api.Util.TemplateRenderer("#recentchangedcontent_item_comment_author_template", json, $("#recentchangedcontent_item_comment_author"));
 
                     if (item.comment){
                         $("#recentchangedcontent_item_comment_author_picture img").attr("src", json.author.authorPicture);
@@ -273,7 +254,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                 }
             }
 
-            var searchterm = contentData["sakai:pooled-content-file-name"] + " " + managersList + " " + viewersList;
+            var searchterm = contentData["sakai:pooled-content-file-name"].substring(0,400) + " " + managersList + " " + viewersList;
             searchquery = prepSearchTermForURL(searchterm);
 
             // get related content for contentData
@@ -306,7 +287,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                     recentchangedcontentjson.items.push(item);
                     // pass the array to HTML view
                     recentchangedcontentjson.sakai = sakai;
-                    $(recentchangedcontentItem, rootel).html(sakai.api.Util.TemplateRenderer(recentchangedcontentItemTemplate,recentchangedcontentjson));
+                    sakai.api.Util.TemplateRenderer(recentchangedcontentItemTemplate, recentchangedcontentjson, $(recentchangedcontentItem, rootel));
                 }
             });
             
@@ -336,7 +317,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                     sortOrder: "desc"
                 },
                 success: function(data){
-                    data = sakai.api.Content.getNewList(data, null, 0, 1);
+                    data.results = $.merge(sakai.api.Content.getNewList(sakai.data.me.user.userid), data.results);
                     handleRecentChangedContentData(true, data);
                 },
                 error: function(data){

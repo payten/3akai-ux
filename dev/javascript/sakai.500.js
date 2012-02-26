@@ -35,13 +35,18 @@ require(["jquery","sakai/sakai.api.core"], function($, sakai) {
         var $errorPageLinksTemplate = $("#error_page_links_template");
         var $errorPageLinksContainer = $("#error_page_links_container");
         var $searchinput = $("#errorsearch_text");
+        var $searchButton = $("#error_content .s3d-search-button");
+
+        var doSearch = function(){
+            document.location = "/search#q=" + $.trim($searchinput.val());
+        };
 
         var doInit = function(){
             var renderedTemplate = false;
             if (sakai.config.enableCategories) {
                 var catcount = 0;
                 for (var i in sakai.config.Directory) {
-                    if (sakai.config.Directory.hasOwnProperty(i)) {
+                    if (sakai.config.Directory.hasOwnProperty(i) && !sakai.config.Directory[i].divider) {
                         catcount+=1;
                     }
                 }
@@ -55,7 +60,7 @@ require(["jquery","sakai/sakai.api.core"], function($, sakai) {
             var obj = {};
             for (var c = 0; c < sakai.config.worldTemplates.length; c++){
                 var world = sakai.config.worldTemplates[c];
-                world.label = sakai.api.i18n.General.getValueForKey(world.title);
+                world.label = sakai.api.i18n.getValueForKey(world.titlePlural);
                 if(c===sakai.config.worldTemplates.length-1){
                     world.last = true;
                 }
@@ -71,7 +76,6 @@ require(["jquery","sakai/sakai.api.core"], function($, sakai) {
             $errorPageLinksContainer.html(sakai.api.Util.TemplateRenderer($errorPageLinksTemplate, linkObj));
             if (sakai.data.me.user.anon){
                 $signinbuttonwrapper.show();
-                $signinbutton.live("click", forceLoginOverlay);
 
                 $('html').addClass("requireAnon");
                 // the user is anonymous and should be able to log in
@@ -86,6 +90,9 @@ require(["jquery","sakai/sakai.api.core"], function($, sakai) {
                 }
                 // Set the link for the sign in button
                 $(".login-container a").attr("href", gatewayURL + "?url=" + escape(redurl));
+                if (sakai.config.Authentication.allowInternalAccountCreation){
+                    $("#error_sign_up").show();
+                }
             } else {
                 // Remove the sakai.index stylesheet as it would mess up the design
                 $("LINK[href*='/dev/css/sakai/sakai.index.css']").remove();
@@ -94,18 +101,14 @@ require(["jquery","sakai/sakai.api.core"], function($, sakai) {
                 $(permissionsError).append(renderedTemplate);
                 $("#permission_error").addClass("error_page_bringdown");
             }
-            document.title = document.title + " " + sakai.api.i18n.General.getValueForKey("AN_ERROR_HAS_OCCURRED");
+            document.title = document.title + " " + sakai.api.i18n.getValueForKey("AN_ERROR_HAS_OCCURRED");
 
             $searchinput.live("keydown", function(ev){
                 if (ev.keyCode === 13) {
-                    document.location = "/search#q=" + $.trim($searchinput.val());
+                    doSearch();
                 }
             });
-        };
-
-        var forceLoginOverlay = function(){
-            $("#topnavigation_user_options_login_fields").addClass("topnavigation_force_submenu_display");
-            $("#topnavigation_user_options_login_wrapper").addClass("topnavigation_force_submenu_display_title");
+            $searchButton.click(doSearch);
         };
 
         doInit();

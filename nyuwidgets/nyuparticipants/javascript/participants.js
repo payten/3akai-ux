@@ -35,20 +35,22 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
         /////////////////////////////
         // Configuration variables //
         /////////////////////////////
-        var NUM_PER_PAGE = 10,
-            currentPage = 1,
-            checkedParticipants = [],
-            checkedParticipantsIDs = [],
-            allParticipantsCache = [],
-            prevAllParticipantsSearch = false,
-            totalParticipants = 0,
-            allPagesSelected = false;
+        var infinityScroll = false;
 
+        var showExtraInfo;
+        // if legacy participants widget (< v1.1)...
+        if (widgetData.hasOwnProperty("participants")) {
+            showExtraInfo = widgetData.participants.showExtraInfo;
+        } else { // new > v1.1 widget
+            showExtraInfo = widgetData.nyuparticipants.showExtraInfo;
+        }
+        
         // Containers
-        var $participantsListContainer = $("#participants_list_container", rootel);
+        var $participantsListContainer = $("#participants_list_container_list", rootel);
 
         // Templates
         var participantsListTemplate = "participants_list_template";
+        var participantsListTemplateEmpty = "participants_list_empty_template";
 
         // Elements
         var $participantsSearchField = $("#participants_search_field", rootel);
@@ -56,18 +58,17 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
         var $participantsSelectAll = $("#participants_select_all", rootel);
         var participantsListParticipantCheckbox = ".participants_list_participant_checkbox input:checkbox";
         var $participantsSendSelectedMessage = $("#participants_send_selected_message", rootel);
+        var $participantsAddPeopleButton = $("#participants_addpeople_button", rootel);
         var participantsListParticipantName = ".participants_list_participant_name";
-        var $participants_pager = $("#participants_pager", rootel);
         var $participants_sort_by = $("#participants_sort_by", rootel);
-        var $participants_select_all = $("#participants_select_all", rootel);
-        var $participants_select_all_container = $("#participants_select_all_container", rootel);
-        var $participants_num_selected = $("#participants_num_selected", rootel);
-        var $participants_select_all_pages = $("#participants_select_all_pages", rootel);
-        var $participants_select_all_pages_button = $("#participants_select_all_pages button", rootel);
-        var $participants_select_this_page = $("#participants_select_this_page", rootel);
-        var $participants_select_this_page_button = $("#participants_select_this_page button", rootel);
-        var $participants_total = $("#participants_total", rootel);
+        var participantsShowGrid = $(".s3d-listview-grid", rootel);
+        var participantsShowList = $(".s3d-listview-list", rootel);
+        widgetData.listStyle = "list";
+        widgetData.query = "";
+        widgetData.sortby = "asc";
 
+        var newlyAdded = [],
+            roles = false;
 
         ///////////////////////
         // Utility functions //
@@ -76,9 +77,11 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
         var enableDisableButtons = function(){
             if($(participantsListParticipantCheckbox + ":checked", rootel).length){
                 $participantsSendSelectedMessage.removeAttr("disabled");
+                $participantsAddPeopleButton.removeAttr("disabled");
             } else {
                 $participantsSendSelectedMessage.attr("disabled", "disabled");
                 $participantsSelectAll.removeAttr("checked");
+                $participantsAddPeopleButton.attr("disabled", "disabled");
             }
         };
 
@@ -86,234 +89,159 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
          * Set the attributes needed by the sendmessage widget to send a message to all selected users
          */
         var setSendSelectedMessageAttributes = function(){
+            var userArr = [];
+            var userIDArr = [];
+            $.each($(participantsListParticipantCheckbox + ":checked", rootel), function(index, item){
+                userIDArr.push($(item).attr("data-entityid"));
+                userArr.push($(item).attr("data-entityname"));
+            });
             $participantsSendSelectedMessage.attr("sakai-entitytype", "user");
-            $participantsSendSelectedMessage.attr("sakai-entityname", checkedParticipants);
-            $participantsSendSelectedMessage.attr("sakai-entityid", checkedParticipantsIDs);
+            $participantsSendSelectedMessage.attr("sakai-entityname", userArr);
+            $participantsSendSelectedMessage.attr("sakai-entityid", userIDArr);
+            $participantsAddPeopleButton.attr("data-entityname", userArr);
+            $participantsAddPeopleButton.attr("data-entityid", userIDArr);
             enableDisableButtons();
-        };
-
-        var checkSingleParticipant = function(e) {
-            var $this = $(e.target),
-                thisID = $this.attr("id").split("_")[0],
-                thisName = $this.parent().nextAll(participantsListParticipantName).text();
-            if ($this.is(":checked")) {
-                checkedParticipantsIDs.push(thisID);
-                checkedParticipants.push(thisName);
-            } else {
-                $participants_select_all_container.hide();
-                $participantsSelectAll.removeAttr("checked");
-                checkedParticipantsIDs = _.without(checkedParticipantsIDs, thisID);
-                checkedParticipants = _.without(checkedParticipants, thisName);
-            }
-            addAllSelectedOnPage();
         };
 
         /**
          * Check/Uncheck all items in the members list and enable/disable buttons
          */
         var checkAll = function(){
-            if ($(this).is(":checked")) {
+            if($(this).is(":checked")){
                 $(participantsListParticipantCheckbox, rootel).attr("checked","checked");
-                addAllSelectedOnPage();
-            } else {
-                selectNone();
+                setSendSelectedMessageAttributes();
+            }else{
+                $(participantsListParticipantCheckbox, rootel).removeAttr("checked");
+                enableDisableButtons();
             }
         };
 
-        var selectNone = function() {
-            allPagesSelected = false;
-            $participants_select_all_container.hide();
-            checkedParticipants = [];
-            $(participantsListParticipantCheckbox, rootel).removeAttr("checked");
-            enableDisableButtons();
-        };
 
-        var addAllSelectedOnPage = function() {
-            allPagesSelected = false;
-            checkedParticipants = [];
-            checkedParticipantsIDs = [];
-            $.each($(participantsListParticipantCheckbox + ":checked", rootel), function(index, item){
-                checkedParticipantsIDs.push($(item).attr("id").split("_")[0]);
-                checkedParticipants.push($(item).parent().nextAll(participantsListParticipantName).text());
-            });
-            setSendSelectedMessageAttributes();
-            if (totalParticipants > NUM_PER_PAGE && $(participantsListParticipantCheckbox + ":checked", rootel).length === $(participantsListParticipantCheckbox, rootel).length) {
-                toggleSelectAll(true);
-            }
-        };
-
-        var toggleSelectAll = function(showSelectall) {
-            $participants_select_all_container.show();
-            if (showSelectall) {
-                $participants_select_this_page.hide();
-                $participants_num_selected.text($(participantsListParticipantCheckbox, rootel).length);
-                $participants_select_all_pages.show();
-            } else {
-                $participants_select_all_pages.hide();
-                $participants_select_this_page.show();
-            }
-        };
-
-        var checkAllPages = function() {
-            allPagesSelected = true;
-            if (prevAllParticipantsSearch === $.trim($participantsSearchField.val())) {
-                selectAllParticipants(allParticipantsCache);
-            } else {
-                sakai.api.Groups.searchMembers(widgetData.participants.groupid, $.trim($participantsSearchField.val()), 1000000000, 0, "firstName", $participants_sort_by.val(), function(success, data) {
-                    prevAllParticipantsSearch = $.trim($participantsSearchField.val());
-                    allParticipantsCache = data.results;
-                    selectAllParticipants(data.results);
+        var getRoleTitle = function(result) {
+            var ret = "";
+            if (result.role && result.role.title) {
+                ret = result.role.title;
+            } else if (result.role === undefined && newlyAdded && newlyAdded.length && roles && roles.length) {
+                $.each(newlyAdded, function(i, member) {
+                    if (member.user === result["rep:userId"] || member.user === result["sakai:group-id"]) {
+                        $.each(roles, function(i, role) {
+                            if (role.id === member.permission) {
+                                ret = role.title;
+                            }
+                        });
+                    }
                 });
             }
-        };
-
-        var selectAllParticipants = function(participants) {
-            toggleSelectAll(false);
-            $participants_total.text(participants.length);
-            checkedParticipants = [];
-            checkedParticipantsIDs = [];
-            $.each(participants, function(i, auth) {
-                var authID, authDisplayName;
-                if (auth.userid) {
-                    authID = auth.userid;
-                    authDisplayName = sakai.api.User.getDisplayName(auth);
-                } else if (auth.groupid) {
-                    authID = auth.groupid;
-                    authDisplayName = auth["sakai:group-title"];
-                }
-                checkedParticipantsIDs.push(authID);
-                checkedParticipants.push(authDisplayName);
-            });
-            setSendSelectedMessageAttributes();
+            return ret;
         };
 
         //////////////////////
         // Render functions //
         //////////////////////
 
-        var renderParticipants = function (success, data){
+        var processParticipants = function (results, callback){
             var extraFields = sakai.widgets.nyuparticipants.defaultConfiguration.extraFields;
-            if (success) {
-                if (data && data.results && data.results.length) {
-                    sakai.api.User.getContacts(function() {
-                        var participantsArr = [];
-                        for (var i = 0; i < data.results.length; i++) {
-                            var contentCount = 0;
-                            var contactsCount = 0;
-                            var membershipsCount = 0;
-                            if (data.results[i].counts){
-                                contentCount = data.results[i].counts.contentCount;
-                                contactsCount = data.results[i].counts.contactsCount;
-                                membershipsCount = data.results[i].counts.membershipsCount;
-                            }
-                            if (data.results[i]["sakai:group-id"]) {
-                                participantsArr.push({
-                                    "name": data.results[i]["sakai:group-title"],
-                                    "id": data.results[i]["sakai:group-id"],
-                                    "title": data.results[i].role.title,
-                                    "type": "group",
-                                    "connected": false,
-                                    "content": contentCount,
-                                    "contacts": contactsCount,
-                                    "memberships": membershipsCount,
-                                    "profilePicture": sakai.api.Groups.getProfilePicture(data.results[i]),
-                                    "membersCount": data.results[i].counts.membersCount
-                                });
-                            } else {
-                                // Check if this user is a friend of us already.
-                                var connected = false, invited = false, pending = false, none = false;
-                                var user = data.results[i];
-                                if (sakai.data.me.mycontacts) {
-                                    for (var ii = 0, jj = sakai.data.me.mycontacts.length; ii<jj; ii++) {
-                                        var friend = sakai.data.me.mycontacts[ii];
-                                        if (friend.target === user["rep:userId"]) {
-                                            connected = true;
-                                            // if invited state set invited to true
-                                            if(friend.details["sakai:state"] === "INVITED"){
-                                                invited = true;
-                                            } else if(friend.details["sakai:state"] === "PENDING"){
-                                                pending = true;
-                                            } else if(friend.details["sakai:state"] === "NONE"){
-                                                none = true;
-                                            }
-                                        }
-                                    }
-                                }
-                                var userToPush = {
-                                    "name": sakai.api.User.getDisplayName(user),
-                                    "id": user["rep:userId"],
-                                    "title": user.role.title,
-                                    "type": "user",
-                                    "content": contentCount,
-                                    "contacts": contactsCount,
-                                    "memberships": membershipsCount,
-                                    "connected": connected,
-                                    "invited": invited,
-                                    "pending": pending,
-                                    "none": none,
-                                    "profilePicture": sakai.api.User.getProfilePicture(data.results[i])
-                                };
-                                // Get the extra info and push it on to the users
-                                if (widgetData.participants.showExtraInfo) {
-                                    var userExtraFields = [];
-                                    $.each(extraFields, function(idx,field) {
-                                        var val = sakai.api.User.getProfileBasicElementValue(user, field.key);
-                                        var searchVal = val;
-                                        // The select element type is special, and requires that we get the i18n key
-                                        // from the basic profile config, since it only stores the key and not
-                                        // the value in the basic profile
-                                        if (sakai.config.Profile.configuration.defaultConfig.basic.elements[field.key] &&
-                                            sakai.config.Profile.configuration.defaultConfig.basic.elements[field.key].type === "select") {
-
-                                            val = sakai.config.Profile.configuration.defaultConfig.basic.elements[field.key].select_elements[val];
-                                            val = sakai.api.i18n.General.process(val);
-                                        }
-                                        if (val) {
-                                            userExtraFields.push({
-                                                "title": sakai.api.i18n.General.getValueForKey(field.title),
-                                                "value": field.key === "sakai:tags" ? val = sakai.api.Util.formatTags(val) : sakai.api.Util.applyThreeDots(val, 650, {max_rows: 2, whole_word: false}, "participants_list_extra_field"),
-                                                "isTag": field.key === "sakai:tags",
-                                                "searchable": field.searchable,
-                                                "searchField": searchVal
-                                            });
-                                        }
-                                    });
-                                    if (userExtraFields.length) {
-                                        userToPush.extraFields = userExtraFields;
-                                    }
-                                }
-                                participantsArr.push(userToPush);
-                            }
+            var participantsArr = [];
+            if (results && results.length){
+                sakai.api.User.getContacts(function() {
+                    $.each(results, function(i, result){
+                        var contentCount = 0;
+                        var contactsCount = 0;
+                        var membershipsCount = 0;
+                        if (result.counts){
+                            contentCount = result.counts.contentCount;
+                            contactsCount = result.counts.contactsCount;
+                            membershipsCount = result.counts.membershipsCount;
                         }
-                        $participantsListContainer.html(sakai.api.Util.TemplateRenderer(participantsListTemplate, {
-                            "participants": participantsArr,
-                            "sakai": sakai
-                        }));
-                        selectNone();
-                        totalParticipants = data.total;
-                        if (data.total > NUM_PER_PAGE) {
-                            $participants_pager.pager({ pagenumber: currentPage, pagecount: Math.ceil(data.total/NUM_PER_PAGE), buttonClickCallback: handlePageClick }).show();
+                        var picture = false;
+                        var roleTitle = getRoleTitle(result);
+                        if (result["sakai:group-id"]) {
+                            if(result.basic.elements.picture && result.basic.elements.picture.value){
+                                picture = sakai.api.Groups.getProfilePicture(result);
+                            }
+                            participantsArr.push({
+                                "name": result["sakai:group-title"],
+                                "id": result["sakai:group-id"],
+                                "title": roleTitle,
+                                "type": "group",
+                                "connected": false,
+                                "content": contentCount,
+                                "contacts": contactsCount,
+                                "memberships": membershipsCount,
+                                "profilePicture": picture,
+                                "membersCount": result.counts.membersCount
+                            });
                         } else {
-                            $participants_pager.empty();
-                        }
-                    }, 1000);
-                } else {
-                    $participantsListContainer.html(sakai.api.Util.TemplateRenderer(participantsListTemplate, {
-                        "participants": [],
-                        "sakai": sakai
-                    }));
-                    $participants_pager.empty();
-                }
-            } else {
-                debug.warn("Participants could not be loaded");
-            }
-        };
+                            // Check if this user is a friend of us already.
+                            var connected = false, invited = false, pending = false, none = false;
+                            if (sakai.data.me.mycontacts) {
+                                $.each(sakai.data.me.mycontacts, function(ii, contact){
+                                    if (contact.target === result["rep:userId"]) {
+                                        connected = true;
+                                        // if invited state set invited to true
+                                        if(contact.details["sakai:state"] === "INVITED"){
+                                            invited = true;
+                                        } else if(contact.details["sakai:state"] === "PENDING"){
+                                            pending = true;
+                                        } else if(contact.details["sakai:state"] === "NONE"){
+                                            none = true;
+                                        }
+                                    }
+                                });
+                            }
+                            if(result.basic.elements.picture && result.basic.elements.picture.value){
+                                picture = sakai.api.User.getProfilePicture(result);
+                            }
 
-        var handlePageClick = function(pageNum) {
-            if (pageNum !== currentPage) {
-                currentPage = pageNum;
-                loadParticipants();
+                            var userToPush = {
+                                "name": sakai.api.User.getDisplayName(result),
+                                "id": result["rep:userId"],
+                                "title": roleTitle,
+                                "type": "user",
+                                "content": contentCount,
+                                "contacts": contactsCount,
+                                "memberships": membershipsCount,
+                                "connected": connected,
+                                "invited": invited,
+                                "pending": pending,
+                                "none": none,
+                                "profilePicture": picture
+                            };
+                            // Get the extra info and push it on to the users
+                            if (showExtraInfo) {
+                                var userExtraFields = [];
+                                $.each(extraFields, function(idx,field) {
+                                    var val = sakai.api.User.getProfileBasicElementValue(result, field.key);
+                                    var searchVal = val;
+                                    // The select element type is special, and requires that we get the i18n key
+                                    // from the basic profile config, since it only stores the key and not
+                                    // the value in the basic profile
+                                    if (sakai.config.Profile.configuration.defaultConfig.basic.elements[field.key] &&
+                                        sakai.config.Profile.configuration.defaultConfig.basic.elements[field.key].type === "select") {
+
+                                        val = sakai.config.Profile.configuration.defaultConfig.basic.elements[field.key].select_elements[val];
+                                        val = sakai.api.i18n.General.process(val);
+                                    }
+                                    if (val) {
+                                        userExtraFields.push({
+                                            "title": sakai.api.i18n.getValueForKey(field.title),
+                                            "value": field.key === "sakai:tags" ? val = sakai.api.Util.formatTags(val) : sakai.api.Util.applyThreeDots(val, 650, {max_rows: 2, whole_word: false}, "participants_list_extra_field"),
+                                            "isTag": field.key === "sakai:tags",
+                                            "searchable": field.searchable,
+                                            "searchField": searchVal
+                                        });
+                                    }
+                                });
+                                if (userExtraFields.length) {
+                                    userToPush.extraFields = userExtraFields;
+                                }
+                            }
+                            participantsArr.push(userToPush);
+                        }
+                    });
+                });
             }
+            callback(participantsArr);
         };
 
         ////////////////////
@@ -321,40 +249,75 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
         ////////////////////
 
         var loadParticipants = function(){
-            // current search term
-            var searchTerm = $.trim($participantsSearchField.val());
-            // add busy spinner
-            $participantsSearchField.addClass("participants_searching");
-            // ensure current search is the one to render
-            // otherwise ignore and presume other search is running
-            var preRenderParticipants = function(success, data) {
-                if (searchTerm === $.trim($participantsSearchField.val())) {
-                    renderParticipants(success, data);
-                    $participantsSearchField.removeClass("participants_searching");
+            // Disable the previous infinite scroll
+            if (infinityScroll){
+                infinityScroll.kill();
+            }
+            // Set up the infinite scroll for the list of items in the library
+            infinityScroll = $participantsListContainer.infinitescroll(function(parameters, callback){
+                $participantsSearchField.addClass("searching");
+                sakai.api.Groups.searchMembers(sakai_global.group.groupId, widgetData.query, parameters.items, parameters.page, parameters.sortBy, parameters.sortOrder, function(success, data){
+                    $participantsSearchField.removeClass("searching");
+                    callback(true, data);
+                });
+            }, {
+                "query": widgetData.query,
+                "sortBy": "lastName",
+                "sortOrder": widgetData.sortby
+            }, function(items, total){
+                if (sakai.data.me.user.anon){
+                    $(".s3d-page-header-top-row", rootel).show();
+                } else {
+                    $(".s3d-page-header-top-row", rootel).show();
+                    $(".s3d-page-header-bottom-row", rootel).show();
                 }
-            };
-            sakai.api.Groups.searchMembers(widgetData.participants.groupid, searchTerm, NUM_PER_PAGE, currentPage-1, "firstName", $participants_sort_by.val(), preRenderParticipants);
+                $participantsSelectAll.removeAttr("checked");
+                setSendSelectedMessageAttributes();
+                return sakai.api.Util.TemplateRenderer(participantsListTemplate, {
+                    "participants": items,
+                    "sakai": sakai
+                });
+            }, function(){
+                $participantsListContainer.html(sakai.api.Util.TemplateRenderer(participantsListTemplateEmpty, {}));
+            }, sakai.config.URL.INFINITE_LOADING_ICON, processParticipants);
         };
 
-        var searchTimeout = null;
+        var handleHashChange = function(){
+            $(".s3d-listview-options", rootel).find("div").removeClass("selected");
+            var ls = $.bbq.getState("ls") || widgetData.listStyle;
+            if (ls === "list"){
+                $("#participants_list_container_list", rootel).removeClass("s3d-search-results-grid");
+                $(participantsShowList, rootel).addClass("selected");
+                $(participantsShowList, rootel).children().addClass("selected");
+            } else if (ls === "grid"){
+                $(participantsShowGrid, rootel).addClass("selected");
+                $(participantsShowGrid, rootel).children().addClass("selected");
+                $("#participants_list_container_list", rootel).addClass("s3d-search-results-grid");
+            }
+            widgetData.query = $.bbq.getState("pq") || "";
+            $participantsSearchField.val(widgetData.query);
+            widgetData.sortby = $.bbq.getState("psb") || "asc";
+            $participants_sort_by.val(widgetData.sortby);
+            loadParticipants();
+        };
 
         var addBinding = function(){
-            $participantsSearchField.unbind("keyup").bind("keyup", function() {
-                $(participantsListParticipantCheckbox, rootel).removeAttr("checked");
-                $participantsSelectAll.removeAttr("checked");
-                $participants_select_all_container.hide();
+            $(window).bind("hashchanged.participants.sakai", handleHashChange);
 
-                if (searchTimeout) {
-                    clearTimeout(searchTimeout);
-                }
-                searchTimeout = setTimeout(function() {
-                    currentPage = 1;
-                    loadParticipants();
-                }, 400);
+            $(".participants_widget .s3d-search-button").unbind("click").bind("click", function(){
+                currentPage = 1;
+                $.bbq.pushState({"pq": $.trim($participantsSearchField.val())});
             });
-            $participants_sort_by.unbind("change").bind("change", loadParticipants);
+            $participantsSearchField.unbind("keyup").bind("keyup", function(ev) {
+                if (ev.keyCode === 13) {
+                    $.bbq.pushState({"pq": $.trim($participantsSearchField.val())});
+                }
+            });
+            $participants_sort_by.unbind("change").bind("change", function(){
+                $.bbq.pushState({"psb": $participants_sort_by.val()});
+            });
             $participantsSelectAll.unbind("click").bind("click", checkAll);
-            $(participantsListParticipantCheckbox, rootel).live("click", checkSingleParticipant);
+            $(participantsListParticipantCheckbox, rootel).live("click", setSendSelectedMessageAttributes);
 
             $(".participants_accept_invitation").live("click", function(ev){
                 var userid = $(this).attr("sakai-entityid");
@@ -374,17 +337,30 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                     }
                 });
             });
-            $participants_select_all_pages_button.unbind("click").bind("click", checkAllPages);
-            $participants_select_this_page_button.unbind("click").bind("click", addAllSelectedOnPage);
+
+            $(participantsShowList, rootel).click(function(){
+                $.bbq.pushState({"ls": "list"});
+            });
+
+            $(participantsShowGrid, rootel).click(function(){
+                $.bbq.pushState({"ls": "grid"});
+            });
         };
 
         var init = function(){
+            var groupData = $.extend(true, {}, sakai_global.group.groupData);
+            groupData.roles = groupData["sakai:roles"];
+            roles = sakai.api.Groups.getRoles(groupData);
+            if (sakai.api.Groups.isCurrentUserAManager(sakai_global.group.groupId, sakai.data.me, groupData)){
+                $("#participants_manage_participants").show();
+            }
             addBinding();
-            loadParticipants();
+            handleHashChange();
         };
 
-        $(window).bind("usersselected.addpeople.sakai", function(){
-            var t = setTimeout(loadParticipants, 2000);
+        $(window).bind("usersselected.addpeople.sakai", function(e, _newlyAdded){
+            newlyAdded = _newlyAdded;
+            setTimeout(loadParticipants, 1000);
         });
 
         init();

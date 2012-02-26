@@ -348,6 +348,14 @@ define(
                         container.html(content);
                         $("#" + widgetsInternal[widgetname][widget].uid).append(container);
 
+                        // Set up draggable/droppable containers in the widget HTML if there are any
+                        if($(".s3d-droppable-container", container).length){
+                            sakai_util.Droppable.setupDroppable({}, container);
+                        }
+                        if($(".s3d-draggable-container", container).length){
+                            sakai_util.Draggable.setupDraggable({}, container);
+                        }
+
                         widgetsInternal[widgetname][widget].todo = JSTags.URL.length;
                         widgetsInternal[widgetname][widget].done = 0;
                     }
@@ -392,14 +400,14 @@ define(
                             if ($.isPlainObject(sakai.widgets[widgetname].i18n)) {
                                 if (sakai.widgets[widgetname].i18n["default"]){
                                     var bundleItem = {
-                                        "url" : sakai.widgets[widgetname].i18n["default"],
+                                        "url" : sakai.widgets[widgetname].i18n["default"].bundle,
                                         "method" : "GET"
                                     };
                                     bundles.push(bundleItem);
                                 }
                                 if (sakai.widgets[widgetname].i18n[current_locale_string]) {
                                     var item1 = {
-                                        "url" : sakai.widgets[widgetname].i18n[current_locale_string],
+                                        "url" : sakai.widgets[widgetname].i18n[current_locale_string].bundle,
                                         "method" : "GET"
                                     };
                                     bundles.push(item1);
@@ -473,7 +481,7 @@ define(
                                                 lastend = expression.lastIndex;
                                             }
                                             else {
-                                                toreplace = quotes + sakai_i18n.Widgets.getValueForKey(widgetName, current_locale_string, lastParen) + quotes;
+                                                toreplace = quotes + sakai_i18n.getValueForKey(lastParen, widgetName) + quotes;
                                                 translated_content += requestedURLsResults[i].body.substring(lastend, expression.lastIndex - replace.length) + toreplace;
                                                 lastend = expression.lastIndex;
                                             }
@@ -671,6 +679,7 @@ define(
             },
 
             informOnLoad : function(widgetname){
+                // Inform the widgets that they have been loaded
                 for (var i = 0, j = sakaiWidgetsAPI.widgetLoader.loaded.length; i<j; i++){
                     sakaiWidgetsAPI.widgetLoader.loaded[i].informOnLoad(widgetname);
                 }
@@ -847,42 +856,90 @@ define(
              * construct the changedParams object which contains a map like this:
              * widgetHashes = { "widgetid" : { "changed": {"property": "value"}, "deleted": {}}};
              */
-            $.each(sakai_widgets_config, function(id, obj) {
-                if (obj.hasOwnProperty('hashParams')) {
-                    // iterate over each of the params that the widet watches
-                    $.each(obj.hashParams, function(i, val) {
-                        // If the current history state has this value
-                        if (currentState.hasOwnProperty(val)) {
-                            widgetHashes[id] = widgetHashes[id] || {changed:{}, deleted:{}, all: {}};
-                            // and the oldState value exists and isn't the same as the new value
-                            // or the oldState didn't have the value
-                            if ((oldState.hasOwnProperty(val) && oldState[val] !== currentState[val]) ||
-                                !oldState.hasOwnProperty(val)) {
+            if (!$.isEmptyObject(sakai_widgets_config)) {
+                $.each(sakai_widgets_config, function(id, obj) {
+                    if (obj.hasOwnProperty('hashParams')) {
+                        // iterate over each of the params that the widet watches
+                        $.each(obj.hashParams, function(i, val) {
+                            // If the current history state has this value
+                            if (currentState.hasOwnProperty(val)) {
+                                widgetHashes[id] = widgetHashes[id] || {changed:{}, deleted:{}, all: {}};
+                                // and the oldState value exists and isn't the same as the new value
+                                // or the oldState didn't have the value
+                                if ((oldState.hasOwnProperty(val) && oldState[val] !== currentState[val]) ||
+                                    !oldState.hasOwnProperty(val)) {
 
-                                widgetHashes[id].changed[val] = currentState[val];
+                                    widgetHashes[id].changed[val] = currentState[val];
+                                }
+                                widgetHashes[id].all[val] = currentState[val];
+
+                            // Check if the property was in the history state previously,
+                            // indicating that it was deleted from the currentState
+                            } else if (oldState.hasOwnProperty(val)) {
+                                widgetHashes[id] = widgetHashes[id] || {changed:{}, deleted:{}, all: {}};
+                                widgetHashes[id].deleted[val] = oldState[val];
                             }
-                            widgetHashes[id].all[val] = currentState[val];
-
-                        // Check if the property was in the history state previously,
-                        // indicating that it was deleted from the currentState
-                        } else if (oldState.hasOwnProperty(val)) {
-                            widgetHashes[id] = widgetHashes[id] || {changed:{}, deleted:{}, all: {}};
-                            widgetHashes[id].deleted[val] = oldState[val];
-                        }
-                    });
-                }
-            });
-            if (e.currentTarget) {
-                // Fire an event to each widget that has the hash params in it
-                $.each(widgetHashes, function(widgetID, hashObj) {
-                    $(window).trigger("hashchanged." + widgetID + ".sakai", [hashObj.changed || {}, hashObj.deleted || {}, hashObj.all || {}, currentState || {}]);
+                        });
+                    }
                 });
+                if (e.currentTarget) {
+                    // Fire an event to each widget that has the hash params in it
+                    $.each(widgetHashes, function(widgetID, hashObj) {
+                        $(window).trigger("hashchanged." + widgetID + ".sakai", [hashObj.changed || {}, hashObj.deleted || {}, hashObj.all || {}, currentState || {}]);
+                    });
 
-                // Reset the oldState to the currentState
-                oldState = currentState;
-                return true;
+                    // Reset the oldState to the currentState
+                    oldState = currentState;
+                    return true;
+                } else {
+                    return widgetHashes[e];
+                }
             } else {
-                return widgetHashes[e];
+                return null;
+            }
+        },
+
+        /**
+         * This function will return the name of a widget in the current user's language
+         * @param {Object} widgetid  id of the widget as specified in the widget's config file
+         */
+        getWidgetTitle: function(widgetid){
+            // Get the user's current locale from the me object
+            var locale = sakai_i18n.getUserLocale();
+            if (locale === "lu_GB") {
+                return widgetid.toUpperCase();
+            } else {
+                if (sakai.widgets[widgetid]){
+                    if (sakai.widgets[widgetid].i18n[locale] && sakai.widgets[widgetid].i18n[locale].name){
+                        return sakai.widgets[widgetid].i18n[locale].name;
+                    } else {
+                        return sakai.widgets[widgetid].i18n["default"].name;
+                    }
+                } else {
+                    debug.error("A config file was not found for the following widget: " + widgetid);
+                }
+            }
+        },
+
+        /**
+         * This function will return the description of a widget in the current user's language
+         * @param {Object} widgetid  id of the widget as specified in the widget's config file
+         */
+        getWidgetDescription: function(widgetid){
+            // Get the user's current locale from the me object
+            var locale = sakai_i18n.getUserLocale();
+            if (locale === "lu_GB") {
+                return widgetid.toUpperCase();
+            } else {
+                if (sakai.widgets[widgetid]){
+                    if (sakai.widgets[widgetid].i18n[locale] && sakai.widgets[widgetid].i18n[locale].description){
+                        return sakai.widgets[widgetid].i18n[locale].description;
+                    } else {
+                        return sakai.widgets[widgetid].i18n["default"].description;
+                    }
+                } else {
+                    debug.error("A config file was not found for the following widget: " + widgetid);
+                }
             }
         },
 
@@ -890,6 +947,14 @@ define(
             sakaiWidgetsAPI.bindToHash();
             sakaiWidgetsAPI.Container.setReadyToLoad(true);
             sakaiWidgetsAPI.widgetLoader.insertWidgets(null, false);
+
+            // Set up draggable/droppable containers for the main page if there are any
+            if($(".s3d-droppable-container", $("body")).length){
+                sakai_util.Droppable.setupDroppable({}, $("body"));
+            }
+            if($(".s3d-draggable-container", $("body")).length){
+                sakai_util.Draggable.setupDraggable({}, $("body"));
+            }
         }
     };
 

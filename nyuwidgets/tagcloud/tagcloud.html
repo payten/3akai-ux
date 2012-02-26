@@ -7,18 +7,16 @@
 
     <div id="tagcloud_main_template" style="display:none"><!--
         <h1>__MSG__TAG_CLOUD__</h1>
-        {if data.results}
+        {if data.length}
           <ul>
-          {for result in data.results}
-            {for tag in result.tags}
-              <li style="display:inline; margin-right: 6px;"><a href="/~${groupId}#l=library&lq=${tag.name}" class="s3d-regular-links{if tag.count <= 5} tagcloud_font1{elseif tag.count <= 15 } tagcloud_font2{elseif tag.count <= 30 } tagcloud_font3{elseif tag.count <= 90 } tagcloud_font4{elseif tag.count > 90 } tagcloud_font5{/if}">${tag.name|safeOutput}</a></li>
-            {forelse}
-              <li>__MSG__NO_TAGS_FOUND__</li>
-            {/for}
+          {for tag in data}            
+              <li style="display:inline; margin-right: 6px;"><a href="/~${groupId}#l=library&lq=${tag.value}" class="s3d-regular-links{if tag.count <= 5} tagcloud_font1{elseif tag.count <= 15 } tagcloud_font2{elseif tag.count <= 30 } tagcloud_font3{elseif tag.count <= 90 } tagcloud_font4{elseif tag.count > 90 } tagcloud_font5{/if}">${tag.value|safeOutput}</a></li>
           {forelse}
             <li>__MSG__NO_TAGS_FOUND__</li>
           {/for}
           </ul>
+        {else}
+            <p>__MSG__NO_TAGS_FOUND__</p>
         {/if}
     --></div>
 </div>

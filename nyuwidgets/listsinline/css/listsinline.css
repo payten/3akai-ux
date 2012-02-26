@@ -1,0 +1,14 @@
+#listsinline_settings {width:100%;}
+#listsinline_settings button{float:right;}
+
+#listsinline_main_container{border:1px solid #ccc;border-radius:5px;float:left;width:350px;margin:0 5px 5px 0;}
+#listsinline_main{margin:10px;padding:10px;}
+#listsinline_title{float:left;}
+#listsinline_title h1{font-size:18px;}
+#listsinline_edit_button{float:right;}
+#listsinline_display_lists{float:left;width:100%}
+#listsinline_choose_values{float:left;width:100%;margin-bottom:10px;}
+#listsinline_choose_values ul {margin-left:0px;}
+#listsinline_choose_values li {list-style:none}
+#listsinline_choose_values label {margin-left:10px;}
+#listsinline_action_buttons{float:left;width:100%;text-align:right;}

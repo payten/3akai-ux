@@ -118,34 +118,25 @@ define(
                     case "new_message":
                         toSend["sakai:templatePath"] = "/var/templates/email/new_message";
                         toSend["sakai:templateParams"] = "sender=" + sender +
-                        "|system=" + sakai_i18n.General.getValueForKey("SAKAI") + "|subject=" + subject + "|body=" + body + "|link=" + sakai_conf.SakaiDomain + sakai_conf.URL.INBOX_URL;
-                        break;
-                    case "join_request":
-                        toSend["sakai:templatePath"] = "/var/templates/email/join_request";
-                        toSend["sakai:templateParams"] = "sender=" + sender +
-                        "|system=" + sakai_i18n.General.getValueForKey("SAKAI") + "|name=" + groupTitle +
-                        "|profilelink=" + sakai_conf.SakaiDomain + "/~" + sakai_util.safeURL(meData.user.userid) +
-                        "|acceptlink=" + sakai_conf.SakaiDomain + "/~" +  groupId;
+                        "|system=" + sakai_i18n.getValueForKey("SAKAI") + "|subject=" + subject + "|body=" + body + "|link=" + sakai_conf.SakaiDomain + sakai_conf.URL.INBOX_URL;
                         break;
                     case "group_invitation":
                         toSend["sakai:templatePath"] = "/var/templates/email/group_invitation";
                         toSend["sakai:templateParams"] = "sender=" + sender +
-                        "|system=" + sakai_i18n.General.getValueForKey("SAKAI") + "|name=" + groupTitle +
+                        "|system=" + sakai_i18n.getValueForKey("SAKAI") + "|name=" + groupTitle +
                         "|body=" + body +
                         "|link=" + sakai_conf.SakaiDomain + "/~" + groupId;
                         break;
                     case "shared_content":
                         toSend["sakai:templatePath"] = "/var/templates/email/shared_content";
                         toSend["sakai:templateParams"] = "sender=" + sender +
-                        "|system=" + sakai_i18n.General.getValueForKey("SAKAI") + "|name=" + sakai_global.content_profile.content_data.data["sakai:pooled-content-file-name"] +
-                        "|description=" + (sakai_global.content_profile.content_data.data["sakai:description"] || "") +
-                        "|body=" + body +
-                        "|link=" + sakai_global.content_profile.content_data.url;
+                        "|system=" + sakai_i18n.getValueForKey("SAKAI") +
+                        "|body=" + body;
                         break;
                     case "contact_invitation":
                         toSend["sakai:templatePath"] = "/var/templates/email/contact_invitation";
                         toSend["sakai:templateParams"] = "sender=" + sender +
-                        "|system=" + sakai_i18n.General.getValueForKey("SAKAI") + "|body=" + body +
+                        "|system=" + sakai_i18n.getValueForKey("SAKAI") + "|body=" + body +
                         "|link=" + sakai_conf.SakaiDomain + sakai_conf.URL.INVITATIONS_URL;
                         break;
                 }
@@ -322,8 +313,12 @@ define(
             }
 
             $.each(messages, function(i, message) {
-               var req = {url: message.path + ".json", method: "POST", parameters: {"sakai:read": "true"}};
-               requests.push(req);
+                var path = message.path;
+                if (path.substring(0, 2) === "a:"){
+                    path = "~" + path.substring(2);
+                };                 
+                var req = {url: path + ".json", method: "POST", parameters: {"sakai:read": "true"}};
+                requests.push(req);
             });
             sakai_server.batch(requests, function(success, data) {
                 if (success) {
@@ -345,10 +340,9 @@ define(
         /**
          * Processes the messages from the server, stripping out everything we don't need
          */
-        processMessages : function(data) {
-            var messages = {},
-                ret = $.extend(true, {}, data);
-            $.each(ret, function(i, msg) {
+        processMessages : function(results) {
+            var messages = [];//,
+            $.each(results, function(i, msg) {
                 if (!$.isEmptyObject(msg)) {
                     var newMsg = {};
                     newMsg.replyAll = [];
@@ -395,6 +389,7 @@ define(
                     newMsg.box = msg["sakai:messagebox"];
                     newMsg.category = msg["sakai:category"];
                     newMsg.date = sakai_l10n.transformDateTimeShort(sakai_l10n.fromEpoch(msg["_created"], sakai_user.data.me));
+                    newMsg.timeago = $.timeago(newMsg.date);
                     newMsg.id = msg.id;
                     newMsg.read = msg["sakai:read"];
                     newMsg.path = msg["_path"];
@@ -404,11 +399,10 @@ define(
                             newMsg.previousMessage = val;
                         });
                     }
-                    messages[newMsg.id] = newMsg;
+                    messages.push(newMsg);
                 }
             });
-            ret = messages;
-            return ret;
+            return messages;
         },
 
         /**
@@ -445,10 +439,8 @@ define(
             // Set the base URL for the search
             if (search) {
                 url = sakai_conf.URL.MESSAGE_BOXCATEGORY_SERVICE;
-            } else if (category) {
-                url = sakai_conf.URL.MESSAGE_BOXCATEGORY_ALL_SERVICE;
             } else {
-                url = sakai_conf.URL.MESSAGE_BOX_SERVICE;
+                url = sakai_conf.URL.MESSAGE_BOXCATEGORY_ALL_SERVICE;
             }
             $.ajax({
                 url: url,
@@ -477,26 +469,38 @@ define(
             });
         },
 
-        getMessage : function(id, callback){
-            var url = "/~" + sakai_util.safeURL(sakai_user.data.me.user.userid) + "/message/inbox/" + id + ".json";
+        /**
+         * Retrieve a message based on its box and its id. This function will also
+         * include the user that has sent the message
+         * @param {String} id            Unique id of the message
+         * @param {String} box           Message box the message lives in. The possible options are inbox, outbox and trash
+         * @param {Object} meData        Me object
+         * @param {Function} callback    Function to call once the message has been retrieved
+         */
+        getMessage : function(id, box, meData, callback){
+            var url = "/~" + sakai_util.safeURL(sakai_user.data.me.user.userid) + "/message/" + box + "/" + id + ".json";
             $.ajax({
                 url: url,
                 cache: false,
-                async: false,
                 dataType: "json",
                 success: function(data){
-                    if ($.isFunction(callback)) {
-                        sakai_user.getUser(data["sakai:from"], function(success,profiledata){
-                            data.userFrom = [];
-                            data.userFrom[0] = profiledata;
-                            callback(data);
-                        });
+                    var useridToLookup = data["sakai:from"];
+                    if (data["sakai:from"] === meData.user.userid){
+                        useridToLookup = data["sakai:to"].split(":")[1];
                     }
+                    sakai_user.getUser(useridToLookup, function(success,profiledata){
+                        if (data["sakai:from"] === meData.user.userid){
+                            data.userFrom = [meData.profile];
+                            data.userTo = [profiledata];
+                        } else {
+                            data.userFrom = [profiledata];
+                            data.userTo = [meData.profile];
+                        }
+                        callback(sakaiCommunicationsAPI.processMessages([data])[0]);
+                    });
                 },
                 error: function(xhr, textStatus, thrownError){
-                    if ($.isFunction(callback)) {
-                        callback({});
-                    }
+                    callback(false);
                 }
             });
         },

@@ -85,7 +85,10 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai, sakai_util) {
          * It renders the contacts types and the personal note
          */
         var renderTemplates = function(){
-            sakai.api.Util.TemplateRenderer(addToContactsFormTypeTemplate.replace(/#/gi, ""), sakai.config.Relationships, $(addToContactsInfoTypesContainer));
+            sakai.api.Util.TemplateRenderer(addToContactsFormTypeTemplate.replace(/#/gi, ""), {
+                "relationships": sakai.config.Relationships,
+                "sakai": sakai
+            }, $(addToContactsInfoTypesContainer));
             var json = {
                 sakai: sakai,
                 me: sakai.data.me
@@ -211,7 +214,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai, sakai_util) {
                 },
                 messages: {
                     addtocontacts_form_type: {
-                        required: sakai.api.i18n.Widgets.getValueForKey("addtocontacts", null, "PLEASE_SELECT_HOW_YOU_ARE_CONNECTED_TO_THIS_USER")
+                        required: sakai.api.i18n.getValueForKey("PLEASE_SELECT_HOW_YOU_ARE_CONNECTED_TO_THIS_USER", "addtocontacts")
                     }
                 },
                 errorContainer: "#addtocontacts_errors",
