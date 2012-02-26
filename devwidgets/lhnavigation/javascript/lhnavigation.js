@@ -181,24 +181,32 @@ require(["jquery", "sakai/sakai.api.core", "jquery-ui"], function($, sakai) {
         };
 
         var getPageContent = function(ref){
-            if ($.inArray(ref, infinityStructuresPulled) === -1) {
-                var toplevelref = ref.split("-")[0];
+			var toplevelref = ref.split("-")[0];
+            if ($.inArray(toplevelref, infinityStructuresPulled) === -1) {                
                 $.ajax({
                     url: "/p/"+toplevelref+".infinity.json",
                     dataType: "json",
                     async: false,
                     success: function(data) {
-                        infinityStructuresPulled.push(ref);
+						// mark ref as loaded
+                        infinityStructuresPulled.push(toplevelref);
+						// format data
                         var docInfo = sakai.api.Server.cleanUpSakaiDocObject(data);
                         docInfo.orderedItems = orderItems(docInfo.structure0);
                         sakaiDocsInStructure["/p/" + toplevelref] = docInfo;
                         addDocUrlIntoStructure(docInfo.structure0, "/p/" + toplevelref);
+						// determine target structure
+						var targetStructure = "public";
+						if (privstructure.pages[toplevelref+"-_lastModified"]) {
+							targetStructure = "private";
+						}
+						// add the data to the structure
 						for (var page_key in docInfo){
-							if (page_key.indexOf("id")===0 && ref.indexOf(page_key) > toplevelref.length){
-			            		if (privstructure.pages[toplevelref+"-_lastModified"]) {
-					            	privstructure.pages[ref] = docInfo[page_key];
+							if (page_key.substring(0,9) !== "structure" && page_key.substring(0,1) !== "_"){
+								if (targetStructure === "private") {
+					            	privstructure.pages[toplevelref+"-"+page_key] = docInfo[page_key];
 					            } else if (pubstructure.pages[toplevelref+"-_lastModified"]) {
-					                pubstructure.pages[ref] = docInfo[page_key];
+					                pubstructure.pages[toplevelref+"-"+page_key] = docInfo[page_key];
 					            }
 							}
 						}
