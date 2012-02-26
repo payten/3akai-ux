@@ -37,11 +37,10 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
         /////////////////////////////
         var infinityScroll = false;
 
-        var showExtraInfo;
-        // if legacy participants widget (< v1.1)...
-        if (widgetData.hasOwnProperty("participants")) {
+        var showExtraInfo = false;
+        if (widgetData.hasOwnProperty("participants")) { // if legacy participants widget (< v1.1)...
             showExtraInfo = widgetData.participants.showExtraInfo;
-        } else { // new > v1.1 widget
+        } else if (widgetData.hasOwnProperty("nyuparticipants")) { // new > v1.1 widget
             showExtraInfo = widgetData.nyuparticipants.showExtraInfo;
         }
         
