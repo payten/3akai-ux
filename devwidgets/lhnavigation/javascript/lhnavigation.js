@@ -189,15 +189,19 @@ require(["jquery", "sakai/sakai.api.core", "jquery-ui"], function($, sakai) {
                     async: false,
                     success: function(data) {
                         infinityStructuresPulled.push(ref);
-                        for (var page_key in data){
-                            if (page_key.indexOf("id")===0 && ref.indexOf(page_key) > toplevelref.length){
-					            if (privstructure.pages[toplevelref+"-_lastModified"]) {
-									privstructure.pages[ref] = data[page_key];
+                        var docInfo = sakai.api.Server.cleanUpSakaiDocObject(data);
+                        docInfo.orderedItems = orderItems(docInfo.structure0);
+                        sakaiDocsInStructure["/p/" + toplevelref] = docInfo;
+                        addDocUrlIntoStructure(docInfo.structure0, "/p/" + toplevelref);
+						for (var page_key in docInfo){
+							if (page_key.indexOf("id")===0 && ref.indexOf(page_key) > toplevelref.length){
+			            		if (privstructure.pages[toplevelref+"-_lastModified"]) {
+					            	privstructure.pages[ref] = docInfo[page_key];
 					            } else if (pubstructure.pages[toplevelref+"-_lastModified"]) {
-									pubstructure.pages[ref] = data[page_key];
-								}
-                            }
-                        }
+					                pubstructure.pages[ref] = docInfo[page_key];
+					            }
+							}
+						}
                     }
                 })
             }
