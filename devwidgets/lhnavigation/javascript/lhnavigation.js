@@ -54,6 +54,7 @@ require(["jquery", "sakai/sakai.api.core", "jquery-ui"], function($, sakai) {
 
         var privstructure = false;
         var pubstructure = false;
+        var infinityStructuresPulled = [];
         var contextData = false;
 
         var parametersToCarryOver = {};
@@ -179,7 +180,29 @@ require(["jquery", "sakai/sakai.api.core", "jquery-ui"], function($, sakai) {
             return pageCount;
         };
 
-        var getPageContent = function(ref){
+       var getPageContent = function(ref){                        
+            if ($.inArray(ref, infinityStructuresPulled) === -1) {                
+                var toplevelref = ref.split("-")[0];
+                var subpageref = ref.split("-")[1];
+                
+                function pageBelongsInPrivStructure() {                   
+                    return privstructure.pages.hasOwnProperty(toplevelref+"-_lastModified");
+                };
+                		
+                $.ajax({
+                    url: "/p/"+toplevelref+"/"+subpageref+".infinity.json",
+                    dataType: "json",
+                    async: false,
+                    success: function(data) {
+                        infinityStructuresPulled.push(ref);
+                        if (pageBelongsInPrivStructure()) {
+                            privstructure.pages[ref] = data;
+                        } else {
+                            pubstructure.pages[ref] = data;
+                        }
+                    }
+                });
+            }
             if (privstructure.pages[ref]) {
                 return privstructure.pages[ref];
             } else if (pubstructure.pages[ref]) {
@@ -309,7 +332,7 @@ require(["jquery", "sakai/sakai.api.core", "jquery-ui"], function($, sakai) {
             var batchRequests = [];
             for (var i = 0; i < pids.length; i++) {
                 batchRequests.push({
-                    "url": "/p/" + pids[i] + ".infinity.json",
+                    "url": "/p/" + pids[i] + ".json",
                     "method": "GET"
                 });
             }

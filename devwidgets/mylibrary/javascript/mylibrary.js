@@ -477,9 +477,8 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
 
             // We embed the deletecontent widget, so make sure it's loaded
             sakai.api.Widgets.widgetLoader.insertWidgets(tuid, false);
-
-            if (widgetData && widgetData.mylibrary) {
-                mylibrary.contextId = widgetData.mylibrary.groupid;
+        
+            function initGroupLibrary() {
                 sakai.api.Server.loadJSON("/system/userManager/group/" +  mylibrary.contextId + ".json", function(success, data) {
                     if (success){
                         currentGroup = data;
@@ -490,13 +489,25 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                         finishInit(contextName, isGroup);
                     }
                 });
-            } else {
+            }
+
+            function initUserLibrary() {
                 mylibrary.contextId = sakai_global.profile.main.data.userid;
                 contextName = sakai.api.User.getFirstName(sakai_global.profile.main.data);
                 if (mylibrary.contextId === sakai.data.me.user.userid) {
                     mylibrary.isOwnerViewing = true;
                 }
-                finishInit(contextName, isGroup);
+            }
+
+            if (widgetData && widgetData.mylibrary) {
+                mylibrary.contextId = widgetData.mylibrary.groupid;
+                initGroupLibrary();
+            } else if (sakai_global.group && sakai_global.group.groupId) {
+                mylibrary.contextId = sakai_global.group.groupId;
+                initGroupLibrary();
+            } else {
+                mylibrary.contextId = sakai_global.profile.main.data.userid;
+                initUserLibrary();
             }
         };
 
