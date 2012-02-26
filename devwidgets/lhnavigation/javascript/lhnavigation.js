@@ -54,7 +54,7 @@ require(["jquery", "sakai/sakai.api.core", "jquery-ui"], function($, sakai) {
 
         var privstructure = false;
         var pubstructure = false;
-        var infinitystructurepulled = [];
+        var infinitystructurespulled = [];
         var contextData = false;
 
         var parametersToCarryOver = {};
@@ -181,14 +181,14 @@ require(["jquery", "sakai/sakai.api.core", "jquery-ui"], function($, sakai) {
         };
 
         var getPageContent = function(ref){
-            if (infinitystructurepulled.indexOf(ref) === -1) {
+            if ($.inArray(ref, infinitystructurespulled) === -1) {
                 var toplevelref = ref.split("-")[0];
                 $.ajax({
                     url: "/p/"+toplevelref+".infinity.json",
                     dataType: "json",
                     async: false,
                     success: function(data) {
-                        infinitystructurepulled.push(ref);                        
+                        infinitystructurespulled.push(ref);                        
                         for (var page in data){
                             if (page.substring(0,9) !== "structure" && page.substring(0,1) !== "_"){
                                 pubstructure.pages[toplevelref + "-" + page] = data[page];
