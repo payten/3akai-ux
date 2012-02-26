@@ -181,34 +181,19 @@ require(["jquery", "sakai/sakai.api.core", "jquery-ui"], function($, sakai) {
         };
 
         var getPageContent = function(ref){
-			var toplevelref = ref.split("-")[0];
-            if ($.inArray(toplevelref, infinityStructuresPulled) === -1) {                
+            if ($.inArray(ref, infinityStructuresPulled) === -1) {
+				var toplevelref = ref.split("-")[0];
+				var subpageref = ref.split("-")[1]
                 $.ajax({
-                    url: "/p/"+toplevelref+".infinity.json",
+                    url: "/p/"+toplevelref+"/"+subpageref+".infinity.json",
                     dataType: "json",
                     async: false,
                     success: function(data) {
-						// mark ref as loaded
-                        infinityStructuresPulled.push(toplevelref);
-						// format data
-                        var docInfo = sakai.api.Server.cleanUpSakaiDocObject(data);
-                        docInfo.orderedItems = orderItems(docInfo.structure0);
-                        sakaiDocsInStructure["/p/" + toplevelref] = docInfo;
-                        addDocUrlIntoStructure(docInfo.structure0, "/p/" + toplevelref);
-						// determine target structure
-						var targetStructure = "public";
+                        infinityStructuresPulled.push(ref);
 						if (privstructure.pages[toplevelref+"-_lastModified"]) {
-							targetStructure = "private";
-						}
-						// add the data to the structure
-						for (var page_key in docInfo){
-							if (page_key.substring(0,9) !== "structure" && page_key.substring(0,1) !== "_"){
-								if (targetStructure === "private") {
-					            	privstructure.pages[toplevelref+"-"+page_key] = docInfo[page_key];
-					            } else if (pubstructure.pages[toplevelref+"-_lastModified"]) {
-					                pubstructure.pages[toplevelref+"-"+page_key] = docInfo[page_key];
-					            }
-							}
+							privstructure.pages[ref] = data;
+						} else {
+							pubstructure.pages[ref] = data;
 						}
                     }
                 })
