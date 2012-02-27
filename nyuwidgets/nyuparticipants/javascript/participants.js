@@ -39,7 +39,13 @@ require(["jquery", "sakai/sakai.api.core", "/dev/javascript/search_util.js"], fu
 
         var showExtraInfo = false;
         var showTagCloud = false;
-        
+        // if legacy participants widget (prior to v1.1)...
+        if (widgetData.hasOwnProperty("participants")) {
+            showExtraInfo = widgetData.participants.showExtraInfo;
+        } else if (widgetData.hasOwnProperty("nyuparticipants")) { // new > v1.1 widget
+            showExtraInfo = widgetData.nyuparticipants.showExtraInfo;
+            showTagCloud = widgetData.nyuparticipants.showTagCloud;
+        }
         var selectedTags = [];
         var MAX_TAGS_IN_CLOUD = 20;
         
@@ -421,40 +427,23 @@ require(["jquery", "sakai/sakai.api.core", "/dev/javascript/search_util.js"], fu
         };
 
         var init = function(){
-            sakai.api.Widgets.loadWidgetData(tuid, function(success, data) {
-                if (success) {                    
-                    widgetData = data;
-                    if (widgetData.hasOwnProperty("showExtraInfo")) {
-                        showExtraInfo = widgetData.showExtraInfo;
-                    } 
-                    if (widgetData.hasOwnProperty("showTagCloud")) {
-                        showTagCloud = widgetData.showTagCloud;
-                    }                    
-                } else if (widgetData === false) {
-                    widgetData = {};
-                }
-                widgetData.listStyle = "list";
-                widgetData.query = "";
-                widgetData.sortby = "asc";
-                
-                var groupData = $.extend(true, {}, sakai_global.group.groupData);
-                groupData.roles = groupData["sakai:roles"];
-                roles = sakai.api.Groups.getRoles(groupData);
-                if (sakai.api.Groups.isCurrentUserAManager(sakai_global.group.groupId, sakai.data.me, groupData)){
-                    $("#participants_manage_participants").show();
-                }
+            var groupData = $.extend(true, {}, sakai_global.group.groupData);
+            groupData.roles = groupData["sakai:roles"];
+            roles = sakai.api.Groups.getRoles(groupData);
+            if (sakai.api.Groups.isCurrentUserAManager(sakai_global.group.groupId, sakai.data.me, groupData)){
+                $("#participants_manage_participants").show();
+            }
 
-                addBinding();
+            addBinding();
 
-                if (showTagCloud) {
-                    require(["/nyuwidgets/nyuparticipants/lib/jquery.jqcloud.js"], function() {
-                        $(".participants_widget",rootel).addClass("tagcloud-enabled");
-                        handleHashChange();
-                    });
-                } else {
+            if (showTagCloud) {
+		require(["/nyuwidgets/nyuparticipants/lib/jquery.jqcloud.js"], function() {
+                    $(".participants_widget",rootel).addClass("tagcloud-enabled");
                     handleHashChange();
-                }
-            })
+                });
+            } else {
+            	handleHashChange();
+            }      
         };
 
         $(window).bind("usersselected.addpeople.sakai", function(e, _newlyAdded){
