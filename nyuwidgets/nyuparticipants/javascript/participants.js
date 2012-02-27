@@ -42,7 +42,7 @@ require(["jquery", "sakai/sakai.api.core", "/dev/javascript/search_util.js"], fu
         // if legacy participants widget (prior to v1.1)...
         if (widgetData.hasOwnProperty("participants")) {
             showExtraInfo = widgetData.participants.showExtraInfo;
-        } else if (widgetData.hasOwnProperty("nyuparticipants")) { // new > v1.1 widget
+        } else { // new > v1.1 widget
             showExtraInfo = widgetData.nyuparticipants.showExtraInfo;
             showTagCloud = widgetData.nyuparticipants.showTagCloud;
         }
