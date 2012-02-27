@@ -83,11 +83,6 @@
 .participants_widget .tagcloud-row .no-tags {
     color: #AAA;
 }
-/*.participants_widget.tagcloud-enabled .refine-by-tags-row .s3d-search-refineby-title,
-.participants_widget.tagcloud-enabled .refine-by-tags-row .search_tag_refine_item,
-.participants_widget.tagcloud-enabled .refine-by-tags-row .s3d-search-refineby .s3d-search-tag.refine {
-	display: none;	
-}*/
 .participants_widget.tagcloud-enabled .s3d-page-header-top-row,
 .participants_widget.tagcloud-enabled .s3d-search-refineby-list {
 	margin-bottom: 10px;
