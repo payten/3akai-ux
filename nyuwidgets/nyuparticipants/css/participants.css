@@ -79,6 +79,10 @@
 	background-position: center right;
 	padding-right: 10px;
 }
+
+.participants_widget .tagcloud-row .no-tags {
+    color: #AAA;
+}
 /*.participants_widget.tagcloud-enabled .refine-by-tags-row .s3d-search-refineby-title,
 .participants_widget.tagcloud-enabled .refine-by-tags-row .search_tag_refine_item,
 .participants_widget.tagcloud-enabled .refine-by-tags-row .s3d-search-refineby .s3d-search-tag.refine {

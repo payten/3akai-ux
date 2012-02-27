@@ -258,79 +258,82 @@ require(["jquery", "sakai/sakai.api.core", "/dev/javascript/search_util.js"], fu
                 infinityScroll.kill();
             }
             // Set up the infinite scroll for the list of items in the library
-            infinityScroll = $participantsListContainer.infinitescroll(function(parameters, callback){
-                $participantsSearchField.addClass("searching");
-                sakai.api.Groups.searchMembers(sakai_global.group.groupId, widgetData.query, parameters.items, parameters.page, parameters.sortBy, parameters.sortOrder, function(success, data){
-                    $participantsSearchField.removeClass("searching");
-                    // if tag show filter
-                    if (data.hasOwnProperty("facet_fields") 
-                            && data.facet_fields.length 
-                            && data.facet_fields[0].hasOwnProperty("tagname") 
-                            && data.facet_fields[0].tagname.length) {
-                            
-                            $("button.filter-by-tags-toggle", rootel).show();
-                            if (showTagCloud) {
-                                var sanitisedTagData = [];
-                                for (var i=0; i<data.facet_fields[0].tagname.length;i++) {
-                                    if (i === MAX_TAGS_IN_CLOUD) {
-                                        break;
-                                    }								
-                                    for (var key in data.facet_fields[0].tagname[i]) {
-                                        if (data.facet_fields[0].tagname[i].hasOwnProperty(key)) {
-                                            sanitisedTagData.push({
-                                                text: key,
-                                                weight: data.facet_fields[0].tagname[i][key],
-                                                url: "javascript:void(0);",
-                                                customClass: ($.inArray(key, selectedTags)>=0)?"search-tag active":"search-tag",
-                                                dataAttributes: {
-                                                    "sakai-entityid": key
-                                                }
-                                            })
-                                        }
-                                    }
-                                }								
-                                $(".tagcloud-row", rootel).empty();
-                                $(".tagcloud-row", rootel).jQCloud(sanitisedTagData, {
-                                    height: 180,
-                                    width: 730
-                                });
-                                $(".tagcloud-container", rootel).show();
-                            }							
-                            /*var refinebytagsData = {
-                                    tags: data.facet_fields[0].tagname,
-                                    selected: selectedTags
-                            }																					
-                            $(".refine-by-tags-row",rootel).html(sakai.api.Util.TemplateRenderer("participants_refinebytags_template", refinebytagsData));
-                            */
-                            sakai_global.data.search.generateTagsRefineBy(data, {
-                                    refine: $.bbq.getState("refine")
-                            })
+            infinityScroll = $participantsListContainer.infinitescroll(
+                function(parameters, callback){
+                    $participantsSearchField.addClass("searching");
+                    sakai.api.Groups.searchMembers(sakai_global.group.groupId, widgetData.query, parameters.items, parameters.page, parameters.sortBy, parameters.sortOrder, function(success, data){
+                        $participantsSearchField.removeClass("searching");                                               
+                        callback(true, data);
+                    });
+                }, 
+                {
+                    "query": widgetData.query,
+                    "sortBy": "lastName",
+                    "sortOrder": widgetData.sortby
+                }, 
+                function(items, total){
+                    if (sakai.data.me.user.anon){
+                        $(".s3d-page-header-top-row", rootel).show();
                     } else {
-                            //$("button.filter-by-tags-toggle", rootel).hide();
-                            //$(".tagcloud-container, .refine-by-tags-row", rootel).hide();
-                    } 
-                    callback(true, data);
+                        $(".s3d-page-header-top-row", rootel).show();
+                        $(".s3d-page-header-bottom-row", rootel).show();
+                    }
+                    $participantsSelectAll.removeAttr("checked");
+                    setSendSelectedMessageAttributes();                
+
+                    return sakai.api.Util.TemplateRenderer(participantsListTemplate, {
+                        "participants": items,
+                        "sakai": sakai
+                    });
+                }, 
+                function(){
+                    $participantsListContainer.html(sakai.api.Util.TemplateRenderer(participantsListTemplateEmpty, {}));
+                }, 
+                sakai.config.URL.INFINITE_LOADING_ICON, 
+                function(data, callback) {                
+                    processParticipants(data, callback);
+                },
+                $.noop,
+                $.noop,
+                function(data) {
+                    // if tag show filter
+                    if (data.hasOwnProperty("facet_fields") && data.facet_fields.length && data.facet_fields[0].hasOwnProperty("tagname") && data.facet_fields[0].tagname.length) {                            
+                        if (showTagCloud) {
+                            var sanitisedTagData = [];
+                            for (var i=0; i<data.facet_fields[0].tagname.length;i++) {
+                                if (i === MAX_TAGS_IN_CLOUD) {
+                                    break;
+                                }								
+                                for (var key in data.facet_fields[0].tagname[i]) {
+                                    if (data.facet_fields[0].tagname[i].hasOwnProperty(key)) {
+                                        sanitisedTagData.push({
+                                            text: key,
+                                            title: key+ " has "+data.facet_fields[0].tagname[i][key]+" matches",
+                                            weight: data.facet_fields[0].tagname[i][key],
+                                            url: "javascript:void(0);",
+                                            customClass: ($.inArray(key, selectedTags)>=0)?"search-tag active":"search-tag",
+                                            dataAttributes: {
+                                                "sakai-entityid": key
+                                            }
+                                        })
+                                    }
+                                }
+                            }
+                            $(".tagcloud-row", rootel).empty();
+                            $(".tagcloud-row", rootel).jQCloud(sanitisedTagData, {
+                                height: 180,
+                                width: 730
+                            });
+                            $(".tagcloud-container", rootel).show();
+                        }
+                    } else if (!$.isEmptyObject(data)) {
+                        if (showTagCloud) {
+                            $(".tagcloud-row").html("<div class='no-tags'>No tags to display</div>");
+                            $(".tagcloud-container", rootel).show();
+                        }
+                    }
+                    sakai_global.data.search.generateTagsRefineBy(data, {refine: $.bbq.getState("refine")});
                 });
-            }, {
-                "query": widgetData.query,
-                "sortBy": "lastName",
-                "sortOrder": widgetData.sortby
-            }, function(items, total){
-                if (sakai.data.me.user.anon){
-                    $(".s3d-page-header-top-row", rootel).show();
-                } else {
-                    $(".s3d-page-header-top-row", rootel).show();
-                    $(".s3d-page-header-bottom-row", rootel).show();
-                }
-                $participantsSelectAll.removeAttr("checked");
-                setSendSelectedMessageAttributes();
-                return sakai.api.Util.TemplateRenderer(participantsListTemplate, {
-                    "participants": items,
-                    "sakai": sakai
-                });
-            }, function(){
-                $participantsListContainer.html(sakai.api.Util.TemplateRenderer(participantsListTemplateEmpty, {}));
-            }, sakai.config.URL.INFINITE_LOADING_ICON, processParticipants);
         };
 
         var handleHashChange = function(){
