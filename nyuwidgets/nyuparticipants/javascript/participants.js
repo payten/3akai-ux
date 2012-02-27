@@ -17,7 +17,7 @@
  */
 
 // load the master sakai object to access all Sakai OAE API methods
-require(["jquery", "sakai/sakai.api.core", "/dev/javascript/search_util.js"], function($, sakai) {
+require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
 
     /**
      * @name sakai_global.participants
@@ -46,7 +46,9 @@ require(["jquery", "sakai/sakai.api.core", "/dev/javascript/search_util.js"], fu
             showExtraInfo = widgetData.nyuparticipants.showExtraInfo;
             showTagCloud = widgetData.nyuparticipants.showTagCloud;
         }
-        var selectedTags = [];
+        var activeTags = [];
+	var refineTags = [];
+	var tagCountObject = {}
         var MAX_TAGS_IN_CLOUD = 20;
         
         // Containers
@@ -296,31 +298,47 @@ require(["jquery", "sakai/sakai.api.core", "/dev/javascript/search_util.js"], fu
                 $.noop,
                 $.noop,
                 function(data) {
-                    // if tag show filter
+                    refineTags = [];
                     if (data.hasOwnProperty("facet_fields") && data.facet_fields.length && data.facet_fields[0].hasOwnProperty("tagname") && data.facet_fields[0].tagname.length) {
+                        var tempTagArray = data.facet_fields[0].tagname;
+			var tagArray = [];
+                        // put the tags from the tag cloud service into an array
+                        $.each(tempTagArray, function(key, tagOjb) {
+                            $.each(tagOjb, function(tag, count) {
+                                if (count > 0) {
+                                    tagArray.push(tag);
+                                    tagCountObject[tag] = count;
+                                }
+                            });
+                        });
+                        tagArray = sakai.api.Util.formatTags(tagArray);
+                        // store tags in either already active tags, or tags available to refine the search by
+                        $.each(tagArray, function(key, tag) {
+                            var inArray = $.inArray(tag.original, activeTags)>=0;
+                            if (!inArray) {
+                                refineTags.push(tag);
+                            }
+                        });
+
                         if (showTagCloud) {
-                            var sanitisedTagData = [];
-                            for (var i=0; i<data.facet_fields[0].tagname.length;i++) {
+                            var tagDataForCloud = [];
+                            for (var i=0; i<tagArray.length;i++) {
                                 if (i === MAX_TAGS_IN_CLOUD) {
                                     break;
                                 }
-                                for (var key in data.facet_fields[0].tagname[i]) {
-                                    if (data.facet_fields[0].tagname[i].hasOwnProperty(key)) {
-                                        sanitisedTagData.push({
-                                            text: key,
-                                            title: key+ " has "+data.facet_fields[0].tagname[i][key]+" matches",
-                                            weight: data.facet_fields[0].tagname[i][key],
-                                            url: "javascript:void(0);",
-                                            customClass: ($.inArray(key, selectedTags)>=0)?"search-tag active":"search-tag",
-                                            dataAttributes: {
-                                                "sakai-entityid": key
-                                            }
-                                        })
-                                    }
-                                }
+                                tagDataForCloud.push({
+                                     text: tagArray[i].original,
+                                     title: tagArray[i].original+ " has "+tagArray[i].original+" matches",
+                                     weight: tagCountObject[tagArray[i].original],
+                                     url: "javascript:void(0);",
+                                     customClass: ($.inArray(tagArray[i].original, activeTags)>=0)?"search-tag active":"search-tag",
+                                     dataAttributes: {
+                                         "sakai-entityid": tagArray[i].original
+                                     }
+                                 });
                             }
                             $(".tagcloud-row", rootel).empty();
-                            $(".tagcloud-row", rootel).jQCloud(sanitisedTagData, {
+                            $(".tagcloud-row", rootel).jQCloud(tagDataForCloud, {
                                 height: 180,
                                 width: 730
                             });
@@ -332,7 +350,9 @@ require(["jquery", "sakai/sakai.api.core", "/dev/javascript/search_util.js"], fu
                             $(".tagcloud-container", rootel).show();
                         }
                     }
-                    sakai_global.data.search.generateTagsRefineBy(data, {refine: $.bbq.getState("refine")});
+                    // render tag filters
+		    sakai.api.Util.TemplateRenderer($("#search_tags_active_template"), {"tags": sakai.api.Util.formatTags(activeTags), "sakai": sakai}, $("#search_tags_active_container", rootel));
+                    sakai.api.Util.TemplateRenderer($("#search_tags_refine_template"), {"tags": refineTags, "sakai": sakai}, $(".search_tags_refine_container", rootel));                    
                 });
         };
 
@@ -352,13 +372,13 @@ require(["jquery", "sakai/sakai.api.core", "/dev/javascript/search_util.js"], fu
             $participantsSearchField.val(widgetData.query);
 
             if ($.bbq.getState("refine")) {
-                    selectedTags = $.bbq.getState("refine").split(",");
-                    if (widgetData.query.length > 0) {
-                            widgetData.query += " AND ";
-                    }
-                    widgetData.query += selectedTags.join(" AND ");
+            	activeTags = $.bbq.getState("refine").split(",");
+                if (widgetData.query.length > 0) {
+                	widgetData.query += " AND ";
+                }
+                widgetData.query += activeTags.join(" AND ");
             } else {
-                    selectedTags = [];
+                activeTags = [];
             }
             
             widgetData.sortby = $.bbq.getState("psb") || "asc";
@@ -411,14 +431,19 @@ require(["jquery", "sakai/sakai.api.core", "/dev/javascript/search_util.js"], fu
                 $.bbq.pushState({"ls": "grid"});
             });
 
-            $(rootel).on("click", ".tagcloud-row a", function(event) {
-                var tag = $(this).parents(".search-tag:first").data("sakai-entityid");
-                if ($.inArray(tag,selectedTags) >= 0) {
-                    selectedTags = $.grep(selectedTags, function(value) {return value != tag});
+            $(rootel).on("click", ".tagcloud-row a, .s3d-search-tag button", function(event) {
+                var tag;
+                if ($(this).parents(".tagcloud-row:first").length) {
+                    tag = $(this).parents(".search-tag:first").data("sakai-entityid");
                 } else {
-                    selectedTags.push(tag);
+                    tag = $(this).data("sakai-entityid");
                 }
-                var newSearchState = {"refine": selectedTags.join(",")};
+                if ($.inArray(tag,activeTags) >= 0) {
+                    activeTags = $.grep(activeTags, function(value) {return value != tag});
+                } else {
+                    activeTags.push(tag);
+                }
+                var newSearchState = {"refine": activeTags.join(",")};
                 if ($.bbq.getState("pq") === undefined) {
                     newSearchState.pq = "";
                 }
