@@ -17,7 +17,7 @@
  */
 
 // load the master sakai object to access all Sakai OAE API methods
-require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
+require(["jquery", "sakai/sakai.api.core", "/dev/javascript/search_util.js"], function($, sakai) {
 
     /**
      * @name sakai_global.participants
@@ -38,11 +38,16 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
         var infinityScroll = false;
 
         var showExtraInfo = false;
-        if (widgetData.hasOwnProperty("participants")) { // if legacy participants widget (< v1.1)...
+        var showTagCloud = false;
+        // if legacy participants widget (prior to v1.1)...
+        if (widgetData.hasOwnProperty("participants")) {
             showExtraInfo = widgetData.participants.showExtraInfo;
         } else if (widgetData.hasOwnProperty("nyuparticipants")) { // new > v1.1 widget
             showExtraInfo = widgetData.nyuparticipants.showExtraInfo;
+            showTagCloud = widgetData.nyuparticipants.showTagCloud;
         }
+        var selectedTags = [];
+        var MAX_TAGS_IN_CLOUD = 20;
         
         // Containers
         var $participantsListContainer = $("#participants_list_container_list", rootel);
@@ -253,32 +258,82 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                 infinityScroll.kill();
             }
             // Set up the infinite scroll for the list of items in the library
-            infinityScroll = $participantsListContainer.infinitescroll(function(parameters, callback){
-                $participantsSearchField.addClass("searching");
-                sakai.api.Groups.searchMembers(sakai_global.group.groupId, widgetData.query, parameters.items, parameters.page, parameters.sortBy, parameters.sortOrder, function(success, data){
-                    $participantsSearchField.removeClass("searching");
-                    callback(true, data);
+            infinityScroll = $participantsListContainer.infinitescroll(
+                function(parameters, callback){
+                    $participantsSearchField.addClass("searching");
+                    sakai.api.Groups.searchMembers(sakai_global.group.groupId, widgetData.query, parameters.items, parameters.page, parameters.sortBy, parameters.sortOrder, function(success, data){
+                        $participantsSearchField.removeClass("searching");
+                        callback(true, data);
+                    });
+                },
+                {
+                    "query": widgetData.query,
+                    "sortBy": "lastName",
+                    "sortOrder": widgetData.sortby
+                },
+                function(items, total){
+                    if (sakai.data.me.user.anon){
+                        $(".s3d-page-header-top-row", rootel).show();
+                    } else {
+                        $(".s3d-page-header-top-row", rootel).show();
+                        $(".s3d-page-header-bottom-row", rootel).show();
+                    }
+                    $participantsSelectAll.removeAttr("checked");
+                    setSendSelectedMessageAttributes();
+
+                    return sakai.api.Util.TemplateRenderer(participantsListTemplate, {
+                        "participants": items,
+                        "sakai": sakai
+                    });
+                },
+                function(){
+                    $participantsListContainer.html(sakai.api.Util.TemplateRenderer(participantsListTemplateEmpty, {}));
+                },
+                sakai.config.URL.INFINITE_LOADING_ICON,
+                function(data, callback) {
+                    processParticipants(data, callback);
+                },
+                $.noop,
+                $.noop,
+                function(data) {
+                    // if tag show filter
+                    if (data.hasOwnProperty("facet_fields") && data.facet_fields.length && data.facet_fields[0].hasOwnProperty("tagname") && data.facet_fields[0].tagname.length) {
+                        if (showTagCloud) {
+                            var sanitisedTagData = [];
+                            for (var i=0; i<data.facet_fields[0].tagname.length;i++) {
+                                if (i === MAX_TAGS_IN_CLOUD) {
+                                    break;
+                                }
+                                for (var key in data.facet_fields[0].tagname[i]) {
+                                    if (data.facet_fields[0].tagname[i].hasOwnProperty(key)) {
+                                        sanitisedTagData.push({
+                                            text: key,
+                                            title: key+ " has "+data.facet_fields[0].tagname[i][key]+" matches",
+                                            weight: data.facet_fields[0].tagname[i][key],
+                                            url: "javascript:void(0);",
+                                            customClass: ($.inArray(key, selectedTags)>=0)?"search-tag active":"search-tag",
+                                            dataAttributes: {
+                                                "sakai-entityid": key
+                                            }
+                                        })
+                                    }
+                                }
+                            }
+                            $(".tagcloud-row", rootel).empty();
+                            $(".tagcloud-row", rootel).jQCloud(sanitisedTagData, {
+                                height: 180,
+                                width: 730
+                            });
+                            $(".tagcloud-container", rootel).show();
+                        }
+                    } else if (!$.isEmptyObject(data)) {
+                        if (showTagCloud) {
+                            $(".tagcloud-row").html("<div class='no-tags'>No tags to display</div>");
+                            $(".tagcloud-container", rootel).show();
+                        }
+                    }
+                    sakai_global.data.search.generateTagsRefineBy(data, {refine: $.bbq.getState("refine")});
                 });
-            }, {
-                "query": widgetData.query,
-                "sortBy": "lastName",
-                "sortOrder": widgetData.sortby
-            }, function(items, total){
-                if (sakai.data.me.user.anon){
-                    $(".s3d-page-header-top-row", rootel).show();
-                } else {
-                    $(".s3d-page-header-top-row", rootel).show();
-                    $(".s3d-page-header-bottom-row", rootel).show();
-                }
-                $participantsSelectAll.removeAttr("checked");
-                setSendSelectedMessageAttributes();
-                return sakai.api.Util.TemplateRenderer(participantsListTemplate, {
-                    "participants": items,
-                    "sakai": sakai
-                });
-            }, function(){
-                $participantsListContainer.html(sakai.api.Util.TemplateRenderer(participantsListTemplateEmpty, {}));
-            }, sakai.config.URL.INFINITE_LOADING_ICON, processParticipants);
         };
 
         var handleHashChange = function(){
@@ -295,6 +350,17 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
             }
             widgetData.query = $.bbq.getState("pq") || "";
             $participantsSearchField.val(widgetData.query);
+
+            if ($.bbq.getState("refine")) {
+                    selectedTags = $.bbq.getState("refine").split(",");
+                    if (widgetData.query.length > 0) {
+                            widgetData.query += " AND ";
+                    }
+                    widgetData.query += selectedTags.join(" AND ");
+            } else {
+                    selectedTags = [];
+            }
+            
             widgetData.sortby = $.bbq.getState("psb") || "asc";
             $participants_sort_by.val(widgetData.sortby);
             loadParticipants();
@@ -344,6 +410,20 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
             $(participantsShowGrid, rootel).click(function(){
                 $.bbq.pushState({"ls": "grid"});
             });
+
+            $(rootel).on("click", ".tagcloud-row a", function(event) {
+                var tag = $(this).parents(".search-tag:first").data("sakai-entityid");
+                if ($.inArray(tag,selectedTags) >= 0) {
+                    selectedTags = $.grep(selectedTags, function(value) {return value != tag});
+                } else {
+                    selectedTags.push(tag);
+                }
+                var newSearchState = {"refine": selectedTags.join(",")};
+                if ($.bbq.getState("pq") === undefined) {
+                    newSearchState.pq = "";
+                }
+                $.bbq.pushState(newSearchState);
+            });
         };
 
         var init = function(){
@@ -353,14 +433,25 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
             if (sakai.api.Groups.isCurrentUserAManager(sakai_global.group.groupId, sakai.data.me, groupData)){
                 $("#participants_manage_participants").show();
             }
+
             addBinding();
-            handleHashChange();
+
+            if (showTagCloud) {
+		require(["/nyuwidgets/nyuparticipants/lib/jquery.jqcloud.js"], function() {
+                    $(".participants_widget",rootel).addClass("tagcloud-enabled");
+                    handleHashChange();
+                });
+            } else {
+            	handleHashChange();
+            }      
         };
 
         $(window).bind("usersselected.addpeople.sakai", function(e, _newlyAdded){
             newlyAdded = _newlyAdded;
             setTimeout(loadParticipants, 1000);
         });
+
+	$(window).triggerHandler("sakai.search.util.init");
 
         init();
 
