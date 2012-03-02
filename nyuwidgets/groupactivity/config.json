@@ -1,0 +1,22 @@
+{
+    "userpages": false,
+    "userdashboard": false,
+    "grouppages": true,
+    "groupdashboard": false,
+    "sakaidocs": true,
+    "hasSettings": false,
+    "showinsakaigoodies":true,
+    "id": "groupactivity",
+    "type": "sakai",
+    "enabled": true,
+    "url":"/nyuwidgets/groupactivity/groupactivity.html",
+    "i18n": {
+        "default": {
+            "bundle": "/nyuwidgets/groupactivity/bundles/default.properties",
+            "name": "Group Activity Report",
+            "description": "Group Activity Report"
+        }
+    },
+    "description": "Group Activity Report",
+    "img":"/nyuwidgets/groupactivity/images/groupactivity.png"
+}
