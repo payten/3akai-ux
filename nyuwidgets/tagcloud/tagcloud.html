@@ -3,22 +3,38 @@
 
 <!-- WIDGET BODY -->
 <div id="tagcloud_container">
-    <div id="tagcloud_main" style="display:none"></div>
+    <div class="s3d-contentpage-title">
+        __MSG__TAG_CLOUD__
+        <div class="s3d-button s3d-header-button s3d-header-smaller-button s3d-listview-options" style="display: none;">
+            <div class="s3d-listview-cloud selected">
+                <div class="s3d-action-icon s3d-search-results-cloudview selected"></div>
+            </div>
+            <div class="s3d-listview-list">
+                <div class="s3d-action-icon s3d-search-results-listview"></div>
+            </div>
+        </div>
+    </div>
+    <div id="tagcloud_main">
+        <div class="tagcloud-cloud" style="display:none"></div>
+        <div class="tagcloud-list" style="display:none"></div>
+    </div>
 
-    <div id="tagcloud_main_template" style="display:none"><!--
-        <h1>__MSG__TAG_CLOUD__</h1>
+    <div id="tagcloud_list_template" style="display:none"><!--       
         {if data.length}
           <ul>
           {for tag in data}            
               <li style="display:inline; margin-right: 6px;"><a href="/~${groupId}#l=library&lq=${tag.value}" class="s3d-regular-links{if tag.count <= 5} tagcloud_font1{elseif tag.count <= 15 } tagcloud_font2{elseif tag.count <= 30 } tagcloud_font3{elseif tag.count <= 90 } tagcloud_font4{elseif tag.count > 90 } tagcloud_font5{/if}">${tag.value|safeOutput}</a></li>
           {forelse}
-            <li>__MSG__NO_TAGS_FOUND__</li>
+            <li  class="no-tags">__MSG__NO_TAGS_FOUND__</li>
           {/for}
           </ul>
         {else}
-            <p>__MSG__NO_TAGS_FOUND__</p>
+            <p class="no-tags">__MSG__NO_TAGS_FOUND__</p>
         {/if}
     --></div>
+    
+    <div id="tagcloud_notagsfound_message" style="display:none"><span class="no-tags">__MSG__NO_TAGS_FOUND__</span></div>
+    <div id="tagcloud_notalltagsdisplayed_message" style="display:none"><span class="not-all-tags-msg">__MSG__NOT_ALL_TAGS_DISPLAYED__</span></div>
 </div>
 
 <!-- JAVASCRIPT -->

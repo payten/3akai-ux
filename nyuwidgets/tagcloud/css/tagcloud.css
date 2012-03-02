@@ -11,8 +11,109 @@
 /* New Styles */
 #tagcloud_container {border: 1px solid #ddd;border-radius:5px;-moz-border-radius:5px;-webkit-border-radius:5px;}
 #tagcloud_main {padding:10px;}
-#tagcloud_main h1 {border-bottom:1px solid #ddd;margin-bottom:10px;padding-bottom:10px;}
+#tagcloud_container .s3d-contentpage-title {
+    margin-bottom:10px;    
+    margin: 0 10px;
+}
 
 
 /* Widget icon */
 .tagcloud.fl-widget .fl-widget-titlebar .widget_title_icon{background:url(/dev/images/icons_sprite.png) no-repeat scroll -699px -21px transparent;height:22px;width:20px;}
+
+/* fancy tag cloud */
+
+#tagcloud_container .tagcloud-cloud {
+    min-height: 240px;
+    padding-top: 1em;
+    position: relative;
+    width: 710px;
+}
+
+#tagcloud_container .s3d-listview-options {margin-top: 0;}
+
+#tagcloud_container .s3d-search-results-cloudview {
+    background-image: url(/nyuwidgets/tagcloud/images/cloudview.off.png);
+    background-repeat: no-repeat;
+    background-position: center right;
+}
+
+#tagcloud_container .s3d-search-results-cloudview:hover,
+#tagcloud_container .s3d-search-results-cloudview.selected {
+    background-image: url(/nyuwidgets/tagcloud/images/cloudview.on.png);
+}
+
+#tagcloud_container .s3d-listview-options {
+    margin-top: 0;    
+}
+#tagcloud_container .s3d-search-results-listview {
+    background-image: url(/nyuwidgets/tagcloud/images/cloudlist.off.png);
+}
+#tagcloud_container .s3d-search-results-listview:hover,
+#tagcloud_container .s3d-search-results-listview.selected {
+    background-image: url(/nyuwidgets/tagcloud/images/cloudlist.on.png) !important;
+}
+#tagcloud_container .no-tags {
+    color: #999;
+}
+#tagcloud_container .not-all-tags-msg {
+    color: #999;
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 0.9em;
+}
+#tagcloud_container div.jqcloud a {
+  color: inherit;
+  font-size: inherit;
+  text-decoration: none;
+}
+#tagcloud_container div.jqcloud a:hover {
+  color: #0df;
+}
+#tagcloud_container div.jqcloud a:hover {
+  color: #0cf;
+}
+#tagcloud_container div.jqcloud span {
+  padding: 0;
+}
+#tagcloud_container div.jqcloud span.w10 {
+  font-size: 28px;
+  color: #0cf;
+}
+#tagcloud_container div.jqcloud span.w9 {
+  font-size: 26px;
+  color: #0cf;
+}
+#tagcloud_container div.jqcloud span.w8 {
+  font-size: 24px;
+  color: #0cf;
+}
+#tagcloud_container div.jqcloud span.w7 {
+  font-size: 22px;
+  color: #39d;
+}
+#tagcloud_container div.jqcloud span.w6 {
+  font-size: 20px;
+  color: #90c5f0;
+}
+#tagcloud_container div.jqcloud span.w5 {
+  font-size: 18px;
+  color: #90a0dd;
+}
+#tagcloud_container div.jqcloud span.w4 {
+  font-size: 16px;
+  color: #90c5f0;
+}
+#tagcloud_container div.jqcloud span.w3 {
+  font-size: 14px;
+  color: #a0ddff;
+}
+#tagcloud_container div.jqcloud span.w2 {
+  font-size: 12px;
+  color: #99ccee;
+}
+#tagcloud_container div.jqcloud span.w1 {
+  font-size: 10px;
+  color: #aab5f0;
+}
+#tagcloud_container div.jqcloud { line-height: normal }
