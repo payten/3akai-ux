@@ -48,8 +48,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
         }
         var tagArray = [];
         var activeTags = [];
-	var refineTags = [];
-	var tagCountObject = {};
+	var refineTags = [];	
         var MAX_TAGS_IN_CLOUD = 20;
         
         // Containers
@@ -300,19 +299,27 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                 $.noop,
                 function(data) {
                     refineTags = [];
-                    if (data.hasOwnProperty("facet_fields") && data.facet_fields.length && data.facet_fields[0].hasOwnProperty("tagname") && data.facet_fields[0].tagname.length) {
-                        var tempTagArray = data.facet_fields[0].tagname;
+                    if (data.hasOwnProperty("facet_fields") && data.facet_fields.length && data.facet_fields[0].hasOwnProperty("tagname") && data.facet_fields[0].tagname.length) {                        
 			tagArray = [];
                         // put the tags from the tag cloud service into an array
-                        $.each(tempTagArray, function(key, tagOjb) {
-                            $.each(tagOjb, function(tag, count) {
-                                if (count > 0) {
-                                    tagArray.push(tag);
-                                    tagCountObject[tag] = count;
-                                }
-                            });
+                        $.each(data.facet_fields[0].tagname, function( i, tagobj ) {
+                            var tag = sakai.api.Util.formatTags( _.keys( tagobj )[ 0 ] )[ 0 ];
+                            tag.count = _.values( tagobj )[ 0 ];
+                            if (tag.count > 0) {
+                                tagArray.push( tag );
+                            }
                         });
-                        tagArray = sakai.api.Util.formatTags(tagArray);
+                        tagArray.sort(function(a, b){
+                            var nameA = a.value.toLowerCase();
+                            var nameB = b.value.toLowerCase();
+                            if (nameA < nameB) {
+                                return -1;
+                            }
+                            if (nameA > nameB) {
+                                return 1;
+                            }
+                            return 0;
+                        });                        
                         // store tags in either already active tags, or tags available to refine the search by
                         $.each(tagArray, function(key, tag) {
                             var inArray = $.inArray(tag.original, activeTags)>=0;
@@ -329,7 +336,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                             $(".tagcloud-row").html("<div class='no-tags'>No tags to display</div>");
                             $(".tagcloud-container", rootel).show();
                         }
-                    }
+                    }                    
                     // render tag filters
 		    sakai.api.Util.TemplateRenderer($("#search_tags_active_template"), {"tags": sakai.api.Util.formatTags(activeTags), "sakai": sakai}, $("#search_tags_active_container", rootel));
                     sakai.api.Util.TemplateRenderer($("#search_tags_refine_template"), {"tags": refineTags, "sakai": sakai}, $(".search_tags_refine_container", rootel)); 
@@ -339,9 +346,33 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
         var renderTagCloud = function() {
             if ($(".tagcloud-container .s3d-search-results-listview",rootel).hasClass("selected")) {
                 $(".tagcloud-row", rootel).removeClass("jqcloud");
+                // sort tagArray by name
+                tagArray.sort(function(a, b){
+                    var nameA = a.value.toLowerCase();
+                    var nameB = b.value.toLowerCase();
+                    if (nameA < nameB) {
+                        return -1;
+                    }
+                    if (nameA > nameB) {
+                        return 1;
+                    }
+                    return 0;
+                });
                 sakai.api.Util.TemplateRenderer($("#nyuparticipants_tagcloud_list", rootel), {"tags": tagArray}, $(".tagcloud-row", rootel)); 
             } else {
                 $(".tagcloud-row", rootel).addClass("jqcloud");
+                // sort tagArray by magnitude
+                tagArray.sort(function(a, b){
+                    var countA = a.count;
+                    var countB = b.count;
+                    if (countA > countB) {
+                        return -1;
+                    }
+                    if (countA < countB) {
+                        return 1;
+                    }
+                    return 0;
+                });
                 var tagDataForCloud = [];
                 for (var i=0; i<tagArray.length;i++) {
                     if (i === MAX_TAGS_IN_CLOUD) {
@@ -349,8 +380,8 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                     }
                     tagDataForCloud.push({
                         text: tagArray[i].original,
-                        title: tagArray[i].original+ " has "+tagArray[i].original+" matches",
-                        weight: tagCountObject[tagArray[i].original],
+                        title: tagArray[i].original+ " has "+tagArray[i].count+" matches",
+                        weight: tagArray[i].count,
                         url: "javascript:void(0);",
                         customClass: ($.inArray(tagArray[i].original, activeTags)>=0)?"search-tag active":"search-tag",
                         dataAttributes: {
@@ -362,7 +393,10 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                 $(".tagcloud-row", rootel).jQCloud(tagDataForCloud, {
                     height: 180,
                     width: 730
-                });                
+                });
+                if (tagArray.length > MAX_TAGS_IN_CLOUD) {
+                    $(".tagcloud-row").append($("#nyuparticipants_notalltagsdisplayed_message").html());
+                }
             }            
             
             $(".tagcloud-container", rootel).show();

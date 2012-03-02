@@ -108,6 +108,13 @@
 .participants_widget .tagcloud-row .no-tags {
     color: #AAA;
 }
+.participants_widget .not-all-tags-msg {
+    color: #999;
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 0.9em;
+}
 .participants_widget.tagcloud-enabled .s3d-page-header-top-row,
 .participants_widget.tagcloud-enabled .s3d-search-refineby-list {
 	margin-bottom: 10px;
