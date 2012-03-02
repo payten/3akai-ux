@@ -18,27 +18,67 @@
 
 /*global $ */
 
-require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
+require(["jquery", "sakai/sakai.api.core", "/nyuwidgets/tagcloud/lib/jquery.jqcloud.js"], function($, sakai) {
 
     sakai_global.tagcloud = function(tuid, showSettings) {
 
         var $rootel = $("#"+tuid),
             $tagcloud_main = $("#tagcloud_main", $rootel),
-            $tagcloud_main_template = $("#tagcloud_main_template", $rootel),
+            $tagcloud_cloud = $(".tagcloud-cloud", $rootel),
+            $tagcloud_list = $(".tagcloud-list", $rootel),
+            $tagcloud_main_template = $("#tagcloud_list_template", $rootel),            
+            $nottagsfound_msg = $("#tagcloud_notagsfound_message", $rootel),
+            $notalltagsdisplayed_msg = $("#tagcloud_notalltagsdisplayed_message", $rootel),
+            MAX_TAGS_IN_CLOUD = 20,
             groupId = "";
 
         var generateTagCloud = function(success, tagData){
-            var newtags = [];
+            var tagArray = [];
             // Filter out directory tagcloud
-            if ( tagData.facet_fields && tagData.facet_fields.length && tagData.facet_fields[ 0 ].tagname ) {
+            if ( tagData.facet_fields && tagData.facet_fields.length && tagData.facet_fields[ 0 ].tagname && tagData.facet_fields[ 0 ].tagname.length) {
                 $.each(tagData.facet_fields[0].tagname, function( i, tagobj ) {
                     var tag = sakai.api.Util.formatTags( _.keys( tagobj )[ 0 ] )[ 0 ];
                     tag.count = _.values( tagobj )[ 0 ];
-                    newtags.push( tag );
+                    tagArray.push( tag );
                 });
-                
-                // Sort the tagcloud in alphabetical order so we can generate a tag cloud
-                newtags.sort(function(a, b){
+
+                // Sort the tagcloud in order of magnitude/hits for the tag cloud
+                tagArray.sort(function(a, b){
+                    var countA = a.count;
+                    var countB = b.count;
+                    if (countA > countB) {
+                        return -1;
+                    }
+                    if (countA < countB) {
+                        return 1;
+                    }
+                    return 0;
+                });
+
+                var tagDataForCloud = [];
+                for (var i=0; i<tagArray.length;i++) {
+                    if (i === MAX_TAGS_IN_CLOUD) {
+                        break;
+                    }
+                    tagDataForCloud.push({
+                        text: tagArray[i].original,
+                        title: tagArray[i].original+ " has "+tagArray[i].count+" matches",
+                        weight: tagArray[i].count,
+                        url: "/~"+groupId+"#l=library&lq="+tagArray[i].value
+                    });
+                }
+
+                $tagcloud_cloud.jQCloud(tagDataForCloud, {
+                    height: 240,
+                    width: 710
+                });
+
+                if (tagArray.length > MAX_TAGS_IN_CLOUD) {
+                    $tagcloud_cloud.append($notalltagsdisplayed_msg.html());
+                }
+
+                // Sort the tagcloud in alphabetical order for the tag list
+                tagArray.sort(function(a, b){
                     var nameA = a.value.toLowerCase();
                     var nameB = b.value.toLowerCase();
                     if (nameA < nameB) {
@@ -49,8 +89,32 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                     }
                     return 0;
                 });
+                // render the list
+                $tagcloud_list.html(sakai.api.Util.TemplateRenderer($tagcloud_main_template, {data: tagArray, groupId: groupId}));
+
+                // bind toolbar events
+                $(".s3d-search-results-cloudview", $rootel).on("click", function() {
+                    $(this).parents(".s3d-header-button:first").find("div").removeClass("selected");
+                    $(this).addClass("selected").parent().addClass("selected");
+                    $tagcloud_list.hide();
+                    $tagcloud_cloud.show();
+                });
+
+                $(".s3d-search-results-listview", $rootel).on("click", function() {
+                    $(this).parents(".s3d-header-button:first").find("div").removeClass("selected");
+                    $(this).addClass("selected").parent().addClass("selected");
+                    $tagcloud_cloud.hide();
+                    $tagcloud_list.show();
+                });                
+
+                // show something
+                $(".s3d-listview-options", $rootel).show();
+                $tagcloud_cloud.show();
+            } else {
+                // no tags!
+                $(".s3d-listview-options", $rootel).hide();
+                $tagcloud_main.html($nottagsfound_msg.html())
             }
-            $tagcloud_main.html(sakai.api.Util.TemplateRenderer($tagcloud_main_template, {data: newtags, groupId: groupId})).show();
         };
 
         var loadData = function(callback){

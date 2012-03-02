@@ -3,7 +3,17 @@
 
 <div class="participants_widget">
     <div class="tagcloud-container" style="display: none;">
-        <div class="s3d-contentpage-title">Tag Cloud</div>        
+        <div class="s3d-contentpage-title">
+            Tag Cloud
+            <div class="s3d-button s3d-header-button s3d-header-smaller-button s3d-listview-options">
+                <div class="s3d-listview-cloud selected">
+                    <div class="s3d-action-icon s3d-search-results-cloudview selected"></div>
+                </div>
+                <div class="s3d-listview-list">
+                    <div class="s3d-action-icon s3d-search-results-listview"></div>
+                </div>
+            </div>
+        </div>        
         <div class="tagcloud-row"></div>
     </div>
     <div class="s3d-contentpage-title">__MSG__PARTICIPANTS__</div>
@@ -180,6 +190,24 @@
         </div>
     {/if}
 --></div>
+
+<div id="nyuparticipants_tagcloud_list"><!--
+    {if tags.length}
+        <ul class="tagcloud-list">
+        {for tag in tags}
+            <li class="s3d-search-tag" data-sakai-entityid="${tag.original}">
+                <button class="search_tag_refine_item" data-sakai-entityid="${tag.original}" title="__MSG__REFINE_SEARCH_TO__ ${tag.value}">${tag.value}</button>
+             </li>
+        {forelse}
+        <li>__MSG__NO_TAGS_FOUND__</li>
+        {/for}
+        </ul>
+    {else}
+        <p>__MSG__NO_TAGS_FOUND__</p>
+    {/if}
+--></div>
+
+<div id="nyuparticipants_notalltagsdisplayed_message" style="display:none"><span class="not-all-tags-msg">__MSG__NOT_ALL_TAGS_DISPLAYED__</span></div>
 
 <!-- JAVASCRIPT -->
 <script type="text/javascript" src="/nyuwidgets/nyuparticipants/javascript/participants.js"></script>
