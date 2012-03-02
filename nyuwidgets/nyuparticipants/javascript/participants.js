@@ -480,9 +480,9 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
             $(rootel).on("click", ".tagcloud-row a, .s3d-search-tag button", function(event) {
                 var tag;
                 if ($(this).parents(".jqcloud.tagcloud-row:first").length) {
-                    tag = $(this).parents(".search-tag:first").data("sakai-entityid");
+                    tag = $(this).parents(".search-tag:first").data("sakai-entityid")+"";
                 } else {
-                    tag = $(this).data("sakai-entityid");
+                    tag = $(this).data("sakai-entityid")+"";
                 }
                 if ($.inArray(tag,activeTags) >= 0) {
                     activeTags = $.grep(activeTags, function(value) {return value != tag});
