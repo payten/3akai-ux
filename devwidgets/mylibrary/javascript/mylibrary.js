@@ -152,8 +152,12 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
             // All other scenarios with no items don't show the top controls
             if (!query){
                 showHideTopControls(false);
+                $(".s3d-page-header-top-row").hide();
+                $(".s3d-page-header-bottom-row").hide();
             } else {
                 showHideTopControls(true);
+                $(".s3d-page-header-top-row").show();
+                $(".s3d-page-header-bottom-row").show();
             }
             // Determine the state of the current user in the current library
             var mode = "user_me";
@@ -168,10 +172,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                 mode: mode,
                 query: query
             }));
-
-            $(".s3d-page-header-top-row").hide();
-            $(".s3d-page-header-bottom-row").hide();
-
+            
             $mylibrary_empty.show();
         }
 
