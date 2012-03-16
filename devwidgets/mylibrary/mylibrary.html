@@ -37,7 +37,11 @@
             <button type="button" id="mylibrary_search_button" class="s3d-button s3d-overlay-button s3d-search-button">
                 <img src="/dev/images/search_icon.png" alt="__MSG__SEARCH_THROUGH_THE_CONTENT_LIBRARY__"/>
             </button>
+            <div id="search_tags_active_container" class="s3d-search-activetags"></div>
         </div>
+	<div class="refine-by-tags-row s3d-search-refineby">
+		<div class="search_tags_refine_container"></div>
+	</div>        
     </div>
     <div class="s3d-page-header-bottom-row" style="display:none;">
         <button type="button" class="s3d-button s3d-large-button fl-force-right sakai_add_content_overlay mylibrary_add_content_button" style="display:none;">
@@ -192,6 +196,39 @@
             {/if}
         {/for}
     {/if}
+    --></div>
+    
+    <!-- TEMPLATE FOR ACTIVE REFINE BY TAGS -->
+    <div id="search_tags_active_template"><!--
+        {for t in tags}
+            <span class="s3d-search-tag">
+                <img src=/dev/images/search_tag_active.png" />
+                <button class="search_tag_active_item" data-sakai-entityid="${t.original}" title="__MSG__REMOVE__ ${t.value} __MSG__FROM_SEARCH__">
+                    ${sakai.api.Util.applyThreeDots(t.value, 345, null, null, true)}<img src=/dev/images/search_tag_remove.png" />
+                </button>
+            </span>
+        {/for}
+    --></div>
+
+    <!-- TEMPLATE FOR REFINE BY TAGS LIST -->
+    <div id="search_tags_refine_template"><!--
+        {var tagsListed = false}
+        {for t in tags}
+            {if t_index === "0"}
+                <span class="s3d-search-refineby-title">__MSG__REFINE_YOUR_SEARCH_BY__</span>
+                <div class="s3d-search-refineby-list">
+                {var tagsListed = true}
+            {/if}
+            <span class="s3d-search-tag">
+                <button class="search_tag_refine_item" data-sakai-entityid="${t.original}" title="__MSG__REFINE_SEARCH_TO__ ${t.value}">
+                    <img src=/dev/images/search_tag_add.png" />
+                    ${sakai.api.Util.applyThreeDots(t.value, 345, null, null, true)}
+                </button>
+            </span>
+        {/for}
+        {if tagsListed === true}
+            </div>
+        {/if}
     --></div>
 </div>
 

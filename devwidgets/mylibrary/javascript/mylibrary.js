@@ -46,7 +46,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
             infinityScroll: false,
             widgetShown: true,
             listStyle: "list"
-        };
+        };                
 
         // DOM jQuery Objects
         var $rootel = $("#" + tuid);  // unique container for each widget instance
@@ -70,6 +70,12 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
         var $mylibraryAddContentOverlay = $(".sakai_add_content_overlay", $rootel);
 
         var currentGroup = false;
+
+        // Tag cloud related variables
+        var tagArray = [];
+        var activeTags = [];
+	var refineTags = [];	
+        var MAX_TAGS_IN_CLOUD = 20;        
 
         ///////////////////////
         // Utility functions //
@@ -189,31 +195,92 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
             if (mylibrary.sortOrder === "modified"){
                 sortOrder = "desc";
             }
-            mylibrary.infinityScroll = $mylibrary_items.infinitescroll("/var/search/pool/manager-viewer.json", {
-                userid: mylibrary.contextId,
-                sortOn: mylibrary.sortBy,
-                sortOrder: sortOrder,
-                q: query
-            }, function(items, total){
-                if(!sakai.data.me.user.anon){
-                    if(items.length !== 0){
-                        $(".s3d-page-header-top-row").show();
-                        $(".s3d-page-header-bottom-row").show();
-                    }
-                } else {
-                    if(items.length !== 0){
-                        $(".s3d-page-header-top-row").show();
-                    }
+           
+            // append any tag filters
+            if (activeTags.length > 0) {
+                if (query.length > 0) {
+                    query += " AND ";
                 }
-                return sakai.api.Util.TemplateRenderer("mylibrary_items_template", {
-                    "items": items,
-                    "sakai": sakai,
-                    "isMe": mylibrary.isOwnerViewing
+                query += activeTags.join(" AND ");
+            }
+            
+            mylibrary.infinityScroll = $mylibrary_items.infinitescroll(
+                "/var/search/pool/manager-viewer.json", 
+                {                
+                    userid: mylibrary.contextId,
+                    sortOn: mylibrary.sortBy,
+                    sortOrder: sortOrder,
+                    q: query
+                }, 
+                function(items, total){
+                    if(!sakai.data.me.user.anon){
+                        if(items.length !== 0){
+                            $(".s3d-page-header-top-row").show();
+                            $(".s3d-page-header-bottom-row").show();
+                        }
+                    } else {
+                        if(items.length !== 0){
+                            $(".s3d-page-header-top-row").show();
+                        }
+                    }
+                    return sakai.api.Util.TemplateRenderer("mylibrary_items_template", {
+                        "items": items,
+                        "sakai": sakai,
+                        "isMe": mylibrary.isOwnerViewing
+                    });
+                }, 
+                handleEmptyLibrary, 
+                sakai.config.URL.INFINITE_LOADING_ICON, 
+                handleLibraryItems, 
+                function() {
+                    // Initialize content draggable
+                    sakai.api.Util.Draggable.setupDraggable({}, $mylibrary_items);
+                }, 
+                sakai.api.Content.getNewList(mylibrary.contextId),
+                function(data) {
+                    refineTags = [];
+                    if (data.hasOwnProperty("facet_fields") && data.facet_fields.length && data.facet_fields[0].hasOwnProperty("tagname") && data.facet_fields[0].tagname.length) {                        
+			tagArray = [];
+                        // put the tags from the tag cloud service into an array
+                        $.each(data.facet_fields[0].tagname, function( i, tagobj ) {
+                            var tag = sakai.api.Util.formatTags( _.keys( tagobj )[ 0 ] )[ 0 ];
+                            tag.count = _.values( tagobj )[ 0 ];
+                            if (tag.count > 0) {
+                                tagArray.push( tag );
+                            }
+                        });
+                        tagArray.sort(function(a, b){
+                            var nameA = a.value.toLowerCase();
+                            var nameB = b.value.toLowerCase();
+                            if (nameA < nameB) {
+                                return -1;
+                            }
+                            if (nameA > nameB) {
+                                return 1;
+                            }
+                            return 0;
+                        });                        
+                        // store tags in either already active tags, or tags available to refine the search by
+                        $.each(tagArray, function(key, tag) {
+                            var inArray = $.inArray(tag.original, activeTags)>=0;
+                            if (!inArray) {
+                                refineTags.push(tag);
+                            }
+                        });
+
+                        /*if (showTagCloud) {
+                            renderTagCloud();
+                        }*/
+                    } else if (!$.isEmptyObject(data)) {
+                        /*if (showTagCloud) {
+                            $(".tagcloud-row").html("<div class='no-tags'>No tags to display</div>");
+                            $(".tagcloud-container", rootel).show();
+                        }*/
+                    }                    
+                    // render tag filters
+		    sakai.api.Util.TemplateRenderer("search_tags_active_template", {"tags": sakai.api.Util.formatTags(activeTags), "sakai": sakai}, $("#search_tags_active_container", $rootel));
+                    sakai.api.Util.TemplateRenderer("search_tags_refine_template", {"tags": refineTags, "sakai": sakai}, $(".search_tags_refine_container", $rootel));                     
                 });
-            }, handleEmptyLibrary, sakai.config.URL.INFINITE_LOADING_ICON, handleLibraryItems, function(){
-                // Initialize content draggable
-                sakai.api.Util.Draggable.setupDraggable({}, $mylibrary_items);
-            }, sakai.api.Content.getNewList(mylibrary.contextId));
         };
 
         ////////////////////
@@ -239,7 +306,12 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                 $mylibrary_show_grid.children().addClass("selected");
                 mylibrary.listStyle = "grid";
             }
-
+            if ($.bbq.getState("refine")) {
+            	activeTags = $.bbq.getState("refine").split(",");                
+            } else {
+                activeTags = [];
+            }
+            
             if (mylibrary.widgetShown){
                 // Set the sort states
                 var parameters = $.bbq.getState();
@@ -439,6 +511,22 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
             $mylibrary_show_grid.click(function(){
                 $.bbq.pushState({"ls": "grid"});
             });
+            /**
+             * Bind tag filter actions
+             */
+            $rootel.on("click", ".s3d-search-tag button", function(event) {                
+                var tag = $(this).data("sakai-entityid")+"";
+                if ($.inArray(tag,activeTags) >= 0) {
+                    activeTags = $.grep(activeTags, function(value) {return value != tag});
+                } else {
+                    activeTags.push(tag);
+                }
+                var newSearchState = {"refine": activeTags.join(",")};
+                if ($.bbq.getState("pq") === undefined) {
+                    newSearchState.pq = "";
+                }
+                $.bbq.pushState(newSearchState);
+            });            
         };
 
         ////////////////////////////////////////////
