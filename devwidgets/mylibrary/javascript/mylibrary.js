@@ -677,15 +677,14 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                 mylibrary.currentPagenum = 1;
                 var all = state && state.all ? state.all : {};
                 mylibrary.listStyle = $.bbq.getState("ls") || "list";
-                
                 if (showTagCloud) {
-                    require(["/nyuwidgets/nyuparticipants/lib/jquery.jqcloud.js"], function() {
+                    require(["/devwidgets/mylibrary/lib/jquery.jqcloud.js"], function() {
                         $(".participants_widget", $rootel).addClass("tagcloud-enabled");
                         handleHashChange(null, true);
                     });
                 } else {
                     handleHashChange(null, true);
-                }                
+                }
                 sakai.api.Util.TemplateRenderer("mylibrary_title_template", {
                     isMe: mylibrary.isOwnerViewing,
                     isGroup: isGroup,
