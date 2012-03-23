@@ -39,13 +39,12 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
 
         var showExtraInfo = false;
         var showTagCloud = false;
-        // if legacy participants widget (prior to v1.1)...
-        if (widgetData.hasOwnProperty("participants")) {
-            showExtraInfo = widgetData.participants.showExtraInfo;
-            showTagCloud = widgetData.participants.showTagCloud;
-        } else if (widgetData.hasOwnProperty("nyuparticipants")) { // new > v1.1 widget
+        if (widgetData.hasOwnProperty("nyuparticipants")) { // if new widget (>= v1.1)
             showExtraInfo = widgetData.nyuparticipants.showExtraInfo;
             showTagCloud = widgetData.nyuparticipants.showTagCloud;
+        } else if (widgetData.hasOwnProperty("participants")) { // legacy < v1.1 widgets
+            showExtraInfo = widgetData.participants.showExtraInfo;
+            showTagCloud = widgetData.participants.showTagCloud;
         }
         var tagArray = [];
         var activeTags = [];
