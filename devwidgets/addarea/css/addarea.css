@@ -87,16 +87,29 @@
 #addarea_container .autosuggest_wrapper ul.as-list{margin-top:0px;}
 
 /* NYU MyLibrary Switch */
-#addarea_container #addarea_contentlist_nyuversion {
+#addarea_container .nyu-version-switch {
+    margin-bottom: 15px;
+    overflow: hidden;
+}
+#addarea_container .nyu-version-switch input {
     float: left; 
     display: inline !important;
     width: auto !important;
+    margin-bottom: 0 !important;
 }
-#addarea_container .nyu-version-switch span {   
+#addarea_container .nyu-version-switch label {
     display: block;
     float: left;
     font-size: 11px;
     line-height: 18px;
     margin-left: 6px;
     overflow: auto;
+    width: auto !important;
+}
+#addarea_container .nyu-version-options {
+    clear: both;
+    margin-left: 15px;
+}
+#addarea_container .nyu-version-option {
+    clear: both;
 }
