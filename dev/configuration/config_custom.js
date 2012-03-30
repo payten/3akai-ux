@@ -341,6 +341,48 @@ define(["config/config"], function(config) {
         partnerId:  141,
         playerId: 4422411
     };
+    
+    /**
+     * Tag list for autocomplete
+     */
+    config.NYUTagList = [
+        {value: "Area Studies"},
+        {value: "Art History"},
+        {value: "Arts and Social Change"},
+        {value: "Business"},
+        {value: "Communications"},
+        {value: "Community Studies"},
+        {value: "Cultural Studies"},
+        {value: "Creative Writing"},
+        {value: "Dance"},
+        {value: "Economics"},
+        {value: "Education"},
+        {value: "Environmental Studies"},
+        {value: "Film"},
+        {value: "Fine Arts"},
+        {value: "Foreign Language"},
+        {value: "Gender Studies"},
+        {value: "Globalization"},
+        {value: "History"},
+        {value: "Humanities"},
+        {value: "Journalism"},
+        {value: "Literature"},
+        {value: "Marketing"},
+        {value: "Media"},
+        {value: "Museum Studies"},
+        {value: "Music"},
+        {value: "Music Business"},
+        {value: "Philosophy"},
+        {value: "Politics"},
+        {value: "Public Health"},
+        {value: "Religion"},
+        {value: "Social Entrepreneurship"},
+        {value: "Studio Arts"},
+        {value: "Television"},
+        {value: "Theater Arts"},
+        {value: "Theology"},
+        {value: "Theory"}
+    ];
 
     return config;
 });
