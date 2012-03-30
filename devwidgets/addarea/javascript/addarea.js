@@ -117,6 +117,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai){
             $("#addarea_contentlist_name").val(sakai.api.i18n.getValueForKey("LIBRARY"));
             $("#addarea_contentlist_permissions").val("");
             $("#addarea_contentlist_tagsandcategories").val("");
+            $("#addarea_contentlist_nyuversion", $rootel).removeAttr("checked");
         };
 
         /*
@@ -627,15 +628,15 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai){
         var createContentLibrary = function(){
             var docTitle = $("#addarea_contentlist_name").val();
             var docPermission = $("#addarea_contentlist_permissions").val();
+            var widget_to_create = $("#addarea_contentlist_nyuversion").is(":checked")?"nyumylibrary":"mylibrary";
             var widgetID = sakai.api.Util.generateWidgetId();
-            var pageContents = ["<img id='widget_mylibrary_" + widgetID + "' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='/devwidgets/participants/images/participants.png' data-mce-src='/devwidgets/participants/images/participants.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'></p>"];
+            var pageContents = ["<img id='widget_"+widget_to_create+"_" + widgetID + "' class='widget_inline' style='display: block; padding: 10px; margin: 4px;' src='/devwidgets/mylibrary/images/mylibrary.png' data-mce-src='/devwidgets/mylibrary/images/mylibrary.png' data-mce-style='display: block; padding: 10px; margin: 4px;' border='1'></p>"];
             var nonEditable = true;
             var widgetContents = {};
-            widgetContents[widgetID] = {
-                mylibrary: {
-                    "groupid": sakai_global.group.groupId
-                }
-            };
+            widgetContents[widgetID] = {};
+            widgetContents[widgetID][widget_to_create] = {
+                "groupid": sakai_global.group.groupId
+            };           
             createSakaiDoc(docTitle, docPermission, pageContents, "library", widgetContents, nonEditable, function(poolId, urlName){
                 setSakaiDocPermissions(urlName, poolId, docPermission, false, function(poolId1){
                     removeCreatorAsManager(poolId, function(){
