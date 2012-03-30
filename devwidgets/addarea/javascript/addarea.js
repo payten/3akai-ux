@@ -118,7 +118,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai){
             $("#addarea_contentlist_permissions").val("");
             $("#addarea_contentlist_tagsandcategories").val("");
             $("#addarea_contentlist_nyuversion").removeAttr("checked");
-            $(".nyu-version-options input").attr("disabled","disabled");
+            $(".nyumylibrary-config .nyu-version-options input").attr("disabled","disabled");
         };
 
         /*
@@ -128,6 +128,8 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai){
             $("#addarea_participants_name").val(sakai.api.i18n.getValueForKey("PARTICIPANTS", "addarea"));
             $("#addarea_participants_permissions").val("");
             $("#addarea_participants_tagsandcategories").val("");
+            $("#addarea_participants_nyuversion_richdetails").removeAttr("checked");
+            $("#addarea_participants_nyuversion_tagcloud").removeAttr("checked");
         };
 
         /*
@@ -668,6 +670,12 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai){
                     "groupid": sakai_global.group.groupId
                 }
             };
+            if ($("#addarea_participants_nyuversion_richdetails").is(":checked")) {
+                widgetContents[widgetID]["nyuparticipants"]["showExtraInfo"] = "true";
+            }
+            if ($("#addarea_participants_nyuversion_tagcloud").is(":checked")) {
+                widgetContents[widgetID]["nyuparticipants"]["showTagCloud"] = "true";
+            }            
             createSakaiDoc(docTitle, docPermission, pageContents, "participants", widgetContents, nonEditable, function(poolId, urlName){
                 setSakaiDocPermissions(urlName, poolId, docPermission, false, function(poolId1){
                     removeCreatorAsManager(poolId, function(){

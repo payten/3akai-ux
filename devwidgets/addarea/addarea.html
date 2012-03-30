@@ -168,16 +168,16 @@
                 <input type="text" id="addarea_contentlist_name" name="addarea_contentlist_name" class="addarea_name_field"/>
                 <label for="addarea_contentlist_permissions">__MSG__WHO_CAN_SEE_IT__:</label>
                 <select id="addarea_contentlist_permissions" name="addarea_contentlist_permissions"></select>
-                <div class="nyu-version-switch">
-                    <input type="checkbox" id="addarea_contentlist_nyuversion" name="addarea_contentlist_nyuversion"/> <label for="addarea_contentlist_nyuversion">__MSG__NYU_VERSION_SWITCH__</label>
+                <div class="nyu-version-switch nyumylibrary-config">
+                    <input type="checkbox" id="addarea_contentlist_nyuversion" name="addarea_contentlist_nyuversion"/> <label for="addarea_contentlist_nyuversion">__MSG__NYU_MYLIBRARY_VERSION_SWITCH__</label>
                     <div class="nyu-version-options">
                         <div class="nyu-version-option">
                             <input type="radio" name="addarea_contentlist_nyuversion_option" id="addarea_contentlist_nyuversion_option_filter" value="filter" disabled="disabled" checked="checked" />
-                            <label for="addarea_contentlist_nyuversion_option_filter">__MSG__NYU_VERSION_FILTER_OPTION__</label>
+                            <label for="addarea_contentlist_nyuversion_option_filter">__MSG__NYU_MYLIBRARY_VERSION_FILTER_OPTION__</label>
                         </div>
                         <div class="nyu-version-option">                            
                             <input type="radio" name="addarea_contentlist_nyuversion_option" id="addarea_contentlist_nyuversion_option_cloud" value="cloud" disabled="disabled"/>
-                            <label for="addarea_contentlist_nyuversion_option_cloud">__MSG__NYU_VERSION_CLOUD_OPTION__</label>
+                            <label for="addarea_contentlist_nyuversion_option_cloud">__MSG__NYU_MYLIBRARY_VERSION_CLOUD_OPTION__</label>
                         </div>
                     </div>                    
                 </div>
@@ -199,6 +199,19 @@
                 <input type="text" id="addarea_participants_name" name="addarea_participants_name" class="addarea_name_field"/>
                 <label for="addarea_participants_permissions">__MSG__WHO_CAN_SEE_IT__:</label>
                 <select id="addarea_participants_permissions" name="addarea_participants_permissions"></select>
+                <div class="nyu-version-switch nyuparticipants-config">
+                    <div class="">__MSG__NYU_PARTICIPANTS_LABEL__:</div>
+                    <div class="nyu-version-options">
+                        <div class="nyu-version-option">
+                            <input type="checkbox" name="addarea_participants_nyuversion_richdetails" id="addarea_participants_nyuversion_richdetails" />
+                            <label for="addarea_participants_nyuversion_richdetails">__MSG__NYU_PARTICIPANTS_RICHDETAILS__</label>
+                        </div>
+                        <div class="nyu-version-option">                            
+                            <input type="checkbox" name="addarea_participants_nyuversion_tagcloud" id="addarea_participants_nyuversion_tagcloud"/>
+                            <label for="addarea_participants_nyuversion_tagcloud">__MSG__NYU_PARTICIPANTS_TAGCLOUD__</label>
+                        </div>
+                    </div>                    
+                </div>
                 <div class="autosuggest_wrapper">
                     <label for="addarea_participants_tagsandcategories">__MSG__TAGS_AND_CATEGORIES__:</label>
                     <button type="button" class="s3d-link-button s3d-bold list_categories">__MSG__LIST_CATEGORIES__</button>
