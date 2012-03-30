@@ -98,7 +98,7 @@
 .participants_widget .tagcloud-row.jqcloud {
 	height: 180px;
 }
-.participants_widget .tagcloud-row .search-tag.active {
+.participants_widget .tagcloud-row .search-tag.active a {
 	background-image: url(/dev/images/search_tag_remove.png);
 	background-repeat: no-repeat;
 	background-position: center right;
@@ -132,12 +132,7 @@
     margin-right: 6px;
 }
 .participants_widget .tagcloud-list button {
-    background: none repeat scroll 0 0 transparent;
-    border: medium none;
-    color: #57068C;
-    cursor: pointer;
-    padding: 0;
-    text-decoration: underline;
+    margin-bottom: 2px;
 }
 
 .participants_widget div.jqcloud {

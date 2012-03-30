@@ -195,9 +195,22 @@
     {if tags.length}
         <ul class="tagcloud-list">
         {for tag in tags}
-            <li class="s3d-search-tag" data-sakai-entityid="${tag.original}">
-                <button class="search_tag_refine_item" data-sakai-entityid="${tag.original}" title="__MSG__REFINE_SEARCH_TO__ ${tag.value}">${tag.value}</button>
-             </li>
+            {if activetags.indexOf(tag.value) < 0}
+                <li class="s3d-search-tag s3d-search-refineby" data-sakai-entityid="${tag.original}">                    
+                    <button class="search_tag_refine_item" data-sakai-entityid="${tag.original}" title="__MSG__REFINE_SEARCH_TO__ ${tag.value}">
+                        <img src="/dev/images/search_tag_add.png">
+                        ${tag.value}
+                    </button>
+                </li>                                               
+            {else}
+                <li class="s3d-search-tag s3d-search-activetags" data-sakai-entityid="${tag.original}">
+                    <img src="/dev/images/search_tag_active.png">
+                    <button class="search_tag_refine_item search_tag_active_item" data-sakai-entityid="${tag.original}" title="__MSG__REFINE_SEARCH_TO__ ${tag.value}">                        
+                        ${tag.value}
+                        <img src="/dev/images/search_tag_remove.png">
+                    </button>
+                </li>
+            {/if}
         {forelse}
         <li>__MSG__NO_TAGS_FOUND__</li>
         {/for}
