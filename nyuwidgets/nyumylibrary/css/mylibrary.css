@@ -98,14 +98,14 @@
     font-weight: bold;
     text-decoration: none;
     color: #ffffff;
-    background:#ffffff url("/devwidgets/mylibrary/images/selected_bg.png") repeat-x;
+    background:#ffffff url("/nyuwidgets/nyumylibrary/images/selected_bg.png") repeat-x;
     border: 1px solid #000000;
     border-radius: 5px;
     -moz-border-radius: 5px; /* Firefox 3.6 and earlier */
     -webkit-border-top-left-radius: 5px; /* Safari */
 }
-.mylibrary_groupfilter_usedin_arrow_up{margin: 1px 0 0 2px;background: url("/devwidgets/mylibrary/images/up_arrow.png") no-repeat scroll left top transparent;display: inline;float: right;height: 17px;width: 17px;}
-.mylibrary_groupfilter_usedin_arrow_down{margin: 1px 0 0 2px;background: url("/devwidgets/mylibrary/images/down_arrow.png") no-repeat scroll left top transparent;display: inline;float: right;height: 17px;width: 17px;}
+.mylibrary_groupfilter_usedin_arrow_up{margin: 1px 0 0 2px;background: url("/nyuwidgets/nyumylibrary/images/up_arrow.png") no-repeat scroll left top transparent;display: inline;float: right;height: 17px;width: 17px;}
+.mylibrary_groupfilter_usedin_arrow_down{margin: 1px 0 0 2px;background: url("/nyuwidgets/nyumylibrary/images/down_arrow.png") no-repeat scroll left top transparent;display: inline;float: right;height: 17px;width: 17px;}
 
 .mylibrary_meta .s3d-no-results-container {font-style:normal;}
 
@@ -118,3 +118,138 @@
 #mylibrary_content_share.s3d-button:disabled:hover .entity_share_content {background:url("/dev/images/share_icon_default_16x11.png") no-repeat center center transparent;display:block;float:right;height:18px;margin-left:7px;width:16px;}
 #mylibrary_content_share.s3d-button:hover .entity_share_content {background:url("/dev/images/share_icon_hover_16x11.png") no-repeat center center transparent;}
 #mylibrary_items .s3d-search-result {padding:10px 10px 6px 5px !important;}
+
+/* Tag related styles */
+.mylibrary_widget .refine-by-tags-row {
+    margin-top: 10px;
+}
+.mylibrary_widget .s3d-search-results-cloudview {
+    background-image: url(/nyuwidgets/nyumylibrary/images/cloudview.off.png);
+    background-repeat: no-repeat;
+    background-position: center right;
+}
+
+.mylibrary_widget .s3d-search-results-cloudview:hover,
+.mylibrary_widget .s3d-search-results-cloudview.selected {
+    background-image: url(/nyuwidgets/nyumylibrary/images/cloudview.on.png);
+}
+
+.mylibrary_widget .tagcloud-container {
+	display: none;
+}
+
+.mylibrary_widget .tagcloud-container .s3d-listview-options {
+    margin-top: 0;
+}
+.mylibrary_widget .tagcloud-container .s3d-search-results-listview {
+    background-image: url(/nyuwidgets/nyumylibrary/images/cloudlist.off.png);
+}
+.mylibrary_widget .tagcloud-container .s3d-search-results-listview:hover,
+.mylibrary_widget .tagcloud-container .s3d-search-results-listview.selected {
+    background-image: url(/nyuwidgets/nyumylibrary/images/cloudlist.on.png) !important;
+}
+.mylibrary_widget .tagcloud-row {
+    	width: 730px;
+        min-height: 180px;
+}
+.mylibrary_widget .tagcloud-row.jqcloud {
+	height: 180px;
+}
+.mylibrary_widget .tagcloud-row .search-tag.active a {
+	background-image: url(/dev/images/search_tag_remove.png);
+	background-repeat: no-repeat;
+	background-position: center right;
+	padding-right: 10px;
+        font-weight: bold;
+}
+
+.mylibrary_widget .tagcloud-row .no-tags {
+    color: #AAA;
+}
+.mylibrary_widget .not-all-tags-msg {
+    color: #999;
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 0.9em;
+}
+.mylibrary_widget.tagcloud-enabled .s3d-page-header-top-row,
+.mylibrary_widget.tagcloud-enabled .s3d-search-refineby-list {
+	margin-bottom: 10px;
+}
+.mylibrary_widget button.filter-by-tags-toggle {
+	float: right;
+	margin: 4px 20px 0 0;
+}
+.mylibrary_widget .tagcloud-list {
+    margin:0;
+    padding:0;   
+}
+.mylibrary_widget .tagcloud-list li {
+    display: inline;
+    margin-right: 6px;
+}
+.mylibrary_widget div.jqcloud {
+  font-family: "Helvetica", "Arial", sans-serif;
+  color: #09f;
+  overflow: hidden;
+  position: relative;
+}
+.mylibrary_widget .tagcloud-list button {
+   margin-bottom: 2px;
+}
+.mylibrary_widget div.jqcloud a {
+  color: inherit;
+  font-size: inherit;
+  text-decoration: none;
+}
+.mylibrary_widget div.jqcloud a:hover {
+  color: #0df;
+}
+.mylibrary_widget div.jqcloud a:hover {
+  color: #0cf;
+}
+.mylibrary_widget div.jqcloud span {
+  padding: 0;
+}
+.mylibrary_widget div.jqcloud span.w10 {
+  font-size: 28px;
+  color: #0cf;
+}
+.mylibrary_widget div.jqcloud span.w9 {
+  font-size: 26px;
+  color: #0cf;
+}
+.mylibrary_widget div.jqcloud span.w8 {
+  font-size: 24px;
+  color: #0cf;
+}
+.mylibrary_widget div.jqcloud span.w7 {
+  font-size: 22px;
+  color: #39d;
+}
+.mylibrary_widget div.jqcloud span.w6 {
+  font-size: 20px;
+  color: #90c5f0;
+}
+.mylibrary_widget div.jqcloud span.w5 {
+  font-size: 18px;
+  color: #90a0dd;
+}
+.mylibrary_widget div.jqcloud span.w4 {
+  font-size: 16px;
+  color: #90c5f0;
+}
+.mylibrary_widget div.jqcloud span.w3 {
+  font-size: 14px;
+  color: #a0ddff;
+}
+.mylibrary_widget div.jqcloud span.w2 {
+  font-size: 12px;
+  color: #99ccee;
+}
+.mylibrary_widget div.jqcloud span.w1 {
+  font-size: 10px;
+  color: #aab5f0;
+}
+.mylibrary_widget div.jqcloud { line-height: normal }
