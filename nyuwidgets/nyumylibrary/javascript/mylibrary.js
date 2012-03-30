@@ -76,6 +76,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
         var activeTags = [];
 	var refineTags = [];	
         var MAX_TAGS_IN_CLOUD = 20;
+        var MAX_TAGS_IN_FILTER = 10;
         var showTagCloud = false; 
         if (widgetData && widgetData.nyumylibrary && widgetData.nyumylibrary.hasOwnProperty("showTagCloud")) {
             showTagCloud = widgetData.nyumylibrary.showTagCloud === "true";
@@ -264,7 +265,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                                 return 1;
                             }
                             return 0;
-                        });                        
+                        });
                         // store tags in either already active tags, or tags available to refine the search by
                         $.each(tagArray, function(key, tag) {
                             var inArray = $.inArray(tag.original, activeTags)>=0;
@@ -281,10 +282,8 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                             $(".tagcloud-row", $rootel).html("<div class='no-tags'>No tags to display</div>");
                             $(".tagcloud-container", $rootel).show();
                         }
-                    }                    
-                    // render tag filters
-		    sakai.api.Util.TemplateRenderer("search_tags_active_template", {"tags": sakai.api.Util.formatTags(activeTags), "sakai": sakai}, $("#search_tags_active_container", $rootel));
-                    sakai.api.Util.TemplateRenderer("search_tags_refine_template", {"tags": refineTags, "sakai": sakai}, $(".search_tags_refine_container", $rootel));                     
+                    }
+                    renderTagFilter();
                 });
         };
 
@@ -586,7 +585,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                     }
                     return 0;
                 });
-                sakai.api.Util.TemplateRenderer("mylibrary_tagcloud_list_template", {"tags": tagArray}, $(".tagcloud-row", $rootel)); 
+                sakai.api.Util.TemplateRenderer("mylibrary_tagcloud_list_template", {"tags": tagArray, "activetags": activeTags}, $(".tagcloud-row", $rootel)); 
             } else {
                 $(".tagcloud-row", $rootel).addClass("jqcloud");
                 // sort tagArray by magnitude
@@ -629,6 +628,38 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
             
             $(".tagcloud-container", $rootel).show();
         };
+
+        function renderTagFilter() {
+            // render tag filters                    
+            sakai.api.Util.TemplateRenderer("search_tags_active_template", {"tags": sakai.api.Util.formatTags(activeTags), "sakai": sakai}, $("#search_tags_active_container", $rootel));
+            // only show refine filter if there's no tag cloud
+            if (!showTagCloud) {
+                var sortedRefineTags = refineTags.sort(function(a, b){
+                    var countA = a.count;
+                    var countB = b.count;
+                    if (countA > countB) {
+                        return -1;
+                    }
+                    if (countA < countB) {
+                        return 1;
+                    }
+                    return 0;
+                });
+                sortedRefineTags = sortedRefineTags.slice(0, MAX_TAGS_IN_FILTER);
+                sortedRefineTags = sortedRefineTags.sort(function(a, b){
+                    var nameA = a.value.toLowerCase();
+                    var nameB = b.value.toLowerCase();
+                    if (nameA < nameB) {
+                        return -1;
+                    }
+                    if (nameA > nameB) {
+                        return 1;
+                    }
+                    return 0;
+                });
+                sakai.api.Util.TemplateRenderer("search_tags_refine_template", {"tags": sortedRefineTags, "sakai": sakai}, $(".search_tags_refine_container", $rootel));
+            }
+        }
 
         /////////////////////////////
         // Initialization function //
