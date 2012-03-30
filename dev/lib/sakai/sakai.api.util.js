@@ -2210,6 +2210,8 @@ define(
                 var data = {};
                 if ( sakai_conf.enableCategories ) {
                     data = getTranslatedCategories();
+                } else if ( sakai_conf.NYUTagList) {
+                    data = sakai_conf.NYUTagList;
                 }
 
                 sakai_util.AutoSuggest.destroy( $elt );
