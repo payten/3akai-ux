@@ -3,6 +3,7 @@
     "userdashboard": true,
     "grouppages": false,
     "groupdashboard": true,
+    "personalportalwall": true,
     "hasSettings": true,
     "id": "text",
     "type": "sakai",

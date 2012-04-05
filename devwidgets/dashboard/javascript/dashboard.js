@@ -120,7 +120,7 @@ require(["jquery", "sakai/sakai.api.core", "fluid/3akai_Infusion"], function($, 
             newel.id = generic;
             newel.className = "widget_inline";
             old.parentNode.replaceChild(newel, old);
-            sakai.api.Widgets.widgetLoader.insertWidgets(newel.parentNode.id, false);
+            sakai.api.Widgets.widgetLoader.insertWidgets(newel.parentNode.id, false, savePath);
         };
 
         var registerWidgetFunctions = function(){
@@ -458,7 +458,7 @@ require(["jquery", "sakai/sakai.api.core", "fluid/3akai_Infusion"], function($, 
                       }
                       $("#widget_settings_menu", $rootel).hide();
                       currentSettingsOpen = false;
-                      sakai.api.Widgets.widgetLoader.insertWidgets(newel.parentNode.id, true);
+                      sakai.api.Widgets.widgetLoader.insertWidgets(newel.parentNode.id, true, savePath);
                       return false;
                   });
 
@@ -509,7 +509,7 @@ require(["jquery", "sakai/sakai.api.core", "fluid/3akai_Infusion"], function($, 
                   // remove the move cursor from the title bar
                   $(".fl-widget-titlebar", $rootel).css("cursor", "default");
                 }
-                sakai.api.Widgets.widgetLoader.insertWidgets(tuid);
+                sakai.api.Widgets.widgetLoader.insertWidgets(tuid, false, savePath);
 
             } else {
                 showInit();
@@ -1019,6 +1019,8 @@ require(["jquery", "sakai/sakai.api.core", "fluid/3akai_Infusion"], function($, 
             $(window).bind("init.dashboard.sakai", function(e, path, editmode, propertyname, fixedContainer) {
                 init(path, editmode, propertyname, fixedContainer);
             });
+        } else if ($.bbq.getState("l") === "wall") {
+            init(widgetData.data.currentPageShown.pageSavePath+"/", true, "personalportalwall", false);
         } else {
             init("", true, "personalportal", false);
         }

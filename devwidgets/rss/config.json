@@ -5,6 +5,7 @@
     "sakaidocs": true,
     "groupdashboard": true,
     "hasSettings":true,
+    "personalportalwall": true,
     "id":"rss",
     "img":"/devwidgets/rss/images/rss.png",
     "showinsakaigoodies":true,

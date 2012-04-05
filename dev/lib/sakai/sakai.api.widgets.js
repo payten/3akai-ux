@@ -613,7 +613,7 @@ define(
 
                         // The widget isn't an iframe widget
                         else if (sakai.widgets[widgetname]){
-
+                            
                             // Set the placement for the widget
                             var placement = "";
                             if (split[3] !== undefined){
@@ -698,7 +698,6 @@ define(
          * @return {Void}
          */
         saveWidgetData : function(id, content, callback, removeTree) {
-
             // Get the URL from the widgetloader
             var url = sakaiWidgetsAPI.widgetLoader.widgets[id].placement,
                 widget = sakai_widgets_config[sakaiWidgetsAPI.widgetLoader.widgets[id].name],
