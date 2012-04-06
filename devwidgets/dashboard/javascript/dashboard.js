@@ -1042,7 +1042,7 @@ require(["jquery", "sakai/sakai.api.core", "fluid/3akai_Infusion"], function($, 
             $(window).bind("init.dashboard.sakai", function(e, path, editmode, propertyname, fixedContainer) {
                 init(path, editmode, propertyname, fixedContainer);
             });
-        } else if ($.bbq.getState("l") === "wall") {
+        } else if (widgetData.data.currentPageShown.path === "wall") {
             init(widgetData.data.currentPageShown.pageSavePath+"/", true, "personalportalwall", false);
         } else {
             init("", true, "personalportal", false);
