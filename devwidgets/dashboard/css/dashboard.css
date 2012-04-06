@@ -30,6 +30,7 @@
 /* WIDGET CONTAINER */
 #dashboard_container #widgetscontainer .fl-widget{margin-top:1px;}
 #dashboard_container .widget_spacer{height:1px;}
+#dashboard_container .ui-sortable .fl-widget-titlebar {cursor: move;}
 
 /* Change layout */
 #change_layout_dialog {width: 470px !important; margin-left: -235px !important;}
