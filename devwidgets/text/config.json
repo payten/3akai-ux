@@ -4,6 +4,8 @@
     "grouppages": false,
     "groupdashboard": true,
     "personalportalwall": true,
+    "dashboardallowmultiple": true,
+    "dashboardallowmax": 2,
     "hasSettings": true,
     "id": "text",
     "type": "sakai",

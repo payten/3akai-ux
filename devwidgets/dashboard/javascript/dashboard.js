@@ -879,9 +879,10 @@ require(["jquery", "sakai/sakai.api.core", "fluid/3akai_Infusion"], function($, 
                 disableAddGoodies();
                 // The expected is btn_add_WIDGETNAME
                 var id = this.id.replace(btnAdd, "");
-                $(addRow + id, $rootelClass).hide();
-                $(removeRow + id, $rootelClass).show();
                 addWidget(id);
+                // rerender the dialog
+                $(addGoodiesListContainer, $rootelClass).html(sakai.api.Util.TemplateRenderer(addGoodiesListTemplate, goodieData()));
+                bindGoodiesEventHandlers();
             });
 
             /*
@@ -895,15 +896,18 @@ require(["jquery", "sakai/sakai.api.core", "fluid/3akai_Infusion"], function($, 
                 disableAddGoodies();
                 // The expected id is btn_remove_WIDGETNAME
                 var id = this.id.replace(btnRemove, "");
-                $(removeRow + id, $rootelClass).hide();
-                $(addRow + id, $rootelClass).show();
                 // We find the widget container itself, and then find its parent,
                 // which is the column the widget is in, and then remove the widget
                 // from the column
-                var el = $("[id^=" + id + "]", $rootel).get(0);
-                var parent = el.parentNode;
-                parent.removeChild(el);
+                var widgetEls = $("[id^=" + id + "]", $rootel);
+                widgetEls.each(function() {
+                   var parent = this.parentNode;
+                   parent.removeChild(this); 
+                });                
                 saveState();
+                // rerender the dialog
+                $(addGoodiesListContainer, $rootelClass).html(sakai.api.Util.TemplateRenderer(addGoodiesListTemplate, goodieData()));
+                bindGoodiesEventHandlers();
             });
 
             $(".close_goodies_dialog", $rootelClass).unbind("click");
@@ -912,17 +916,14 @@ require(["jquery", "sakai/sakai.api.core", "fluid/3akai_Infusion"], function($, 
             });
 
         };
-
-        var renderGoodies = function(hash) {
-
+        
+        var goodieData = function() {
             var addingPossible = {};
             addingPossible.items = [];
-
-            $(addGoodiesListContainer, $rootelClass).html("");
-
             for (var l in sakai.widgets) {
                 if (sakai.widgets.hasOwnProperty(l)) {
                     var alreadyIn = false;
+                    var alreadyInCount = 0;
                     // Run through the list of widgets that are already on my dashboard and decide
                     // whether the current widget is already on the dashboard (so show the Remove row),
                     // or whether the current widget is not on the dashboard (and thus show the Add row)
@@ -931,25 +932,31 @@ require(["jquery", "sakai/sakai.api.core", "fluid/3akai_Infusion"], function($, 
                             for (var ii = 0; ii < settings.columns[c].length; ii++) {
                                 if (settings.columns[c][ii].name === l) {
                                     alreadyIn = true;
+                                    alreadyInCount = alreadyInCount + 1;
                                 }
                             }
                         }
                     }
-                    if (sakai.widgets[l][widgetPropertyName]) {
+                    if (sakai.widgets[l][widgetPropertyName]) {                        
                         var index = addingPossible.items.length;
                         addingPossible.items[index] = sakai.widgets[l];
                         addingPossible.items[index].alreadyIn = alreadyIn;
+                        addingPossible.items[index].alreadyInCount = alreadyInCount;
                     }
                 }
             }
 
             // Render the list of widgets. The template will render a remove and add row for each widget, but will
             // only show one based on whether that widget is already on my dashboard
-
+            console.log(addingPossible);
             addingPossible.sakai = sakai;
-            $(addGoodiesListContainer, $rootelClass).html(sakai.api.Util.TemplateRenderer(addGoodiesListTemplate, addingPossible));
-            bindGoodiesEventHandlers();
+            return addingPossible;
+        };
 
+        var renderGoodies = function(hash) {
+            $(addGoodiesListContainer, $rootelClass).html("");           
+            $(addGoodiesListContainer, $rootelClass).html(sakai.api.Util.TemplateRenderer(addGoodiesListTemplate, goodieData()));
+            bindGoodiesEventHandlers();
             // Show the modal dialog
             hash.w.show();
 
