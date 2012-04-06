@@ -260,7 +260,7 @@ define(["config/config"], function(config) {
      */
     config.defaultpubstructure["structure0"]["wall"] = {
         "_title": "My wall",
-        "_altTitle": "My Other wall",
+        "_altTitle": "${user}'s  wall",
         "_order": -1,
         "_view": "anonymous",
         "_canEdit": true,
@@ -274,7 +274,7 @@ define(["config/config"], function(config) {
         }
     };
     config.defaultpubstructure["${refid}3"] = {
-        "page": "<div class='fl-force-right'><button type='button' class='s3d-button s3d-margin"+
+        "page": "<div class='fl-force-right dashboard-admin-actions' style='display:none;'><button type='button' class='s3d-button s3d-margin"+
                 "-top-5 s3d-header-button s3d-header-smaller-button dashboard_change_layout' dat"+
                 "a-tuid='${refid}4'>__MSG__EDIT_LAYOUT__</button><button type='button' class='s3d-button "+
                 "s3d-margin-top-5 s3d-header-button s3d-header-smaller-button dashboard_global_a"+

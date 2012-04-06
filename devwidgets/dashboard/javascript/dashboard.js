@@ -57,6 +57,7 @@ require(["jquery", "sakai/sakai.api.core", "fluid/3akai_Infusion"], function($, 
         var settings = false;
         var widgetPropertyName = false;
         var tempSettings;
+        var isOwnerViewing = false;
 
         var rootel = "#" + tuid;
         var $rootel = $(rootel);
@@ -340,6 +341,7 @@ require(["jquery", "sakai/sakai.api.core", "fluid/3akai_Infusion"], function($, 
 
             if (isValid) {
                 final2.sakai = sakai;
+                final2.isMe = isOwnerViewing;
                 $('#widgetscontainer', $rootel).html(sakai.api.Util.TemplateRenderer("widgetscontainer_template", final2));
 
 
@@ -477,34 +479,36 @@ require(["jquery", "sakai/sakai.api.core", "fluid/3akai_Infusion"], function($, 
 
                   });
 
-                  var grabHandleFinder,
-                  createAvatar,
-                  options;
+                  if (isOwnerViewing) {
+                    var grabHandleFinder,
+                    createAvatar,
+                    options;
 
-                  grabHandleFinder = function(item) {
-                      // the handle is the toolbar. The toolbar id is the same as the portlet id, with the
-                      // "portlet_" prefix replaced by "toolbar_".
-                      return jQuery("[id=draghandle_" + item.id + "]");
-                  };
+                    grabHandleFinder = function(item) {
+                        // the handle is the toolbar. The toolbar id is the same as the portlet id, with the
+                        // "portlet_" prefix replaced by "toolbar_".
+                        return jQuery("[id=draghandle_" + item.id + "]");
+                    };
 
-                  options = {
-                      styles: {
-                          mouseDrag: "orderable-mouse-drag",
-                          dropMarker: "orderable-drop-marker-box",
-                          avatar: "orderable-avatar-clone"
-                      },
-                      selectors: {
-                          columns: ".groupWrapper",
-                          modules: ".widget1",
-                          grabHandle: grabHandleFinder
-                      },
-                      listeners: {
-                          onBeginMove: beforeWidgetDrag,
-                          afterMove: saveState
-                      }
-                  };
+                    options = {
+                        styles: {
+                            mouseDrag: "orderable-mouse-drag",
+                            dropMarker: "orderable-drop-marker-box",
+                            avatar: "orderable-avatar-clone"
+                        },
+                        selectors: {
+                            columns: ".groupWrapper",
+                            modules: ".widget1",
+                            grabHandle: grabHandleFinder
+                        },
+                        listeners: {
+                            onBeginMove: beforeWidgetDrag,
+                            afterMove: saveState
+                        }
+                    };
 
-                  fluid.reorderLayout($('#widgetscontainer', $rootel), options);
+                    fluid.reorderLayout($('#widgetscontainer', $rootel), options);
+                  }
                 } else {
                   // remove the move cursor from the title bar
                   $(".fl-widget-titlebar", $rootel).css("cursor", "default");
@@ -990,6 +994,18 @@ require(["jquery", "sakai/sakai.api.core", "fluid/3akai_Infusion"], function($, 
         * @param {Boolean} fixedContainer is the dashboard should be a fixed container, ie. 920px wide
         */
         var init = function(path, editmode, propertyname, fixedContainer) {
+            if (sakai.data.me.user.userid === sakai_global.profile.main.data.userid) {
+                isOwnerViewing = true;
+                $rootel.closest("#s3d-page-container").find(".dashboard-admin-actions").show();
+                $rootel.closest("#s3d-page-container").find(".s3d-contentpage-title").html(sakai.api.Util.TemplateRenderer("dashboard_title_template", {
+                    isMe: true
+                }));
+            } else {                
+                $rootel.closest("#s3d-page-container").find(".s3d-contentpage-title").html(sakai.api.Util.TemplateRenderer("dashboard_title_template", {
+                    isMe: false,
+                    user: sakai.api.User.getFirstName(sakai_global.profile.main.data)
+                }));
+            }
             savePath = path;
             isEditable = editmode;
             widgetPropertyName = propertyname;
