@@ -57,3 +57,7 @@
 .add_goodies .dialog_body .dialog_add_goodies_title {color:#333;font-size:13px;font-weight:bold;}
 .add_goodies .remove_add_column {text-align:right; margin-left: 8px; width: auto;}
 .add_goodies #add_goodies_body {height:310px; overflow: auto;}
+
+.s3d-widget.s3d-widget-container .s3d-contentpage-title {
+    margin-bottom: 0;
+}

@@ -735,8 +735,10 @@ define(
          * @param {String} title The title to change to
          */
         changeWidgetTitle : function(tuid, title) {
-            title = sakai_util.applyThreeDots(title, $("#"+tuid).parent("div").siblings("div.fl-widget-titlebar").width() - 70, {max_rows:4}, "s3d-bold");
+            title = sakai_util.applyThreeDots(title, $("#"+tuid).parent("div").siblings("div.fl-widget-titlebar").width() - 70, {max_rows:4}, "s3d-bold");            
             $("#"+tuid).parent("div").siblings("div.fl-widget-titlebar").find("h2.widget_title").text(title);
+            // some widgets have s3d-contentpage-title instead of h2
+            $("#"+tuid).parent("div").siblings("div.fl-widget-titlebar").find(".s3d-contentpage-title").text(title);
         },
 
 
