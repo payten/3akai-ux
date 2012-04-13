@@ -262,9 +262,9 @@ define(["config/config"], function(config) {
         "_title": "__MSG__USER_PUBLIC_DASHBOARD_TITLE__",
         "_altTitle": "__MSG__USER_PUBLIC_DASHBOARD_ALT_TITLE__",
         "_order": -1,
-        "_view": "anonymous",
+        "_view": "private",
         "_canEdit": true,
-        "_reorderOnly": true,
+        "_reorderOnly": false,
         "_nonEditable": true,
         "_ref": "${refid}3",
         "main": {
