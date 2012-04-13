@@ -3,6 +3,8 @@
     "userdashboard": true,
     "grouppages": true,
     "groupdashboard": true,
+    "personalportalwall": true,
+    "dashboardallowmultiple": true,
     "hasSettings":true,
     "id":"comments",
     "i18n": {
