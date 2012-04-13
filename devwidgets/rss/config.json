@@ -6,6 +6,7 @@
     "groupdashboard": true,
     "hasSettings":true,
     "personalportalwall": true,
+    "dashboardallowmultiple": true,
     "id":"rss",
     "img":"/devwidgets/rss/images/rss.png",
     "showinsakaigoodies":true,
