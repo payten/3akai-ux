@@ -5,6 +5,9 @@
     "groupdashboard": true,
     "sakaidocs": true,
     "hasSettings": true,
+    "personalportalwall": true,
+    "dashboardallowmultiple": true,
+    "dashboardallowmax": 2,
     "i18n": {
         "default": {
             "bundle": "/devwidgets/googlemaps/bundles/default.properties",

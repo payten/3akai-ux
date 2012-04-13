@@ -57,6 +57,7 @@ require(["jquery", "sakai/sakai.api.core", "fluid/3akai_Infusion"], function($, 
         var settings = false;
         var widgetPropertyName = false;
         var tempSettings;
+        var isOwnerViewing = false;
 
         var rootel = "#" + tuid;
         var $rootel = $(rootel);
@@ -120,7 +121,7 @@ require(["jquery", "sakai/sakai.api.core", "fluid/3akai_Infusion"], function($, 
             newel.id = generic;
             newel.className = "widget_inline";
             old.parentNode.replaceChild(newel, old);
-            sakai.api.Widgets.widgetLoader.insertWidgets(newel.parentNode.id, false);
+            sakai.api.Widgets.widgetLoader.insertWidgets(newel.parentNode.id, false, savePath);
         };
 
         var registerWidgetFunctions = function(){
@@ -340,6 +341,7 @@ require(["jquery", "sakai/sakai.api.core", "fluid/3akai_Infusion"], function($, 
 
             if (isValid) {
                 final2.sakai = sakai;
+                final2.isMe = isOwnerViewing;
                 $('#widgetscontainer', $rootel).html(sakai.api.Util.TemplateRenderer("widgetscontainer_template", final2));
 
 
@@ -458,7 +460,7 @@ require(["jquery", "sakai/sakai.api.core", "fluid/3akai_Infusion"], function($, 
                       }
                       $("#widget_settings_menu", $rootel).hide();
                       currentSettingsOpen = false;
-                      sakai.api.Widgets.widgetLoader.insertWidgets(newel.parentNode.id, true);
+                      sakai.api.Widgets.widgetLoader.insertWidgets(newel.parentNode.id, true, savePath);
                       return false;
                   });
 
@@ -477,39 +479,24 @@ require(["jquery", "sakai/sakai.api.core", "fluid/3akai_Infusion"], function($, 
 
                   });
 
-                  var grabHandleFinder,
-                  createAvatar,
-                  options;
-
-                  grabHandleFinder = function(item) {
-                      // the handle is the toolbar. The toolbar id is the same as the portlet id, with the
-                      // "portlet_" prefix replaced by "toolbar_".
-                      return jQuery("[id=draghandle_" + item.id + "]");
-                  };
-
-                  options = {
-                      styles: {
-                          mouseDrag: "orderable-mouse-drag",
-                          dropMarker: "orderable-drop-marker-box",
-                          avatar: "orderable-avatar-clone"
-                      },
-                      selectors: {
-                          columns: ".groupWrapper",
-                          modules: ".widget1",
-                          grabHandle: grabHandleFinder
-                      },
-                      listeners: {
-                          onBeginMove: beforeWidgetDrag,
-                          afterMove: saveState
-                      }
-                  };
-
-                  fluid.reorderLayout($('#widgetscontainer', $rootel), options);
+                  if (isOwnerViewing) {
+                    $('#widgetscontainer .groupWrapper', $rootel).sortable({
+                        connectWith: ".groupWrapper", // Columns where we can drag modules into
+                        cursor: "move",
+                        handle: ".widget1-head",
+                        helper: "clone",
+                        opacity: 0.5,
+                        placeholder: 'orderable-drop-marker-box',
+                        tolerance: "intersect",
+                        start: beforeWidgetDrag,
+                        stop: saveState
+                    });
+                  }
                 } else {
                   // remove the move cursor from the title bar
                   $(".fl-widget-titlebar", $rootel).css("cursor", "default");
                 }
-                sakai.api.Widgets.widgetLoader.insertWidgets(tuid);
+                sakai.api.Widgets.widgetLoader.insertWidgets(tuid, false, savePath);
 
             } else {
                 showInit();
@@ -875,9 +862,10 @@ require(["jquery", "sakai/sakai.api.core", "fluid/3akai_Infusion"], function($, 
                 disableAddGoodies();
                 // The expected is btn_add_WIDGETNAME
                 var id = this.id.replace(btnAdd, "");
-                $(addRow + id, $rootelClass).hide();
-                $(removeRow + id, $rootelClass).show();
                 addWidget(id);
+                // rerender the dialog
+                $(addGoodiesListContainer, $rootelClass).html(sakai.api.Util.TemplateRenderer(addGoodiesListTemplate, goodieData()));
+                bindGoodiesEventHandlers();
             });
 
             /*
@@ -891,15 +879,18 @@ require(["jquery", "sakai/sakai.api.core", "fluid/3akai_Infusion"], function($, 
                 disableAddGoodies();
                 // The expected id is btn_remove_WIDGETNAME
                 var id = this.id.replace(btnRemove, "");
-                $(removeRow + id, $rootelClass).hide();
-                $(addRow + id, $rootelClass).show();
                 // We find the widget container itself, and then find its parent,
                 // which is the column the widget is in, and then remove the widget
                 // from the column
-                var el = $("[id^=" + id + "]", $rootel).get(0);
-                var parent = el.parentNode;
-                parent.removeChild(el);
+                var widgetEls = $("[id^=" + id + "]", $rootel);
+                widgetEls.each(function() {
+                   var parent = this.parentNode;
+                   parent.removeChild(this); 
+                });                
                 saveState();
+                // rerender the dialog
+                $(addGoodiesListContainer, $rootelClass).html(sakai.api.Util.TemplateRenderer(addGoodiesListTemplate, goodieData()));
+                bindGoodiesEventHandlers();
             });
 
             $(".close_goodies_dialog", $rootelClass).unbind("click");
@@ -908,17 +899,14 @@ require(["jquery", "sakai/sakai.api.core", "fluid/3akai_Infusion"], function($, 
             });
 
         };
-
-        var renderGoodies = function(hash) {
-
+        
+        var goodieData = function() {
             var addingPossible = {};
             addingPossible.items = [];
-
-            $(addGoodiesListContainer, $rootelClass).html("");
-
             for (var l in sakai.widgets) {
                 if (sakai.widgets.hasOwnProperty(l)) {
                     var alreadyIn = false;
+                    var alreadyInCount = 0;
                     // Run through the list of widgets that are already on my dashboard and decide
                     // whether the current widget is already on the dashboard (so show the Remove row),
                     // or whether the current widget is not on the dashboard (and thus show the Add row)
@@ -927,25 +915,31 @@ require(["jquery", "sakai/sakai.api.core", "fluid/3akai_Infusion"], function($, 
                             for (var ii = 0; ii < settings.columns[c].length; ii++) {
                                 if (settings.columns[c][ii].name === l) {
                                     alreadyIn = true;
+                                    alreadyInCount = alreadyInCount + 1;
                                 }
                             }
                         }
                     }
-                    if (sakai.widgets[l][widgetPropertyName]) {
+                    if (sakai.widgets[l][widgetPropertyName]) {                        
                         var index = addingPossible.items.length;
                         addingPossible.items[index] = sakai.widgets[l];
                         addingPossible.items[index].alreadyIn = alreadyIn;
+                        addingPossible.items[index].alreadyInCount = alreadyInCount;
                     }
                 }
             }
 
             // Render the list of widgets. The template will render a remove and add row for each widget, but will
             // only show one based on whether that widget is already on my dashboard
-
+            console.log(addingPossible);
             addingPossible.sakai = sakai;
-            $(addGoodiesListContainer, $rootelClass).html(sakai.api.Util.TemplateRenderer(addGoodiesListTemplate, addingPossible));
-            bindGoodiesEventHandlers();
+            return addingPossible;
+        };
 
+        var renderGoodies = function(hash) {
+            $(addGoodiesListContainer, $rootelClass).html("");           
+            $(addGoodiesListContainer, $rootelClass).html(sakai.api.Util.TemplateRenderer(addGoodiesListTemplate, goodieData()));
+            bindGoodiesEventHandlers();
             // Show the modal dialog
             hash.w.show();
 
@@ -990,6 +984,20 @@ require(["jquery", "sakai/sakai.api.core", "fluid/3akai_Infusion"], function($, 
         * @param {Boolean} fixedContainer is the dashboard should be a fixed container, ie. 920px wide
         */
         var init = function(path, editmode, propertyname, fixedContainer) {
+            if (sakai.data.me.user.userid === sakai_global.profile.main.data.userid) {
+                isOwnerViewing = true;
+                $rootel.closest("#s3d-page-container").find(".dashboard-admin-actions").show();
+                if (propertyname === "personalportalwall") {
+                    $rootel.closest("#s3d-page-container").find(".s3d-contentpage-title").html(sakai.api.Util.TemplateRenderer("dashboard_title_template", {
+                        isMe: true
+                    }));
+                }
+            } else if (propertyname === "personalportalwall") {
+                $rootel.closest("#s3d-page-container").find(".s3d-contentpage-title").html(sakai.api.Util.TemplateRenderer("dashboard_title_template", {
+                    isMe: false,
+                    user: sakai.api.User.getFirstName(sakai_global.profile.main.data)
+                }));
+            }
             savePath = path;
             isEditable = editmode;
             widgetPropertyName = propertyname;
@@ -1019,6 +1027,8 @@ require(["jquery", "sakai/sakai.api.core", "fluid/3akai_Infusion"], function($, 
             $(window).bind("init.dashboard.sakai", function(e, path, editmode, propertyname, fixedContainer) {
                 init(path, editmode, propertyname, fixedContainer);
             });
+        } else if (widgetData.data.currentPageShown.path === "wall") {
+            init(widgetData.data.currentPageShown.pageSavePath+"/", true, "personalportalwall", false);
         } else {
             init("", true, "personalportal", false);
         }
