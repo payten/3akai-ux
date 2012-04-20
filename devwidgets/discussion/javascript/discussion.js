@@ -345,11 +345,8 @@ require(["jquery", "sakai/sakai.api.core", "jquery-plugins/jquery.cookie"], func
         var parseSettings = function(data){
             var contact = false;
             var canEditPage = false;
-            if (sakai_global.hasOwnProperty("profile") && sakai_global.profile.main.data.userid === sakai.data.me.user.userid) {
+            if (!widgetData) {
                 canEditPage = true;
-            }
-            else if (!widgetData) {
-                canEditPage = false;
             }
             else {
                 canEditPage = sakai.api.Widgets.canEditContainer(widgetData);

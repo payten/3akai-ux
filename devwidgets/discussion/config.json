@@ -3,8 +3,6 @@
     "userdashboard": true,
     "grouppages": true,
     "groupdashboard": true,
-    "personalportalwall": true,
-    "dashboardallowmultiple": true,
     "id":"discussion",
     "img":"/devwidgets/discussion/images/discussion.png",
     "i18n": {
