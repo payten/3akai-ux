@@ -5,6 +5,7 @@ html,.requireUser,.requireAnon{background:#57068C url("images/body_nyu_home_bg.p
 a,a:link,
 a.s3d-regular-links,
 .s3d-regular-links a,
+.s3d-regular-links,
 button.s3d-regular-links,
 .s3d-button.s3d-large-button,
 .s3d-regular-links button,
@@ -23,6 +24,13 @@ a:visited{color:#3C1354 !important;}
     border: 1px solid #4d10d5 !important;
 }
 .s3d-button.s3d-header-button.s3d-popout-button:disabled {background: none repeat scroll 0 0 #FFFFFF !important; border: none !important;}
+
+/* Branding widget */
+.branding_widget {
+    background:white url("images/nyu_logos.png") top center no-repeat !important;
+    height:80px !important;
+    border-bottom: 1px solid #DCDCDC;
+}
 
 /* Header */
 .s3d-navigation-container{box-shadow:none;-webkit-box-shadow:none;-moz-box-shadow:none;}
@@ -168,8 +176,16 @@ button.searchcontent_result_plus{color:#E4E4E4 !important}
 .gritter-item a{color:#EEE !important;}
 
 /* Collections */
-.collections_widget .collections_collection_title_short, .collections_widget button, .collections_widget a {color: #FFF !important}
-.collections_widget #collections_rightcolumn #collections_close_button:hover, .collections_widget #collections_rightcolumn #collections_close_button:focus {background-image: url("images/collections_delete_icon_20x20_hover.png") !important;}
+.inserter_widget ul li:hover, .inserter_widget ul li.dragover {
+    background-image: url("images/topnav_nav_hover.png") !important;
+    background-color: #510590 !important;
+}
+.inserter_widget ul li:hover .inserter_item_count_container, .inserter_widget ul li.dragover .inserter_item_count_container {
+    background-image: url("images/lefthandnav_count_hover.png") !important;
+}
+.inserter_widget #inserter_header #inserter_header_collection_title {
+    color: #FFF !important;
+}
 
 /* participants widget */
 .participants_widget #participants_list_container ul li .participants_message_icon:hover {background-image: url("images/message_icon.png") !important;}
@@ -181,4 +197,18 @@ button.searchcontent_result_plus{color:#E4E4E4 !important}
 #addarea_container button.list_categories,
 #displayprofilesection_form_basic button.list_categories{
     display: none !important;
+}
+
+/* sakaidoc and insert bar styles */
+a.inserterbar_action_link {
+    color: #FFF !important;
+    margin: 0 !important;
+    padding: 6px 10px;
+}
+#inserterbar_widget .inserterbar_widget_container li {
+    margin: 0 !important
+}
+#inserterbar_widget .inserterbar_widget_container:hover {
+     background-image: url("images/button_overlay_action_hover.png") !important;
+     background-color: #530691 !important;
 }

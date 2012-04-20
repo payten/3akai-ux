@@ -629,7 +629,7 @@ require(["jquery", "sakai/sakai.api.core", "underscore"], function($, sakai, _){
             };
             
             if (useNYUWidget && $("#addarea_contentlist_nyuversion_option_cloud").is(":checked")) {
-                widgetContents[widgetID][widgetToCreate]["showTagCloud"] = "true";
+                docStructure[0][widgetID][widgetToCreate]["showTagCloud"] = "true";
             }            
             
             var nonEditable = true;
@@ -671,10 +671,10 @@ require(["jquery", "sakai/sakai.api.core", "underscore"], function($, sakai, _){
             
             // NYU options
             if ($("#addarea_participants_nyuversion_richdetails").is(":checked")) {
-                widgetContents[widgetID]["nyuparticipants"]["showExtraInfo"] = "true";
+                docStructure[0][widgetID]["nyuparticipants"]["showExtraInfo"] = "true";
             }
             if ($("#addarea_participants_nyuversion_tagcloud").is(":checked")) {
-                widgetContents[widgetID]["nyuparticipants"]["showTagCloud"] = "true";
+                docStructure[0][widgetID]["nyuparticipants"]["showTagCloud"] = "true";
             }              
             
             var nonEditable = true;
