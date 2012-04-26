@@ -1,7 +1,7 @@
 {
-    "sakaidocs": false,
+    "sakaidocs": true,
     "ca":true,
-    "hasSettings": false,
+    "hasSettings": true,
     "id":"basiclti",
     "i18n": {
         "default": {
@@ -17,6 +17,5 @@
     "userpages": true,
     "userdashboard": true,
     "grouppages": true,
-    "groupdashboard": true,
-    "showinsakaigoodies":true
+    "groupdashboard": true
 }

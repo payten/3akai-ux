@@ -34,9 +34,10 @@ define(
         "sakai/sakai.api.util",
         "sakai/sakai.api.i18n",
         "sakai/sakai.api.user",
-        "sakai/sakai.api.communication"
+        "sakai/sakai.api.communication",
+        "underscore"
     ],
-    function($, sakai_conf, sakai_serv, sakai_util, sakai_i18n, sakai_user, sakai_comm){
+    function($, sakai_conf, sakai_serv, sakai_util, sakai_i18n, sakai_user, sakai_comm, _){
 
     var sakaiGroupsAPI = {
         /**
@@ -104,7 +105,7 @@ define(
                 });
                 if ($.isFunction(callback)){
                     callback(true, toReturn);
-                };
+                }
             });
         },
 
@@ -153,6 +154,7 @@ define(
                 "visibility" : visibility,
                 "joinability" : joinability,
                 "worldTemplate" : templatePath,
+                'schemaVersion': sakai_conf.schemaVersion,
                 "message" : {
                     "body" : body,
                     "subject" : subject,
@@ -802,9 +804,9 @@ define(
          * @param {String} sort The parameter to sort on (firstName or lastName)
          * @param {String} sortOrder The direction of the sort (desc or asc)
          * @param {Function} callback Function executed on success or error
-
+         * @param {Boolean} roleCache Flag to get group role data from cache if available 
          */
-        searchMembers: function(groupId, query, num, page, sort, sortOrder, callback) {
+        searchMembers: function(groupId, query, num, page, sort, sortOrder, callback, roleCache) {
             if (groupId) {
                 var url = "";
                 if (query && query !== "*") {
@@ -844,7 +846,7 @@ define(
                                             }
                                         });
                                     });
-                                });
+                                }, roleCache);
                             });
                         } else {
                             if ($.isFunction(callback)) {
@@ -901,7 +903,7 @@ define(
                             urlToGroupMapping[url] = {
                                 "groupid": groupid,
                                 "role": roles[i].id
-                            }
+                            };
                             batchRequests.push({
                                 "url": url,
                                 "method": "GET",
@@ -923,7 +925,7 @@ define(
                                 dataToReturn[groupid][roleid] = {"results": members};
                                 if (sakaiGroupsAPI.groupData[groupid]){
                                     sakaiGroupsAPI.groupData[groupid].membersPerRole = sakaiGroupsAPI.groupData[groupid].membersPerRole || {};
-                                    sakaiGroupsAPI.groupData[groupid].membersPerRole[roleid] = {"results": members}
+                                    sakaiGroupsAPI.groupData[groupid].membersPerRole[roleid] = {"results": members};
                                 }
                             });
                             if ($.isFunction(callback)) {
@@ -944,6 +946,7 @@ define(
 
         getRoles : function(groupData, translate) {
             var roles = [];
+            groupData.roles = groupData.roles || groupData["sakai:roles"];
             if ( _.isString( groupData.roles ) ) {
                 groupData.roles = $.parseJSON( groupData.roles );
             }
@@ -960,7 +963,8 @@ define(
             return roles;
         },
 
-        getRole : function(userId, groupID, callback){
+        getRole : function(userId, groupID, callback, roleCache){
+            var cache = roleCache === false ? false : true;
             var groupInfo = sakaiGroupsAPI.getGroupAuthorizableData(groupID, function(success, data){
                 if (success){
                     data = data[groupID];
@@ -999,7 +1003,7 @@ define(
                         }
                     };
 
-                    if ($.isPlainObject(sakaiGroupsAPI.groupRoleData[groupID])) {
+                    if (cache && $.isPlainObject(sakaiGroupsAPI.groupRoleData[groupID])) {
                         parseRoles(sakaiGroupsAPI.groupRoleData[groupID]);
                     } else {
                         sakai_serv.batch(batchRequests, function(success, data){
@@ -1017,6 +1021,25 @@ define(
                     }
                 }
             });
+        },
+
+        /**
+         * Checks if one role managers the other, returns true if the role has management rights
+         *
+         * @param {Object} parentRoleObject The role we want to check if it has management rights on the other
+         * @param {String} roleIdToCheck The role to check if it can be managed by
+         */
+        hasManagementRights : function(parentRoleObject, roleIdToCheck) {
+            var manages = false;
+            if (parentRoleObject.manages) {
+                $.each(parentRoleObject.manages, function(i, childRole) {
+                    if (childRole === roleIdToCheck) {
+                        manages = true;
+                        return false;
+                    }
+                });
+            }
+            return manages;
         },
 
         leave : function(groupId, role, meData, callback){

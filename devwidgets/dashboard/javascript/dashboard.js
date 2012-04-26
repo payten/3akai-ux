@@ -23,7 +23,7 @@
  * /dev/lib/misc/trimpath.template.js (TrimpathTemplates)
  */
 
-require(["jquery", "sakai/sakai.api.core", "fluid/3akai_Infusion"], function($, sakai) {
+require(["jquery", "sakai/sakai.api.core", "jquery-ui"], function($, sakai) {
 
     /**
      * @name sakai_global.dashboard
@@ -817,6 +817,7 @@ require(["jquery", "sakai/sakai.api.core", "fluid/3akai_Infusion"], function($, 
             if (title) {
                 $("#paget_title_only", $rootel).html(" " + title);
             }
+            sakai.api.Util.bindDialogFocus(changeLayoutDialog);
             $(changeLayoutDialog, $rootel).jqmShow();
         };
 
@@ -969,6 +970,7 @@ require(["jquery", "sakai/sakai.api.core", "fluid/3akai_Infusion"], function($, 
         
         var showAddWidgetDialog = function(iTuid){
             if (iTuid === tuid) {
+                sakai.api.Util.bindDialogFocus(addGoodiesDialog);
                 $(addGoodiesDialog, $rootel).jqmShow();
             }
         };
@@ -986,14 +988,14 @@ require(["jquery", "sakai/sakai.api.core", "fluid/3akai_Infusion"], function($, 
         var init = function(path, editmode, propertyname, fixedContainer) {
             if (sakai.data.me.user.userid === sakai_global.profile.main.data.userid) {
                 isOwnerViewing = true;
-                $rootel.closest("#s3d-page-container").find(".dashboard-admin-actions").show();
+                $rootel.closest(".contentauthoring_table_row").find(".dashboard-admin-actions").show();
                 if (propertyname === "personalportalwall") {
-                    $rootel.closest("#s3d-page-container").find(".s3d-contentpage-title").html(sakai.api.Util.TemplateRenderer("dashboard_title_template", {
+                    $rootel.closest(".contentauthoring_table_row").find(".s3d-contentpage-title").html(sakai.api.Util.TemplateRenderer("dashboard_title_template", {
                         isMe: true
                     }));
                 }
             } else if (propertyname === "personalportalwall") {
-                $rootel.closest("#s3d-page-container").find(".s3d-contentpage-title").html(sakai.api.Util.TemplateRenderer("dashboard_title_template", {
+                $rootel.closest(".contentauthoring_table_row").find(".s3d-contentpage-title").html(sakai.api.Util.TemplateRenderer("dashboard_title_template", {
                     isMe: false,
                     user: sakai.api.User.getFirstName(sakai_global.profile.main.data)
                 }));
@@ -1022,7 +1024,6 @@ require(["jquery", "sakai/sakai.api.core", "fluid/3akai_Infusion"], function($, 
                 sakai.api.Widgets.loadWidgetData(tuid, decideExists);
             }
         };
-
         if (document.location.pathname === "/dev/group.html"){
             $(window).bind("init.dashboard.sakai", function(e, path, editmode, propertyname, fixedContainer) {
                 init(path, editmode, propertyname, fixedContainer);
@@ -1030,7 +1031,7 @@ require(["jquery", "sakai/sakai.api.core", "fluid/3akai_Infusion"], function($, 
         } else if (widgetData.data.currentPageShown.path === "wall") {
             init(widgetData.data.currentPageShown.pageSavePath+"/", true, "personalportalwall", false);
         } else {
-            init("", true, "personalportal", false);
+            init("/~" + sakai.data.me.user.userid + "/private/privspace/", true, "personalportal", false);
         }
 
         /**

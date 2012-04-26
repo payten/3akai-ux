@@ -16,49 +16,53 @@
  * specific language governing permissions and limitations under the License.
  */
 
-require(["jquery","sakai/sakai.api.core"], function($, sakai) {
+require(['jquery','sakai/sakai.api.core'], function($, sakai) {
 
     sakai_global.createnew = function() {
 
         var pubdata = {
-            "structure0": {}
+            'structure0': {}
         };
 
-        var order = 0;
-        for (var i = 0; i < sakai.config.worldTemplates.length; i++){
+        for (var i = 0; i < sakai.config.worldTemplates.length; i++) {
             var category = sakai.config.worldTemplates[i];
-            if (sakai.api.Groups.canCreateTemplate(category.id)) {
-                pubdata.structure0[category.id] = {
-                    "_order": order,
-                    "_title": sakai.api.i18n.getValueForKey(category.title),
-                    "_ref": category.id
-                };
-                pubdata[category.id] = {
-                    "page": "<div id='widget_selecttemplate_" + category.id + "' class='widget_inline'></div>"
-                };
-                order++;
-            }
+            var rnd = sakai.api.Util.generateWidgetId();
+            pubdata.structure0[category.id] = {
+                '_order': i,
+                '_title': sakai.api.i18n.getValueForKey(category.title),
+                '_ref': rnd
+            };
+            pubdata[rnd] = {
+                'rows': [{
+                    'id': sakai.api.Util.generateWidgetId(),
+                    'columns': [{
+                        'width': 1,
+                        'elements': [
+                            {
+                                'id': category.id,
+                                'type': 'selecttemplate'
+                            }
+                        ]
+                    }]
+                }]
+            };
         }
 
-        var generateNav = function(){
-            $(window).trigger("lhnav.init", [pubdata, {}, {}]);
+        var generateNav = function() {
+            $(window).trigger('lhnav.init', [pubdata, {}, {}]);
         };
 
-        var renderCreateGroup = function(){
-            $(window).trigger("sakai.newcreategroup.init");
+        var renderCreateGroup = function() {
+            $(window).trigger('sakai.newcreategroup.init');
         };
 
-        $(window).bind("lhnav.ready", function(){
-            generateNav();
-        });
-
-        $(window).bind("newcreategroup.ready", function(){
-            renderCreateGroup();
-        });
+        $(window).bind('lhnav.ready', generateNav);
+        $(window).bind('newcreategroup.ready', renderCreateGroup);
 
         generateNav();
         
     };
 
-    sakai.api.Widgets.Container.registerForLoad("createnew");
+    sakai.api.Widgets.Container.registerForLoad('createnew');
+
 });
