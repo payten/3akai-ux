@@ -169,19 +169,21 @@ define(["config/config"], function(config) {
             "label": "__MSG__PROFILE_BASIC_DEPARTMENT_LABEL__",
             "required": false,
             "display": true
+        },        
+        "tags": {
+            "label": "__MSG__TAGS_AND_CATEGORIES__",
+            "required": false,
+            "display": true,
+            "type": "tags",
+            "tagField": true,
+            "example": "Fill in a few words or phrases (separated by commas) to help others with similar interests find you.  Examples: Nuclear Physics, Poetry, Women's Studies."
         },
         "academicinterests": {
             "label": "__MSG__PROFILE_ABOUTME_ACADEMICINTERESTS_LABEL__",
             "required": false,
             "display": true,
-            "type": "textarea"
-        },
-        "tags": {
-            "label": "__MSG__TAGS__",
-            "required": false,
-            "display": true,
-            "type": "tags",
-            "tagField": true
+            "type": "textarea",
+            "example": "Write a few sentences describing your academic interests. This description will form part of your public profile in ATLAS."
         }
     };
 
