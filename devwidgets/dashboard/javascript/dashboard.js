@@ -988,14 +988,9 @@ require(["jquery", "sakai/sakai.api.core", "jquery-ui"], function($, sakai) {
         var init = function(path, editmode, propertyname, fixedContainer) {
             if (sakai.data.me.user.userid === sakai_global.profile.main.data.userid) {
                 isOwnerViewing = true;
-                $rootel.closest(".contentauthoring_table_row").find(".dashboard-admin-actions").show();
-                if (propertyname === "personalportalwall") {
-                    $rootel.closest(".contentauthoring_table_row").find(".s3d-contentpage-title").html(sakai.api.Util.TemplateRenderer("dashboard_title_template", {
-                        isMe: true
-                    }));
-                }
-            } else if (propertyname === "personalportalwall") {
-                $rootel.closest(".contentauthoring_table_row").find(".s3d-contentpage-title").html(sakai.api.Util.TemplateRenderer("dashboard_title_template", {
+                $rootel.siblings(".dashboard-admin-actions").show();
+            } else if (propertyname === "personalportalwall") {                
+                $rootel.siblings(".s3d-contentpage-title").html(sakai.api.Util.TemplateRenderer("dashboard_title_template", {
                     isMe: false,
                     user: sakai.api.User.getFirstName(sakai_global.profile.main.data)
                 }));
