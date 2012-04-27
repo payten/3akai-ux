@@ -91,10 +91,10 @@
 #ebook_settings_search_results .ebook_awdl_error{margin:10px 0;}
 /* Display */
 #ebook_display{padding-top:10px;}
-.ebook_preview_wrapper .ebook_preview{padding:4px 4px 12px;}
+.ebook_preview_wrapper .ebook_preview{padding:4px 0 12px; float: left; width: 430px;}
 .ebook_preview_wrapper .ebook_preview .ebook_author{margin:0;line-height:120%;font-size:0.9em;}
 #ebook_display .ebook_no_book_set_message{padding:0 10px;}
-#ebook_display .ebook_preview_wrapper .ebook_preview{margin:4px;border:none;}
+#ebook_display .ebook_preview_wrapper .ebook_preview{margin:4px 0;border:none;}
 #ebook_display .ebook_details{margin-left:100px;}
 .ebook_preview_wrapper .ebook_preview .ebook_thumbnail_link{bottom:8px;padding:0 17.5px;position:absolute;}
 .ebook_preview_wrapper .ebook_preview .ebook_thumbnail_link img{width:65px;box-shadow:1px 1px 2px 1px #999;-moz-box-shadow:1px 1px 2px 1px #999;-webkit-box-shadow:1px 1px 2px 1px #999;}
@@ -118,6 +118,7 @@
         -moz-box-shadow: 0 2px 3px #999 inset;-webkit-box-shadow: 0 2px 3px #999 inset;box-shadow: 0 2px 3px #999 inset;
 }
 .ebook_reader_summary_thumbnail img {max-width: 160px;}
+
 /* Display style - Listing */
 #ebook_display .ebook_settings_book_order,
 #ebook_display .ebook_settings_caption_input{display:none;}

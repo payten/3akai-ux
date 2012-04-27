@@ -857,7 +857,7 @@ require(
                         // set the widget content height based on the first n*book heights
                         var widgetHeight = 0;
                         for (var i=0; i<parseInt(settings.rows, 10);i++) {
-                            widgetHeight += $(books[i]).height() + 20;
+                            widgetHeight += $(books[i]).height() + 25;
                         }
                         $(ebookDisplayPreviewWrapper, rootel).height(widgetHeight);
                     }
