@@ -989,7 +989,7 @@ require(["jquery", "sakai/sakai.api.core", "jquery-ui"], function($, sakai) {
             if (sakai.data.me.user.userid === sakai_global.profile.main.data.userid) {
                 isOwnerViewing = true;
                 $rootel.siblings(".dashboard-admin-actions").show();
-            } else if (propertyname === "personalportalwall") {                
+            } else if (propertyname === "personalportalwall") {
                 $rootel.siblings(".s3d-contentpage-title").html(sakai.api.Util.TemplateRenderer("dashboard_title_template", {
                     isMe: false,
                     user: sakai.api.User.getFirstName(sakai_global.profile.main.data)
