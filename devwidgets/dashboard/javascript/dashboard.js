@@ -23,7 +23,7 @@
  * /dev/lib/misc/trimpath.template.js (TrimpathTemplates)
  */
 
-require(["jquery", "sakai/sakai.api.core", "fluid/3akai_Infusion"], function($, sakai) {
+require(["jquery", "sakai/sakai.api.core", "jquery-ui"], function($, sakai) {
 
     /**
      * @name sakai_global.dashboard
@@ -817,6 +817,7 @@ require(["jquery", "sakai/sakai.api.core", "fluid/3akai_Infusion"], function($, 
             if (title) {
                 $("#paget_title_only", $rootel).html(" " + title);
             }
+            sakai.api.Util.bindDialogFocus(changeLayoutDialog);
             $(changeLayoutDialog, $rootel).jqmShow();
         };
 
@@ -969,6 +970,7 @@ require(["jquery", "sakai/sakai.api.core", "fluid/3akai_Infusion"], function($, 
         
         var showAddWidgetDialog = function(iTuid){
             if (iTuid === tuid) {
+                sakai.api.Util.bindDialogFocus(addGoodiesDialog);
                 $(addGoodiesDialog, $rootel).jqmShow();
             }
         };
@@ -1017,7 +1019,6 @@ require(["jquery", "sakai/sakai.api.core", "fluid/3akai_Infusion"], function($, 
                 sakai.api.Widgets.loadWidgetData(tuid, decideExists);
             }
         };
-
         if (document.location.pathname === "/dev/group.html"){
             $(window).bind("init.dashboard.sakai", function(e, path, editmode, propertyname, fixedContainer) {
                 init(path, editmode, propertyname, fixedContainer);
@@ -1025,7 +1026,7 @@ require(["jquery", "sakai/sakai.api.core", "fluid/3akai_Infusion"], function($, 
         } else if (widgetData.data.currentPageShown.path === "wall") {
             init(widgetData.data.currentPageShown.pageSavePath+"/", true, "personalportalwall", false);
         } else {
-            init("", true, "personalportal", false);
+            init("/~" + sakai.data.me.user.userid + "/private/privspace/", true, "personalportal", false);
         }
 
         /**
