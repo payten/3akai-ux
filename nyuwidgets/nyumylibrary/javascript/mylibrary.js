@@ -248,13 +248,13 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                     if (data.hasOwnProperty("facet_fields") && data.facet_fields.length && data.facet_fields[0].hasOwnProperty("tagname") && data.facet_fields[0].tagname.length) {                        
 			tagArray = [];
                         // put the tags from the tag cloud service into an array
-                        $.each(data.facet_fields[0].tagname, function( i, tagobj ) {
-                            var tag = sakai.api.Util.formatTags( _.keys( tagobj )[ 0 ] )[ 0 ];
-                            tag.count = _.values( tagobj )[ 0 ];
+                        for (var i=0; i<data.facet_fields[0].tagname.length; i++) {
+                           var tag =  sakai.api.Util.formatTags( $.map(data.facet_fields[0].tagname[i], function(v,k) {return k;})[ 0 ] )[ 0 ];
+                           tag.count = data.facet_fields[0].tagname[i][tag["original"]];
                             if (tag.count > 0) {
                                 tagArray.push( tag );
-                            }
-                        });
+                            }                           
+                        };
                         tagArray.sort(function(a, b){
                             var nameA = a.value.toLowerCase();
                             var nameB = b.value.toLowerCase();

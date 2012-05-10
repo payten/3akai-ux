@@ -309,7 +309,7 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
                             if (tag.count > 0) {
                                 tagArray.push( tag );
                             }                           
-                        };                        
+                        };
                         tagArray.sort(function(a, b){
                             var nameA = a.value.toLowerCase();
                             var nameB = b.value.toLowerCase();
