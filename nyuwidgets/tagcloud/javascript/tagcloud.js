@@ -36,11 +36,11 @@ require(["jquery", "sakai/sakai.api.core", "/nyuwidgets/tagcloud/lib/jquery.jqcl
             var tagArray = [];
             // Filter out directory tagcloud
             if ( tagData.facet_fields && tagData.facet_fields.length && tagData.facet_fields[ 0 ].tagname && tagData.facet_fields[ 0 ].tagname.length) {
-                $.each(tagData.facet_fields[0].tagname, function( i, tagobj ) {
-                    var tag = sakai.api.Util.formatTags( _.keys( tagobj )[ 0 ] )[ 0 ];
-                    tag.count = _.values( tagobj )[ 0 ];
+                for (var i=0; i<tagData.facet_fields[0].tagname.length; i++) {
+                    var tag =  sakai.api.Util.formatTags( $.map(tagData.facet_fields[0].tagname[i], function(v,k) {return k;})[ 0 ] )[ 0 ];
+                    tag.count = tagData.facet_fields[0].tagname[i][tag["original"]];
                     tagArray.push( tag );
-                });
+                };
 
                 // Sort the tagcloud in order of magnitude/hits for the tag cloud
                 tagArray.sort(function(a, b){
