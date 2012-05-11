@@ -215,10 +215,12 @@ a.inserterbar_action_link {
 
 /* group - add content overrides */
 #addarea_container ul#addarea_content_menu li.selected ul.addarea_content_menu_item_subnav li.selected,
-.addarea_existing_item.selected {
+.addarea_existing_item.selected,
+.newaddcontent_container_lhchoice_subitem.newaddcontent_container_lhchoice_selected_subitem {
     background-image: url(images/lhnav_selected_item_bg.png) !important;
 }
 #addarea_container ul#addarea_content_menu li.selected ul.addarea_content_menu_item_subnav li.selected button,
-.addarea_existing_item.selected a {
+.addarea_existing_item.selected a,
+.newaddcontent_container_lhchoice_subitem.newaddcontent_container_lhchoice_selected_subitem a {
     color: #FFF !important;
 }
