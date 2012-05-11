@@ -85,6 +85,7 @@
 #ebook_settings_customize_form{padding:2px 0 2px 4px;color:#333333;font-size:0.9em;background-color:#f7f2fa;}
 #ebook_settings_customize_form .ebook_customize_form_actions{float:right;}
 #ebook_settings_customize_form label{display:inline-block;width:80px;}
+#ebook_settings_customize_form .ebook_settings_title_fields label {width: auto;}
 #ebook_settings_customize_form input{border:1.5px solid #DEDEDE;margin-bottom:8px;padding:5px 0;width:98%;}
 .ebook_awdl_error{background-color:#FFEEEE;border:2px solid #FFAAAA;color:#993333;margin:4px;padding:5px;}
 .ebook_awdl_error p{color:#666666;font-size:0.9em;margin:4px 0 0;}
