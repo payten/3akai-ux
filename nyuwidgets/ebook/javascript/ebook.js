@@ -396,7 +396,7 @@ require(
 
                 $(ebookReaderDialog).jqmShow();
 
-                renderOembedReader(bookData, $(ebookReaderDialog).find(".ebook_reader_dialog_content"), $(ebookReaderDialog).find(".ebook_reader_dialog_content").height() - 24, $(ebookReaderDialog).find(".ebook_reader_dialog_content").width() - 210);                
+                renderOembedReader(bookData, $(ebookReaderDialog).find(".ebook_reader_dialog_content"), $(ebookReaderDialog).find(".ebook_reader_dialog_content").height()-40, $(ebookReaderDialog).find(".ebook_reader_dialog_content").width() - 210);
             });
 
             // action for removing the ebook reader dialog
@@ -892,6 +892,7 @@ require(
                     var ebookReaderContainer = ".ebook_reader_for_"+data.nid;
                     
                     targetContainer.append(sakai.api.Util.TemplateRenderer(ebookReaderOembedTemplate, data));
+                    $(ebookReaderContainer, rootel).height(height+50);
                     $(ebookReaderContainer, targetContainer).find(".ebook_reader_summary").width(200);
                     $(ebookReaderContainer, targetContainer).find(".ebook_reader_frame").width(width);
                     $(data.html).load(function() {
