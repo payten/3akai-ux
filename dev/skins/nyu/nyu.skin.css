@@ -212,3 +212,13 @@ a.inserterbar_action_link {
      background-image: url("images/button_overlay_action_hover.png") !important;
      background-color: #530691 !important;
 }
+
+/* group - add content overrides */
+#addarea_container ul#addarea_content_menu li.selected ul.addarea_content_menu_item_subnav li.selected,
+.addarea_existing_item.selected {
+    background-image: url(images/lhnav_selected_item_bg.png) !important;
+}
+#addarea_container ul#addarea_content_menu li.selected ul.addarea_content_menu_item_subnav li.selected button,
+.addarea_existing_item.selected a {
+    color: #FFF !important;
+}
