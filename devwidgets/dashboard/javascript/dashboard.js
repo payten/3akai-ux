@@ -988,9 +988,9 @@ require(["jquery", "sakai/sakai.api.core", "jquery-ui"], function($, sakai) {
         var init = function(path, editmode, propertyname, fixedContainer) {
             if (sakai.data.me.user.userid === sakai_global.profile.main.data.userid) {
                 isOwnerViewing = true;
-                $rootel.siblings(".dashboard-admin-actions").show();
+                $rootel.parents(".contentauthoring_cell_content:first").find(".dashboard-admin-actions").show();
             } else if (propertyname === "personalportalwall") {
-                $rootel.siblings(".s3d-contentpage-title").html(sakai.api.Util.TemplateRenderer("dashboard_title_template", {
+                $rootel.parents(".contentauthoring_cell_content:first").find(".s3d-contentpage-title").html(sakai.api.Util.TemplateRenderer("dashboard_title_template", {
                     isMe: false,
                     user: sakai.api.User.getFirstName(sakai_global.profile.main.data)
                 }));
@@ -1018,15 +1018,18 @@ require(["jquery", "sakai/sakai.api.core", "jquery-ui"], function($, sakai) {
             } else {
                 sakai.api.Widgets.loadWidgetData(tuid, decideExists);
             }
-        };
+        };        
         if (document.location.pathname === "/dev/group.html"){
             $(window).bind("init.dashboard.sakai", function(e, path, editmode, propertyname, fixedContainer) {
                 init(path, editmode, propertyname, fixedContainer);
             });
-        } else if (widgetData.data.currentPageShown.path === "wall") {
-            init(widgetData.data.currentPageShown.pageSavePath+"/", true, "personalportalwall", false);
         } else {
-            init("/~" + sakai.data.me.user.userid + "/private/privspace/", true, "personalportal", false);
+            var currentPageShown = sakai_global.lhnavigation.getCurrentPage();
+            if (currentPageShown.path === "wall") {
+                init(currentPageShown.pageSavePath+"/", true, "personalportalwall", false);
+            } else {
+                init("/~" + sakai.data.me.user.userid + "/private/privspace/", true, "personalportal", false);
+            }
         }
 
         /**
