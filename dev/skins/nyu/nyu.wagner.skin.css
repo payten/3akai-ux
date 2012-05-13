@@ -3,8 +3,7 @@ html, .requireUser {
 background: #f0f0f0 url("images/body_nyu_wagner_bg.png") left top repeat-x !important;
 }
 /* Header */
-#institutionalskinning_logo,
-#top_banner_logo {
+.branding_widget {
 	background:transparent url("images/nyu_wagner_logos.png") top center no-repeat !important;
 }
 
