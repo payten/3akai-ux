@@ -318,37 +318,47 @@ define(
          * @param {Array}  an array containing a string for each namespace to move
          */
         removeServerCreatedObjects : function(obj, namespace, notToRemove) {
-            var newobj = false;
             if ($.isPlainObject(obj)) {
-                newobj = $.extend(true, {}, obj);
                 notToRemove = notToRemove || [];
-                $.each(newobj, function(key,val) {
-                    for (var ns = 0; ns < namespace.length; ns++) {
-                        if (key && key.indexOf && key.indexOf(namespace[ns]) === 0) {
-                            var canRemove = true;
-                            for (var i = 0; i < notToRemove.length; i++) {
-                                if (notToRemove[i] === key) {
-                                    canRemove = false;
+                //$.each(obj, function(key,val) {
+                for (var key in obj) {
+                    if (obj.hasOwnProperty(key)) {
+                        var deleted = false;
+                        for (var ns = 0; ns < namespace.length; ns++) {
+                            if (key && key.indexOf && key.indexOf(namespace[ns]) === 0) {
+                                var canRemove = true;
+                                for (var i = 0; i < notToRemove.length; i++) {
+                                    if (notToRemove[i] === key) {
+                                        canRemove = false;
+                                        break;
+                                    }
+                                }
+                                if (canRemove) {
+                                    delete obj[key];
+                                    deleted = true;
                                     break;
                                 }
                             }
-                            if (canRemove) {
-                                delete newobj[key];
-                            }
-                        } else if ($.isPlainObject(newobj[key]) || $.isArray(newobj[key])) {
-                            newobj[key] = sakaiServerAPI.removeServerCreatedObjects(newobj[key], namespace, notToRemove);
+                        }
+                        if (deleted) {
+                            break;
+                        } else if ($.isPlainObject(obj[key]) || $.isArray(obj[key])) {
+                            obj[key] = sakaiServerAPI.removeServerCreatedObjects(obj[key], namespace, notToRemove);
                         }
                     }
-                });
+                }
+                //});
             } else if ($.isArray(obj)) {
-                newobj = $.merge([], obj);
-                $.each(newobj, function(key, val) {
-                    if ($.isPlainObject(newobj[key]) || $.isArray(newobj[key])) {
-                        newobj[key] = sakaiServerAPI.removeServerCreatedObjects(newobj[key], namespace, notToRemove);
+                obj = $.merge([], obj);
+                $.each(obj, function(key, val) {
+                    if ($.isPlainObject(obj[key]) || $.isArray(obj[key])) {
+                        obj[key] = sakaiServerAPI.removeServerCreatedObjects(obj[key], namespace, notToRemove);
                     }
                 });
+            } else {
+                return false;
             }
-            return newobj;
+            return obj;
         },
 
         /**
