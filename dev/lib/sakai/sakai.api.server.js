@@ -316,46 +316,53 @@ define(
          *
          * @param {Object} the object to clean
          * @param {Array}  an array containing a string for each namespace to move
+         * @param {Array}  an array containing strings for each key not to remove
          */
-        removeServerCreatedObjects : function(obj, namespace, notToRemove) {
-            if ($.isPlainObject(obj)) {
-                notToRemove = notToRemove || [];
-                for (var key in obj) {
-                    if (obj.hasOwnProperty(key)) {
-                        var deleted = false;
-                        for (var ns = 0; ns < namespace.length; ns++) {
-                            if (key && key.indexOf && key.indexOf(namespace[ns]) === 0) {
-                                var canRemove = true;
-                                for (var i = 0; i < notToRemove.length; i++) {
-                                    if (notToRemove[i] === key) {
-                                        canRemove = false;
+        removeServerCreatedObjects : function(origObj, namespace, notToRemove) {           
+            // clean() - the recursive cleaning function
+            var clean = function(obj) {
+                if ($.isPlainObject(obj)) {
+                    notToRemove = notToRemove || [];
+                    for (var key in obj) {
+                        if (obj.hasOwnProperty(key)) {
+                            var deleted = false;
+                            for (var ns = 0; ns < namespace.length; ns++) {
+                                if (key && key.indexOf && key.indexOf(namespace[ns]) === 0) {
+                                    var canRemove = true;
+                                    for (var i = 0; i < notToRemove.length; i++) {
+                                        if (notToRemove[i] === key) {
+                                            canRemove = false;
+                                            break;
+                                        }
+                                    }
+                                    if (canRemove) {
+                                        delete obj[key];
+                                        deleted = true;
                                         break;
                                     }
                                 }
-                                if (canRemove) {
-                                    delete obj[key];
-                                    deleted = true;
-                                    break;
-                                }
+                            }
+                            if (deleted) {
+                                continue;
+                            } else if ($.isPlainObject(obj[key]) || $.isArray(obj[key])) {
+                                clean(obj[key]);
                             }
                         }
-                        if (deleted) {
-                            continue;
-                        } else if ($.isPlainObject(obj[key]) || $.isArray(obj[key])) {
-                            obj[key] = sakaiServerAPI.removeServerCreatedObjects(obj[key], namespace, notToRemove);
+                    }
+                } else if ($.isArray(obj)) {
+                    $.each(obj, function(key, val) {
+                        if ($.isPlainObject(obj[key]) || $.isArray(obj[key])) {
+                            clean(obj[key]);
                         }
-                    }
+                    });
                 }
-            } else if ($.isArray(obj)) {
-                $.each(obj, function(key, val) {
-                    if ($.isPlainObject(obj[key]) || $.isArray(obj[key])) {
-                        obj[key] = sakaiServerAPI.removeServerCreatedObjects(obj[key], namespace, notToRemove);
-                    }
-                });
-            } else {
-                return false;
-            }
-            return obj;
+            };
+            // clone the object... for some reason?
+            var tree = $.extend(true, {}, origObj);
+            // clean it...
+            clean(tree);
+            // return the clean tree
+            return tree;
         },
 
         /**
