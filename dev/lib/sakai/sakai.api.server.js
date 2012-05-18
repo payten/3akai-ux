@@ -318,7 +318,7 @@ define(
          * @param {Array}  an array containing a string for each namespace to move
          * @param {Array}  an array containing strings for each key not to remove
          */
-        removeServerCreatedObjects : function(obj, namespace, notToRemove) {           
+        removeServerCreatedObjects : function(obj, namespace, notToRemove) {
             var junk_regexp = new RegExp('^(' + namespace.join('|') + ')');
 
             var protected_fields = {}
