@@ -318,51 +318,36 @@ define(
          * @param {Array}  an array containing a string for each namespace to move
          * @param {Array}  an array containing strings for each key not to remove
          */
-        removeServerCreatedObjects : function(origObj, namespace, notToRemove) {           
-            // clean() - the recursive cleaning function
-            var clean = function(obj) {
-                if ($.isPlainObject(obj)) {
-                    notToRemove = notToRemove || [];
-                    for (var key in obj) {
-                        if (obj.hasOwnProperty(key)) {
-                            var deleted = false;
-                            for (var ns = 0; ns < namespace.length; ns++) {
-                                if (key && key.indexOf && key.indexOf(namespace[ns]) === 0) {
-                                    var canRemove = true;
-                                    for (var i = 0; i < notToRemove.length; i++) {
-                                        if (notToRemove[i] === key) {
-                                            canRemove = false;
-                                            break;
-                                        }
-                                    }
-                                    if (canRemove) {
-                                        delete obj[key];
-                                        deleted = true;
-                                        break;
-                                    }
-                                }
-                            }
-                            if (deleted) {
-                                continue;
-                            } else if ($.isPlainObject(obj[key]) || $.isArray(obj[key])) {
-                                clean(obj[key]);
-                            }
-                        }
-                    }
-                } else if ($.isArray(obj)) {
-                    $.each(obj, function(key, val) {
-                        if ($.isPlainObject(obj[key]) || $.isArray(obj[key])) {
-                            clean(obj[key]);
+        removeServerCreatedObjects : function(obj, namespace, notToRemove) {           
+            var junk_regexp = new RegExp('^(' + namespace.join('|') + ')');
+
+            var protected_fields = {}
+            for (var field in notToRemove) {
+                protected_fields[notToRemove[field]] = true;
+            }
+
+            var root = $.extend(true, {}, obj);
+            var stack = [root];
+
+            while (stack.length > 0) {
+                var tree = stack.pop();
+
+                if ($.isPlainObject(tree)) {
+                    $.each(tree, function (key, val) {
+                        if (!protected_fields[key] && junk_regexp.test(key)) {
+                            delete tree[key];
+                        } else {
+                            stack.push(val);
                         }
                     });
+                } else if ($.isArray(tree)) {
+                    for (var elt in tree) {
+                        stack.push(tree[elt]);
+                    }
                 }
             };
-            // clone the object... for some reason?
-            var tree = $.extend(true, {}, origObj);
-            // clean it...
-            clean(tree);
-            // return the clean tree
-            return tree;
+
+            return root;
         },
 
         /**
