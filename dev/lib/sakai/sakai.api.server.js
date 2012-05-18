@@ -316,39 +316,38 @@ define(
          *
          * @param {Object} the object to clean
          * @param {Array}  an array containing a string for each namespace to move
+         * @param {Array}  an array containing strings for each key not to remove
          */
         removeServerCreatedObjects : function(obj, namespace, notToRemove) {
-            var newobj = false;
-            if ($.isPlainObject(obj)) {
-                newobj = $.extend(true, {}, obj);
-                notToRemove = notToRemove || [];
-                $.each(newobj, function(key,val) {
-                    for (var ns = 0; ns < namespace.length; ns++) {
-                        if (key && key.indexOf && key.indexOf(namespace[ns]) === 0) {
-                            var canRemove = true;
-                            for (var i = 0; i < notToRemove.length; i++) {
-                                if (notToRemove[i] === key) {
-                                    canRemove = false;
-                                    break;
-                                }
-                            }
-                            if (canRemove) {
-                                delete newobj[key];
-                            }
-                        } else if ($.isPlainObject(newobj[key]) || $.isArray(newobj[key])) {
-                            newobj[key] = sakaiServerAPI.removeServerCreatedObjects(newobj[key], namespace, notToRemove);
-                        }
-                    }
-                });
-            } else if ($.isArray(obj)) {
-                newobj = $.merge([], obj);
-                $.each(newobj, function(key, val) {
-                    if ($.isPlainObject(newobj[key]) || $.isArray(newobj[key])) {
-                        newobj[key] = sakaiServerAPI.removeServerCreatedObjects(newobj[key], namespace, notToRemove);
-                    }
-                });
+            var junk_regexp = new RegExp('^(' + namespace.join('|') + ')');
+
+            var protected_fields = {}
+            for (var field in notToRemove) {
+                protected_fields[notToRemove[field]] = true;
             }
-            return newobj;
+
+            var root = $.extend(true, {}, obj);
+            var stack = [root];
+
+            while (stack.length > 0) {
+                var tree = stack.pop();
+
+                if ($.isPlainObject(tree)) {
+                    $.each(tree, function (key, val) {
+                        if (!protected_fields[key] && junk_regexp.test(key)) {
+                            delete tree[key];
+                        } else {
+                            stack.push(val);
+                        }
+                    });
+                } else if ($.isArray(tree)) {
+                    for (var elt in tree) {
+                        stack.push(tree[elt]);
+                    }
+                }
+            };
+
+            return root;
         },
 
         /**
