@@ -320,7 +320,6 @@ define(
         removeServerCreatedObjects : function(obj, namespace, notToRemove) {
             if ($.isPlainObject(obj)) {
                 notToRemove = notToRemove || [];
-                //$.each(obj, function(key,val) {
                 for (var key in obj) {
                     if (obj.hasOwnProperty(key)) {
                         var deleted = false;
@@ -341,15 +340,13 @@ define(
                             }
                         }
                         if (deleted) {
-                            break;
+                            continue;
                         } else if ($.isPlainObject(obj[key]) || $.isArray(obj[key])) {
                             obj[key] = sakaiServerAPI.removeServerCreatedObjects(obj[key], namespace, notToRemove);
                         }
                     }
                 }
-                //});
             } else if ($.isArray(obj)) {
-                obj = $.merge([], obj);
                 $.each(obj, function(key, val) {
                     if ($.isPlainObject(obj[key]) || $.isArray(obj[key])) {
                         obj[key] = sakaiServerAPI.removeServerCreatedObjects(obj[key], namespace, notToRemove);
