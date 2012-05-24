@@ -258,6 +258,15 @@ require(["jquery", "sakai/sakai.api.core", "/devwidgets/documentviewer/lib/docum
 
             if (sakai.api.Content.isKalturaPlayerSupported(mimeType)) {
                 renderKalturaPlayer(data);
+
+                // ATLASINT-181: disable the download button for NYU Stream content
+                var disableDownload = function () {
+                    $('#contentpreview_download_button').hide();
+                };
+
+                disableDownload();
+                $(window).bind("sakai.entity.ready", disableDownload);
+
             } else if (sakai.api.Content.isJwPlayerSupportedVideo(mimeType)){            
                 renderVideoPlayer(getPath(data));
             } else if (sakai.api.Content.isJwPlayerSupportedAudio(mimeType)) {
