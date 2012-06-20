@@ -1,0 +1,276 @@
+<!-- CSS -->
+<link rel="stylesheet" type="text/css" href="/nyuwidgets/openebook/css/ebook.css" />
+
+<div>
+
+    <!-- SETTINGS VIEW -->
+    <div id="ebook_settings" class="s3d-widget-content fl-widget-content" style="display:none">
+        <div class="ebook_settings_section expanded">
+            <div class="ebook_settings_section_header">
+                <h3>__MSG__SELECTED_SECTION_TITLE__</h3>
+            </div>
+
+            <div id="ebook_settings_existing_selection" class="ebook_settings_section_content">
+                <ul class="ebook_settings_book_list"></ul>
+            </div>
+        </div>
+
+        <div class="ebook_settings_section expanded">
+            <div class="ebook_settings_section_header">
+                <h3>__MSG__SEARCH_SECTION_TITLE__</h3>
+            </div>
+
+            <div class="ebook_settings_search_wrapper ebook_settings_section_content">
+                <form id="ebook_settings_search_form">
+                    <input type="text" id="ebook_search_string"/>
+                    <button type="submit" class="s3d-button s3d-overlay-button ebook_search_btnSearchURL"><span class="s3d-button-inner">__MSG__SEARCH_BUTTON__</span></button>
+                    <div class="ebook_settings_search_pagination" style="display: none;"></div>
+                </form>
+                <div id="ebook_settings_search_results"></div>
+                <div class="ebook_settings_search_footer">
+                    <div class="ebook_settings_search_pagination" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ebook_settings_section">
+            <div class="ebook_settings_section_header">
+                <h3>__MSG__CUSTOMIZE_SECTION_TITLE__</h3>
+            </div>
+
+            <div class="ebook_settings_customize_wrapper ebook_settings_section_content" style="display: none;">
+
+            </div>
+        </div>
+
+        <div class="dialog_buttons">
+            <button type="button" class="s3d-button s3d-overlay-button" id="ebook_settings_btnSave"><span class="s3d-button-inner">__MSG__SAVE_SETTINGS__</span></button>
+        </div>
+        <div class="fl-push"></div>
+    </div>
+
+    <!-- MAIN VIEW -->
+    <div  id="ebook_display" class="s3d-widget-content fl-widget-content" style="display:none">
+
+    </div>
+
+    <!-- WIDGET FOOTER-->
+    <div class="s3d-widget-no-options">
+        <div class="s3d-widget-no-options-inner"></div>
+    </div>
+
+
+    <div id="ebook_reader_dialog" class="s3d-dialog s3d-dialog-container" style="display:none"></div>
+    <div id="ebook_remove_confirmation_dialog" class="s3d-dialog s3d-dialog-container" style="display:none"></div>
+
+    <!-- TEMPLATES -->
+    <div id="ebook_display_template" style="display: none;"><!--
+      <div class="ebook_preview_wrapper">
+      {for id in order}
+          <div class="ebook_preview">
+              <div class="ebook_bookshelf">
+                  <div class="ebook_thumbnail">
+                    <a title="__MSG__INVOKE_READER_LINK_TEXT__" href="javascript:void(0);" class="ebook_btnShowReader ebook_thumbnail_link"><img src="${books[id].data.ts_field_awdl_thumbnail}" alt="" /></a>
+                  </div>
+                  <div class="ebook_details">
+                      <div class="ebook_title" id="book-${books[id].data.identifier}"><a href="javascript:void(0);" class="ebook_btnShowReader ebook_title_link"><span class="ebook_trunc_me">${unescape(books[id].data.title)}</span></a></div>
+                      <p class="ebook_author"><span class="ebook_trunc_me">__MSG__AUTHOR_PREFIX__ ${unescape(books[id].data.creator.join("; "))}</span></p>
+                      <div class="ebook_widget_actions">
+                        <a href="javascript:void(0);" class="ebook_btnShowReader">__MSG__INVOKE_READER_LINK_TEXT__</a>
+                        <a href="${books[id].data.url}" target="_blank" class="ebook_btnViewInAWDL">__MSG__VIEW_IN_LIBRARY_LINK_TEXT__</a>
+                      </div>
+                  </div>
+                  <div class="fl-push"></div>
+              </div>
+              <input type="hidden" name="identifier" value="${books[id].data.identifier}"/>
+              {if books[id].caption != null && books[id].caption.length > 0}
+              <div class="ebook_caption_container">
+                <div class="ebook_arrowUp"></div>
+                <div class="ebook_captions">
+                    <div class="ebook_caption">${books[id].caption.replace( /\n/g, '<br />\n' )}</div>
+                </div>
+              </div>
+              {/if}
+              <div class="fl-push"></div>
+          </div>
+          {if id_index%2 == 1}
+            <div class="fl-push"></div>
+          {/if}
+      {/for}
+      <div class="fl-push"></div>
+      </div>
+    --></div>
+    <div id="ebook_list_template" style="display: none;"><!--
+      <ul class="ebook_settings_book_list ebook_sorted_by_${sort}">
+      {for id in order}
+        <li class="ebook_preview ebook_settings_book_list_item  {if books[id].selected} already_selected{/if} {if order.indexOf(id)==0}first{/if} {if (order.indexOf(id)+1)==order.length}last{/if}">
+          <div class="ebook_settings_book_list_item_header">
+              <div class="ebook_settings_book_list_item_sort_handles">
+                 <a class="ebook_settings_book_order_up_action" title="__MSG__ORDER_MOVE_UP_LINK_TEXT__" rel="-1" href="javascript:void(0);"></a>
+                 <a class="ebook_settings_book_order_down_action" title="__MSG__ORDER_MOVE_DOWN_LINK_TEXT__" rel="1" href="javascript:void(0);"></a>
+              </div>
+              <div class="ebook_title" id="book-${books[id].data.identifier}"><a href="javascript:void(0);">${unescape(books[id].data.title)}</a></div>
+              {if (books[id].data.creator)}<div class="ebook_author">__MSG__AUTHOR_PREFIX__ ${unescape(books[id].data.creator.join("; "))}</div>{/if}
+			  {if (books[id].data.date)}<div class="ebook_date">${books[id].data.date.substring(0,4)}</div>{/if}
+              <div class="ebook_settings_book_list_item_toggle_handle"></div>
+          </div>
+          <div class="ebook_settings_book_list_item_content">
+            <form class="ebook_settings_book_form" onsubmit="return false;">
+              <input type="hidden" name="identifier" value="${books[id].data.identifier}"/>
+              {if (books[id].data.ts_field_awdl_thumbnail && books[id].data.ts_field_awdl_thumbnail != "/")}
+                <a title="__MSG__INVOKE_READER_LINK_TEXT__" href="javascript:void(0);" class="ebook_btnShowReader ebook_thumbnail_link"><img src="${books[id].data.ts_field_awdl_thumbnail}" alt="" /></a>
+              {/if}
+              <div class="ebook_settings_book_info">
+                  <div class="ebook_widget_actions">
+                     <a href="javascript:void(0);" class="ebook_btnShowReader">__MSG__INVOKE_READER_LINK_TEXT__</a>
+                     <a href="${books[id].data.url}" target="_blank" class="ebook_btnViewInAWDL">__MSG__VIEW_IN_LIBRARY_LINK_TEXT__</a>
+                  </div>
+                  {if (books[id].data.publisher)}
+                    <div class="ebook_settings_book_metadata"><span class="ebook_settings_book_metadata_label">__MSG__PUBLISHER_LABEL__:</span> <span class="ebook_settings_book_metadata_value">${unescape(books[id].data.publisher.join("; "))}</span></div>
+                  {/if}
+                  {if defined('editable') && editable === true}
+                      <div class="ebook_settings_book_order">
+                        <label for="ebook_caption_${books[id].data.identifier}">__MSG__ORDER_LABEL__:</label>
+                        <a href="javascript:void(0);" class="ebook_settings_book_order_up_action" rel="-1">__MSG__ORDER_MOVE_UP_LINK_TEXT__</a> <span class="ebook_settings_book_order_action_separator">|</span> <a href="javascript:void(0);" class="ebook_settings_book_order_down_action" rel="1">__MSG__ORDER_MOVE_DOWN_LINK_TEXT__</a>
+                      </div>
+                      <div class="ebook_settings_caption_input">
+                        <label for="ebook_caption_${books[id].data.identifier}">__MSG__CAPTION_LABEL__:</label>
+                        <p>
+                            <textarea name="caption" id="ebook_caption_${books[id].data.identifier}" col="60" rows="2">${books[id].caption}</textarea>
+                        </p>
+                      </div>
+                  {/if}
+              </div>
+              {if books[id].caption != null && books[id].caption.length > 0}<div class="ebook_settings_caption_display_container"><div class="ebook_arrowUp"></div><div class="ebook_settings_caption_display">${books[id].caption.replace( /\n/g, '<br />\n' )}</div></div>{/if}
+              {if defined('editable') && editable === true}
+                  <div class="dialog_buttons ebook_selected_actions" style="display:none;">
+                    <button type="button" class="s3d-button s3d-header-button ebook_settings_btnRemove"><span class="s3d-button-inner">__MSG__REMOVE_BUTTON__</span></button>
+                    <button type="button" class="s3d-button s3d-header-button ebook_settings_btnUpdate"><span class="s3d-button-inner">__MSG__UPDATE_BUTTON__</span></button>
+                  </div>
+                  <div class="dialog_buttons ebook_search_result_actions" style="display:none;">
+                    <button type="button" class="s3d-button s3d-header-button" id="ebook_settings_btnAdd"><span class="s3d-button-inner">__MSG__SETTINGS_ADD_BOOK_BUTTON__</span></button>
+                  </div>
+              {/if}
+              <div class="fl-push"></div>
+            </form>
+         </div>
+         <div class="fl-push"></div>
+        </li>
+      {/for}
+      </ul>
+    --></div>
+    <div id="ebook_search_error_template" style="display: none;"><!--
+      <div>__MSG__SEARCH_NO_RESULTS__ for: ${argument}</div>
+      <p>Error message: ${message}</p>
+      <p>Error code: ${code}</p>
+    --></div>
+    <div id="ebook_reader_dialog_template" style="display: none;"><!--
+        <div class="s3d-dialog-close jqmClose"></div>
+        <h1 class="s3d-dialog-header ebook_reader_dialog_title">__MSG__READER_DIALOG_TITLE__</h1>
+        <div class="ebook_reader_dialog_content">
+			<div id="BookReader"></div>
+		</div>
+    --></div>
+    <div id="ebook_reader_oembed_template" style="display: none;"><!--
+         <div class="ebook_reader_oembed ebook_reader_for_${identifier}">
+            <div class="ebook_reader_summary">
+               <div class="ebook_reader_summary_thumbnail"><img src="${thumbnail_url}"/></div>
+               <div class="ebook_reader_summary_title">${title}</div>
+               <div class="ebook_reader_summary_author">by ${author_name}</div>
+            </div>
+            <div class="ebook_reader_frame">
+               <div class="ebook_page_navigation">
+                    <div id="ebook_page_navigation_slider"></div>
+                    <span class="ebook_reader_navigation_select_container">
+                        Go to page <select id="ebook_reader_navigation_select">
+                           {var all_pages = $.makeArray(new Array(pages))}
+                           {for i in all_pages}<option value="${parseInt(i_index)+1}" {if start_index === (parseInt(i_index)+1)}selected="selected"{/if}>${parseInt(i_index)+1}</option>{/for}
+                        </select> of ${pages}
+                    </span>
+               </div>
+            </div>
+            <div id="ebook_reader_iframe_blockout"><img src="/dev/images/ajax_load.gif"/></div>
+        </div>
+    --></div>
+    <div id="ebook_settings_search_pagination_template" style="display: none;"><!--
+        <span class="ebook_search_pagination_index">Results ${start} to ${end} (${total} total)</span>
+        <span class="ebook_search_pagination_navigation">
+            {if start > 1}<a class="ebook_search_pagination_prev" href="javascript:void(0);" rel="${start - 1 - rows}">__MSG__PAGINATION_PREV_LINK_TEXT__</a>{/if}
+            {if start > 1 && end < total} | {/if}
+            {if end < total}<a class="ebook_search_pagination_next" href="javascript:void(0);" rel="${start - 1  + rows}">__MSG__PAGINATION_NEXT_LINK_TEXT__</a>{/if}
+        </span>
+    --></div>
+    <div id="ebook_settings_customize_form_template" style="display: none;"><!--
+      <form id="ebook_settings_customize_form">
+          <div class="ebook_settings_title_fields">
+            <label for="ebook_title">__MSG__TITLE_LABEL__:</label>
+            <input type="text" name="title" {if defined('title')}value="${title}"{/if} />
+          </div>
+          <div>
+            <label for="ebook_sort">__MSG__SORT_LABEL__:</label>
+            <select name="sort" id="ebook_sort">
+                <option value="custom">__MSG__OPTION_SORT_CUSTOM__</option>
+                <option value="title" {if defined('sort') && sort == "title"}selected{/if}>__MSG__OPTION_SORT_TITLE__</option>
+                <option value="author"  {if defined('sort') && sort == "author"}selected{/if}>__MSG__OPTION_SORT_AUTHOR__</option>
+            </select>
+          </div>
+          <div>
+            <label for="ebook_display_style">__MSG__DISPLAY_STYLE_LABEL__:</label>
+            <select name="display_style" id="ebook_display_style">
+                <option value="bookshelf"  {if defined('display_style') && display_style == 'bookshelf'}selected{/if}>__MSG__OPTION_DISPLAY_STYLE_BOOKSHELF__</option>
+                <option value="listing"  {if defined('display_style') && display_style == 'listing'}selected{/if}>__MSG__OPTION_DISPLAY_STYLE_LISTING__</option>
+                <option value="reader"  {if defined('display_style') && display_style == 'reader'}selected{/if}>__MSG__OPTION_DISPLAY_STYLE_READER__</option>
+            </select>
+          </div>
+          <div {if defined('display_style') && display_style != 'bookshelf'} style="display:none;" {/if} >
+            <label for="ebook_rows">__MSG__ROWS_LABEL__:</label>
+            <select name="rows" id="ebook_rows">
+                <option value="">__MSG__OPTION_ROWS_AUTO__</option>
+                <option value="1"  {if defined('rows') && rows == 1}selected{/if}>1</option>
+                <option value="2"  {if defined('rows') && rows == 2}selected{/if}>2</option>
+                <option value="3"  {if defined('rows') && rows == 3}selected{/if}>3</option>
+                <option value="4"  {if defined('rows') && rows == 4}selected{/if}>4</option>
+                <option value="5"  {if defined('rows') && rows == 5}selected{/if}>5</option>
+            </select>
+          </div>
+          <div class="ebook_customize_form_actions">
+            <button type="submit" class="s3d-button s3d-overlay-button" id="ebook_settings_customize_btnSubmit"><span class="s3d-button-inner">__MSG__SETTINGS_CUSTOMIZE_BUTTON__</span></button>
+          </div>
+          <div class="fl-push"></div>
+      </form>
+    --></div>
+    <div id="ebook_remove_confirmation_dialog_template" style="display: none;"><!--
+        <div class="s3d-dialog-close jqmClose"></div>
+        <h1 class="ebook_remove_confirmation_dialog_title">__MSG__REMOVE_CONFIRMATION_DIALOG_TITLE__</h1>
+        <div>
+            <input type="hidden" id="ebook_id_to_remove" name="bookId" value="${bookId}"/>
+            <div class="ebook_remove_confirmation_dialog_content">__MSG__REMOVE_CONFIRMATION_MESSAGE__</div>
+
+            <div class="dialog_buttons delete_page_buttons">
+                <button type="button" class="s3d-button s3d-header-button ebook_remove_confirmation_close_dialog"><span class="s3d-button-inner">__MSG__NO__</span></button>
+                <button type="button" class="s3d-button s3d-header-button" id="ebook_remove_book_confirm"><span class="s3d-button-inner">__MSG__YES__</span></button>
+            </div>
+            <div class="fl-push"></div>
+        </div>
+    --></div>
+
+    <!-- MESSAGES -->
+    <div id="ebook_no_search_results_message" style="display: none">__MSG__SEARCH_NO_RESULTS__</div>
+    <div id="ebook_book_url_required_message" style="display: none">__MSG__SEARCH_BOOK_URL_REQUIRED__</div>
+    <div id="ebook_book_already_added_message" style="display: none">__MSG__ALREADY_ADDED__</div>
+    <div id="ebook_searching_for_results_message" style="display: none;"><img src="/dev/images/ajax_load.gif"/></div>
+    <div id="ebook_search_string_required_message" style="display: none;">__MSG__SEARCH_STRING_REQUIRED__</div>
+    <div id="ebook_default_widget_title_message" style="display: none;">__MSG__DEFAULT_WIDGET_TITLE__</div>
+    <div id="ebook_book_updated_message" style="display: none;">__MSG__BOOK_UPDATED_MESSAGE__</div>
+    <div id="ebook_book_removed_message" style="display: none;">__MSG__BOOK_REMOVED_MESSAGE__</div>
+    <div id="ebook_book_added_message" style="display: none;">__MSG__BOOK_ADDED_MESSAGE__</div>
+    <div id="ebook_no_book_set_message" style="display: none;"><div class='ebook_no_book_set_message'>__MSG__NO_BOOK_SET__</div></div>
+    <div id="ebook_bookshelf_settings_updated_message" style="display: none;">__MSG__BOOKSHELF_SETTINGS_UPDATED_MESSAGE__</div>
+    <div id="ebook_awdl_refresh_error_message" style="display: none;"><p>__MSG__ERROR_MESSAGE_AWDL_REFRESH__</p></div>
+    <div id="ebook_awdl_timeout_message" style="display: none;"><div class='ebook_awdl_error'>__MSG__ERROR_MESSAGE_AWDL_TIMEOUT__</div></div>
+    <div id="ebook_awdl_error_message" style="display: none;"><div class='ebook_awdl_error'>__MSG__ERROR_MESSAGE_AWDL_ERROR__</div></div>
+
+</div>
+
+<!-- JAVASCRIPT -->
+<script type="text/javascript" src="/nyuwidgets/openebook/javascript/ebook.js"></script>
