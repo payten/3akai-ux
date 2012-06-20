@@ -3,6 +3,9 @@
     "userdashboard": true,
     "grouppages": true,
     "groupdashboard": true,
+	"personalportalwall": true,
+	"dashboardallowmultiple": true,
+	"dashboardallowmax": 1,
     "sakaidocs": true,
     "hasSettings": true,
     "i18n": {

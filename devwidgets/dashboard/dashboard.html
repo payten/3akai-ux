@@ -65,32 +65,49 @@
                                 </div>
                         </li>
                     {else}
-                        {if i.alreadyIn}
-                        <li class="add" id="row_add_${i.id}" style="display:none">
-                        {else}
-                        <li id="row_add_${i.id}" class="add">
-                        {/if}
-                            <div class="remove_add_column">
-                            <button type="button" id="btn_add_${i.id}" class="s3d-button s3d-overlay-action-button add-button add goodies_add_button">__MSG__ADD__</button>
-                            </div>
+                        {if i.dashboardallowmultiple && i.alreadyIn}
+                            <li id="row_add_${i.id}" class="add">
+                                {if !i.hasOwnProperty('dashboardallowmax') || i.dashboardallowmax > i.alreadyInCount}
+                                    <div class="remove_add_column">
+                                        <button type="button" id="btn_add_${i.id}" class="s3d-button s3d-overlay-action-button add-button add goodies_add_button">Add Another</button>
+                                    </div>
+                                {/if}
+                                <div class="remove_add_column">
+                                    <button type="button" id="btn_remove_${i.id}" class="s3d-button s3d-overlay-button remove goodies_remove_button">Remove All (${i.alreadyInCount})</button>
+                                </div>
                                 <div class="dialog_add_goodies_title">${i.title}</div>
                                 <div class="dialog_add_goodies_description">
-                                ${sakai.api.Widgets.getWidgetDescription(i.id)}
+                                    ${sakai.api.Widgets.getWidgetDescription(i.id)}
                                 </div>
-                        </li>
-                        {if i.alreadyIn}
-                            <li id="row_remove_${i.id}" class="remove">
-                        {else}
-                            <li id="row_remove_${i.id}" class="remove" style="display:none">
-                        {/if}
-                            <div class="remove_add_column">
-                                <button type="button" id="btn_remove_${i.id}" class="s3d-button s3d-overlay-action-button remove goodies_remove_button">__MSG__REMOVE__</button>
-                            </div>
-                                <div class="dialog_remove_goodies_title">${i.title}</div>
-                                <div class="dialog_remove_goodies_description">
-                                ${sakai.api.Widgets.getWidgetDescription(i.id)}
-                            </div>
-                        </li>
+                            </li>
+                        {else}                  
+                            {if i.alreadyIn}
+                            <li class="add" id="row_add_${i.id}" style="display:none">
+                            {else}
+                            <li id="row_add_${i.id}" class="add">
+                            {/if}
+                                <div class="remove_add_column">
+                                <button type="button" id="btn_add_${i.id}" class="s3d-button s3d-overlay-action-button add-button add goodies_add_button">__MSG__ADD__</button>
+                                </div>
+                                    <div class="dialog_add_goodies_title">${i.title}</div>
+                                    <div class="dialog_add_goodies_description">
+                                    ${sakai.api.Widgets.getWidgetDescription(i.id)}
+                                    </div>
+                            </li>
+                            {if i.alreadyIn}
+                                <li id="row_remove_${i.id}" class="remove">
+                            {else}
+                                <li id="row_remove_${i.id}" class="remove" style="display:none">
+                            {/if}
+                                    <div class="remove_add_column">
+                                        <button type="button" id="btn_remove_${i.id}" class="s3d-button s3d-overlay-button remove goodies_remove_button">__MSG__REMOVE__</button>
+                                    </div>
+                                        <div class="dialog_remove_goodies_title">${i.title}</div>
+                                        <div class="dialog_remove_goodies_description">
+                                        ${sakai.api.Widgets.getWidgetDescription(i.id)}
+                                    </div>
+                                </li>
+                            {/if}                        
                     {/if}
                 {/for}
             </ul>
@@ -108,8 +125,8 @@
                     <div class="s3d-widget s3d-widget-container widget1 ${p.id}" id="${p.id}_${p.uid}">
                         <div {if p.display=="none"} class="fl-widget-titlebar widget1-head hiddenwidget" {else} class="fl-widget-titlebar widget1-head" {/if} id="draghandle_${p.id}_${p.uid}">
                             <div class="s3d-contentpage-title">
-                                <button type="button" id="${p.id}_${p.uid}_settings" class="fl-force-right fl-icon settings s3d-link-button s3d-action" style="display:none" title="__MSG__OPTIONS__">&#9660;</button>
-                                ${sakai.api.Widgets.getWidgetTitle(p.id)}
+                                {if isMe}<button type="button" id="${p.id}_${p.uid}_settings" class="fl-force-right fl-icon settings s3d-link-button s3d-action" style="display:none" title="__MSG__OPTIONS__">&#9660;</button>{/if}
+                                <span class="widget-title-text">${sakai.api.Widgets.getWidgetTitle(p.id)}</span>
                             </div>
                         </div>
                     {if p.display == "none"}
@@ -133,6 +150,14 @@
         <div class="fl-fix fl-centered s3d-main-container" id="widgetscontainer" style="display:none"></div>
     </div>
 
+    <div id="dashboard_title_template"><!--
+        {if isMe}
+            My wall
+        {else}
+            ${user}'s wall
+        {/if}
+    --></div>
+    
     <!-- Dropdown menu shown when clicking on a widget's pencil -->
     <div id="widget_settings_menu" class="s3d-dropdown-list" style="display:none">
         <div class="s3d-dropdown-list-arrow-up"><!----></div>

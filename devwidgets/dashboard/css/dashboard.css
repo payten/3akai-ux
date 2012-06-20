@@ -30,6 +30,7 @@
 /* WIDGET CONTAINER */
 #dashboard_container #widgetscontainer .fl-widget{margin-top:1px;}
 #dashboard_container .widget_spacer{height:1px;}
+#dashboard_container .ui-sortable .fl-widget-titlebar {cursor: move;}
 
 /* Change layout */
 #change_layout_dialog {width: 470px !important; margin-left: -235px !important;}
@@ -55,5 +56,9 @@
 .add_goodies .dialog_body .dialog_remove_goodies_title {color:#999;font-size:14px;font-weight:bold;}
 .add_goodies .dialog_body .dialog_remove_goodies_description {color:#999999;font-size:12px;font-weight:100;}
 .add_goodies .dialog_body .dialog_add_goodies_title {color:#333;font-size:13px;font-weight:bold;}
-.add_goodies .remove_add_column {text-align:right; width:100px;}
+.add_goodies .remove_add_column {text-align:right; margin-left: 8px; width: auto;}
 .add_goodies #add_goodies_body {height:310px; overflow: auto;}
+
+.s3d-widget.s3d-widget-container .s3d-contentpage-title {
+    margin-bottom: 0;
+}
