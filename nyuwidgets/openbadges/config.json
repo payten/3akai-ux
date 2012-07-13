@@ -1,0 +1,21 @@
+{
+    "userpages": true,
+    "userdashboard": true,
+    "personalportalwall": true,
+    "dashboardallowmultiple": false,    
+    "sakaidocs": true,
+    "hasSettings": false,
+    "i18n": {
+        "default": {
+            "bundle": "/nyuwidgets/openbadges/bundles/default.properties",
+            "name": "Open Badges Public Feed",
+            "description": "Open Badges Public Feed"
+        }
+    },
+    "id":"openbadges",
+    "img":"/nyuwidgets/openbadges/images/icon.png",
+    "showinsakaigoodies":true,
+    "type":"sakai",
+    "enabled":true,
+    "url":"/nyuwidgets/openbadges/openbadges.html"
+}

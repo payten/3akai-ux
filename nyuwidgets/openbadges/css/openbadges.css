@@ -1,0 +1,27 @@
+#openbadges_display {
+    padding: 10px;
+}
+
+#openbadges_display .badges-container {
+    overflow: hidden;
+    padding-bottom: 10px;
+}
+
+#openbadges_display .badge {
+    border: 1px solid #DDDDDD;
+    padding-bottom: 10px;
+    text-align: center;
+    width: 140px;
+    margin: 10px 10px 0 0;
+    box-shadow: 1px 1px 3px #ccc;
+    float: left;
+    min-height: 155px;
+}
+
+#openbadges_display .badge .badge-image {
+    max-width: 120px;
+}
+
+#openbadges_display .badge .badge-issued {
+    color: #999;
+}

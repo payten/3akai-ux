@@ -1,0 +1,35 @@
+<!-- CSS -->
+<link href="/nyuwidgets/openbadges/css/openbadges.css" type="text/css" rel="stylesheet" />
+
+<!-- Badges Display -->
+<div  id="openbadges_display" class="s3d-widget-content fl-widget-content">
+    <div class="groupselector-container"></div>
+    <div class="badges-container"></div>
+</div>
+
+<!-- WIDGET FOOTER-->
+<div class="s3d-widget-no-options">
+    <div class="s3d-widget-no-options-inner"></div>
+</div>
+
+<!-- TEMPLATES -->
+<div id="openbadges_groupselector_template"><!--
+    <select id="groupselector">
+        <option value="" class="empty"> -- Select a Group --</option>
+        {for group in groups}
+            <option value="${group.groupId}">${group.name}</option>
+        {/for}
+    </select>
+--></div>
+<div id="openbadges_badges_template"><!--
+  {for badge in badges}
+  <div class="badge">
+      <img class="badge-image" src="${badge.imageUrl}" alt="${badge.assertion.badge.description}"/>
+      <div class="badge-name">${badge.assertion.badge.name}</div>      
+      <div class="badge-issued">${badge.assertion.issued_on}</div>      
+  </div>
+  {/for}  
+--></div>
+
+<!-- JAVASCRIPT -->
+<script src="/nyuwidgets/openbadges/javascript/openbadges.js" type="text/javascript"></script>
