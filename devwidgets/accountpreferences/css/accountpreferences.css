@@ -257,3 +257,12 @@ div.accountpreferences_error {
     margin-top: 2px;
 }
 
+/* NYU custom warning dialog */
+#accountpreferences_warning_container {
+    margin-top:90px;
+}
+#accountpreferences_warning_container p {
+    font-size:16px;
+    line-height:20px;
+}
+

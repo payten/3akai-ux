@@ -235,14 +235,29 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
 
         $("#accountpreferences_privacy_change").live("submit", function(ev){
             var option = $(".accountpreferences_selectable input:radio[name='accountpreferences_privacy_radio']:checked").val();
+            if (option === "public") {
+                $("#accountpreferences_proceedandapply").removeAttr("disabled");
+                sakai.api.Util.Modal.open('#accountpreferences_warning_container');
+            } else {
+                savePrivacySettingChanges(option);
+            }            
+            ev.stopPropagation();
+            return false;
+        });
+        
+        $("#accountpreferences_proceedandapply").die("click").live("click", function() {
+            var option = $(".accountpreferences_selectable input:radio[name='accountpreferences_privacy_radio']:checked").val();
+            savePrivacySettingChanges(option);
+            sakai.api.Util.Modal.close('#accountpreferences_warning_container');
+        });
+
+        var savePrivacySettingChanges = function(option) {
             sakai.api.User.savePrivacySettings(option, function(success){
                 sakai.api.Util.notification.show(sakai.api.i18n.getValueForKey("PRIVACY_SETTINGS", "accountpreferences"), sakai.api.i18n.getValueForKey("PRIVACY_SETTINGS_UPDATED", "accountpreferences"));
                 privacyChanges = false;
                 finishSave();
             });
-            ev.stopPropagation();
-            return false;
-        });
+        }
 
         //////////////////////////////
         // Change Country, Timezone //
@@ -488,7 +503,15 @@ require(["jquery", "sakai/sakai.api.core"], function($, sakai) {
             overlay: 20,
             toTop: true,
             onShow: myShow,
-            onHide: myClose
+            onHide: myClose,
+            zIndex: 3000
+        });
+        
+        sakai.api.Util.Modal.setup('#accountpreferences_warning_container', {
+            modal: true,
+            overlay: 20,
+            toTop: true,
+            zIndex: 4000
         });
 
         $('#accountpreferences_email').on('change', function() {
