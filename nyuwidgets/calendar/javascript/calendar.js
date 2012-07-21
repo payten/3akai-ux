@@ -56,7 +56,7 @@ require(
                $("#calendar_add_dialog_content", rootel).html(sakai.api.Util.TemplateRenderer("calendar_add_template", {
                    title: "",
                    start: Globalize.format( new Date(), 'yyyy-MM-ddTH:mm:00zz' ),
-                   finish: Globalize.format( new Date(), 'yyyy-MM-ddTH:mm:00zz' )
+                   end: Globalize.format( new Date(), 'yyyy-MM-ddTH:mm:00zz' )
                }));                      
                $("#calendar_add_dialog", rootel).jqmShow();
             });
@@ -67,7 +67,7 @@ require(
                 for (var i=0; i<formData.length; i++) {
                     event[formData[i].name] = formData[i].value;
                 }
-                console.log(formData);
+                //console.log(formData);
                 event["allDay"] = false;
                 widgetData.events.push(event);
                 
@@ -175,7 +175,7 @@ require(
                         initCalendar();                      
                     }
                 }
-                console.log(widgetData);
+                //console.log(widgetData);
             });
         };
 
