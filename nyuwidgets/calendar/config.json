@@ -1,0 +1,24 @@
+{
+   "userpages": true,
+   "userdashboard": true,
+   "grouppages": true,
+   "groupdashboard": true,
+   "sakaidocs": true,
+   "hasSettings": true,
+    "description": "Calendar",
+    "hasSettings": false,
+    "id": "calendar",
+    "type": "sakai",
+    "enabled": true,
+    "sakaidocs": true,
+    "showinsakaigoodies":true,
+    "url":"/nyuwidgets/calendar/calendar.html",
+    "img":"/nyuwidgets/calendar/images/calendar.png",
+    "i18n": {
+        "default": {
+            "bundle": "/nyuwidgets/calendar/bundles/default.properties",
+            "name": "Calendar Widget",
+            "description": "Calendar Widget"
+        }
+    }
+}

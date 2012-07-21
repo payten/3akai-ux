@@ -1,0 +1,18 @@
+#calendar_display {
+    width: 100%;
+    min-height: 600px;
+}
+
+#calendar_display .calendar-add-event {
+    margin-right: 10px;
+}
+
+#calendar_add_dialog {
+    position: fixed;
+    top: 100px;
+}
+
+#calendar_add_dialog  input {
+    width: 100%;
+    margin-bottom: 10px;
+}
