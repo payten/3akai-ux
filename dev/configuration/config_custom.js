@@ -385,18 +385,6 @@ define(["config/config"], function(config) {
         {value: "Theology"},
         {value: "Theory"}
     ];
-    
-    /**
-     * Add extra widgets to the dashboard whitelist     
-     */     
-     config.enabledDashboardWidgets = $.merge(config.enabledDashboardWidgets, [
-         "comments",
-         "googlemaps",
-         "remotecontent",
-         "rss",
-         "text"
-     ]);
-     
 
     return config;
 });
