@@ -1446,7 +1446,7 @@ define(
                     }
                 }
             });
-        }
+        },
 
         getCategoryTitle: function(cat) {
             var category = false;
