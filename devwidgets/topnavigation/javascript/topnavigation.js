@@ -206,7 +206,6 @@ require(['jquery', 'sakai/sakai.api.core'], function($, sakai) {
          * Check if a redirect should be performed
          */
         var checkForRedirect = function() {
-            var qs = new Querystring();
             // Check for url param, path and if user is logged in
             if ($.deparam.querystring().url && checkValidRedirect($.deparam.querystring().url) &&
                 !sakai.api.User.isAnonymous(sakai.data.me) &&
@@ -339,21 +338,6 @@ require(['jquery', 'sakai/sakai.api.core'], function($, sakai) {
         ////////////////////////
         //////// SEARCH ////////
         ////////////////////////
-        /**
-         * Enable (show) the Search feature but disable (remove) if /search
-         * is restricted and the user is anonymous
-         */
-        var initSearch = function() {  
-            if (sakai.api.User.isAnonymous(sakai.data.me) &&
-                !sakai.config.anonAllowedToSearch) {
-                
-                $(topnavSearchContainer, topnavContainer).remove();
-                $(".topnavigation_usersection_splitter", topnavContainer).remove();
-            } else {
-                $(topnavSearchContainer, topnavContainer).show();
-            }
-        };
-
 
         /**
          * Execute the live search and render the results
@@ -1118,8 +1102,7 @@ require(['jquery', 'sakai/sakai.api.core'], function($, sakai) {
          * Initialise the topnavigation widget
          */
         var doInit = function(){
-            checkForRedirect();            
-            initSearch();
+            checkForRedirect();
             renderUser();
             setUserName();
             sakai.api.Util.getTemplates(function(success, templates) {
