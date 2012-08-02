@@ -386,5 +386,48 @@ define(["config/config"], function(config) {
         {value: "Theory"}
     ];
 
+
+    var logAccess = function() {
+        // We're within a group context.
+        data = {}
+
+        if (sakai_global.group) {
+            data.groupId = sakai_global.group.groupId;
+        }
+
+        if (sakai_global.lhnavigation && sakai_global.lhnavigation.getCurrentPage()) {
+            data.page_title = sakai_global.lhnavigation.getCurrentPage().title;
+        }
+
+        if (sakai_global.content_profile &&
+            sakai_global.content_profile.content_data &&
+            sakai_global.content_profile.content_data.data) {
+            data.path = sakai_global.content_profile.content_data.data['_path'];
+            data.description = sakai_global.content_profile.content_data.data['sakai:description'];
+        }
+
+        var worth_sending = false;
+        for (var key in data) {
+            if (data.hasOwnProperty(key)) {
+                if (data[key]) {
+                    worth_sending = true;
+                } else {
+                    delete data[key]
+                }
+            }
+        }
+
+        if (worth_sending) {
+                $.ajax({
+                    url: '/system/atlasanalytics',
+                    type: "POST",
+                    cache: false,
+                    data: {data: JSON.stringify(data)}
+                });
+        }
+    }
+
+    $(window).bind('showpage.contentauthoring.sakai', logAccess);
+
     return config;
 });
