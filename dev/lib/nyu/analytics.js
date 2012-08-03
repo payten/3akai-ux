@@ -58,7 +58,7 @@ require(["jquery","sakai/sakai.api.core"], function($, sakai) {
 
         if (worth_sending) {
                 $.ajax({
-                    url: '/system/atlasanalytics',
+                    url: '/system/analytics',
                     type: "POST",
                     cache: false,
                     data: {data: JSON.stringify(data)}
