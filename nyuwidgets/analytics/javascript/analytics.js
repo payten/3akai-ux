@@ -28,12 +28,11 @@ require(
 
         var addBindings = function() {
             $(window).bind('showpage.contentauthoring.sakai', log);
-            $(window).bind('render.contentmetadata.sakai', log);
         };
-        
+
         var log = function() {
             // We're within a group context.
-            data = {}
+            data = {};
 
             if (sakai_global.group) {
                 data.groupId = sakai_global.group.groupId;
@@ -60,7 +59,7 @@ require(
                     if (data[key]) {
                         worth_sending = true;
                     } else {
-                        delete data[key]
+                        delete data[key];
                     }
                 }
             }
@@ -73,7 +72,7 @@ require(
                         data: {data: JSON.stringify(data)}
                     });
             }
-        }
+        };
 
         addBindings();
         
