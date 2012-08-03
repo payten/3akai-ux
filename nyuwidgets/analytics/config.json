@@ -1,0 +1,6 @@
+{
+    "enabled": true,
+    "id": "analytics",
+    "type": "core",
+    "url": "/nyuwidgets/analytics/analytics.html"
+}
