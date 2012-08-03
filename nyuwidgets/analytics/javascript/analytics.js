@@ -31,11 +31,11 @@ require(
         };
 
         var log = function() {
-            // We're within a group context.
             data = {};
 
             if (sakai_global.group) {
                 data.groupId = sakai_global.group.groupId;
+                data.context = 'group';
             }
 
             if (sakai_global.profile) {
@@ -51,6 +51,7 @@ require(
                 sakai_global.content_profile.content_data.data) {
                 data.path = sakai_global.content_profile.content_data.data['_path'];
                 data.description = sakai_global.content_profile.content_data.data['sakai:description'];
+                data.context = 'content';
             }
 
             var worth_sending = false;
